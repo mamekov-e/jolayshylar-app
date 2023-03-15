@@ -1,0 +1,33 @@
+.cardSection {
+    display: grid;
+    justify-items: center;
+    gap: 35px;
+    width: 250px;
+    height: auto;
+    padding: 15px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.cardSection > a {
+  width: 100%;
+
+}
+
+.cardDescription {
+  text-align: center;
+  width: 80%;
+}
+
+.thirdBtn {
+    width: 100%;
+    background: #F2F2F2;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    font-size: 0.9em;
+    line-height: 15px;
+    font-weight: 700;
+    color: #014E6D;
+    /* padding-block: 6px; */
+    padding: 0.7em 1.2em;
+}

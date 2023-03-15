@@ -1,0 +1,29 @@
+.panel {
+    display: flex;
+}
+
+.busDescription {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 5px;
+    padding-inline: 10px;
+    border: 1px solid #014E6D;
+    border-right: 0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.openOrSelectIcon {
+    display: flex;
+    align-items: center;
+    background: #3483A2;
+    padding: 8px 10px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.iconStyle {
+    width: 15px;
+    height: 15px;
+}

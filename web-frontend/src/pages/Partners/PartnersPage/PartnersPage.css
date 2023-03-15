@@ -1,0 +1,16 @@
+.welcomeCard {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-inline: 10%;
+    padding-block: 5px;
+}
+
+.sectionCards {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-inline: 10%;
+    margin-top: 15px;
+    padding: 25px;
+}   

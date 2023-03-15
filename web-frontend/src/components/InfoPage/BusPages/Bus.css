@@ -1,0 +1,27 @@
+.busActionsPage {
+    display: flex;
+    justify-content: center;
+}
+
+.allBusesSubpage {
+    display: flex;
+    justify-content: center;
+}    
+
+
+.busesList {
+    display: flex;
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+    align-content: flex-start
+}
+
+.emptyListText {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-top: 30px;
+}

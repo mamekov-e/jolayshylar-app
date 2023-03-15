@@ -1,0 +1,13 @@
+.primaryBtn {
+    width: 100%;
+    border-radius: 5px;
+    border-color: white;
+    border: none;
+    padding: 0.7em;
+    outline-color: #014E6D;
+    font-size: 0.8em;
+    font-weight: 400;
+    font-family: inherit;
+    color: #014E6D;
+    background-color: white;
+}
