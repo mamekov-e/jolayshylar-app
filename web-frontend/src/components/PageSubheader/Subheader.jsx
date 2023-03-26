@@ -1,16 +1,15 @@
 import React, { useContext } from "react";
-import { BusContext } from "../../contexts/useBus";
+import { BreadcrumbContext } from "../../contexts/useBreadcrumb";
 import OpenedPage from "../OpenedPage/OpenedPage";
 import Operations from "../Operations/Operations";
 import "./Subheader.css";
 
 export default function Subheader() {
-  const { isSubpageOpen } = useContext(BusContext);
-
+  const { breadcrumb } = useContext(BreadcrumbContext);
   return (
     <div className="subheader">
       <OpenedPage />
-      {isSubpageOpen() && <Operations />}
+      {breadcrumb.length < 3 && <Operations />}
     </div>
   );
 }

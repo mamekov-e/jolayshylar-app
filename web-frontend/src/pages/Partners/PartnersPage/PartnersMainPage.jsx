@@ -5,7 +5,6 @@ import Card from "../../../components/Cards/Card";
 
 export default function PartnersMainPage() {
   const cards = partnersMainPageData.map((data) => {
-    console.log(data);
     return <Card key={data.btnName} data={data} />;
   });
 

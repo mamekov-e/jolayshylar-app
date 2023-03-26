@@ -1,0 +1,22 @@
+.busInfoPage {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    margin-top: 20px;
+}
+
+.busInfoDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.busInfoDetails > p{
+    margin: 0;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.busInfoDetails > h3{
+    margin-block: 10px;
+}

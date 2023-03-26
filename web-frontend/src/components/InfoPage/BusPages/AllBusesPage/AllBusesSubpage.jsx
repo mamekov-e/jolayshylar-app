@@ -2,14 +2,15 @@ import React, { useContext, useEffect, useState } from "react";
 import { BusContext } from "../../../../contexts/useBus";
 import BusItem from "../BusItem/BusItem";
 import DeleteActions from "../../DeleteActions/DeleteActions";
+import { BusInfoSubpageCrumb } from "../../../../constants/BreadcrumbItems";
 
 export default function AllBusesSubpage() {
-  const { busItems, deleteOn, removeBuses } = useContext(BusContext);
+  const { busItems, deleteOn, removeBuses, goToSubpage } =
+    useContext(BusContext);
   const [selectedBuses, setSelectedBuses] = useState([]);
 
   useEffect(() => {
     setSelectedBuses([]);
-    console.log(busItems);
   }, [busItems, deleteOn]);
 
   function getAllBuses() {
@@ -20,10 +21,16 @@ export default function AllBusesSubpage() {
           busItem={busItem}
           selected={selectedBuses.includes(busItem)}
           onSelect={handleSelect}
+          onOpen={handleOpen}
         />
       );
     });
   }
+
+  const handleOpen = (bus) => {
+    const subpagecrumb = BusInfoSubpageCrumb(bus);
+    goToSubpage(subpagecrumb);
+  };
 
   const handleSelect = (bus) => {
     setSelectedBuses(
@@ -43,8 +50,6 @@ export default function AllBusesSubpage() {
 
   const handleDeleteSelected = () => {
     const selectedBusesIds = selectedBuses.map((bus) => bus.id);
-    console.log("selectedBusesIds: " + selectedBusesIds);
-    console.log("selectedBuses: " + selectedBuses);
     removeBuses(selectedBusesIds);
   };
 

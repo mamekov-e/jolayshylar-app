@@ -1,41 +1,57 @@
 [
     {
         "id": 1,
+        "seatNumber":50,
+        "capacity":60,
         "number": "Х129КLG",
         "selected" : false
     },
     {
         "id": 2,
+        "seatNumber":50,
+        "capacity":60,
         "number": "Х139КLG",
         "selected" : false
     },
     {
         "id": 3,
+        "seatNumber":50,
+        "capacity":60,
         "number": "Х149КLG",
         "selected" : false
     },
     {
         "id": 4,
+        "seatNumber":50,
+        "capacity":60,
         "number": "Х159КLG",
         "selected" : false
     },
     {
         "id": 5,
+        "seatNumber":50,
+        "capacity":60,
         "number": "Х169КLG",
         "selected" : false
     },
     {
         "id": 6,
+        "seatNumber":50,
+        "capacity":60,
         "number": "Х179КLG",
         "selected" : false
     },
     {
         "id": 7,
+        "seatNumber":50,
+        "capacity":60,
         "number": "Х189КLG",
         "selected" : false
     },
     {
         "id": 8,
+        "seatNumber":50,
+        "capacity":60,
         "number": "Х199КLG",
         "selected" : false
     }

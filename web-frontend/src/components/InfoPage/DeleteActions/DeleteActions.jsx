@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { useState } from "react";
 import { BusContext } from "../../../contexts/useBus";
 import "./DeleteActions.css";
 

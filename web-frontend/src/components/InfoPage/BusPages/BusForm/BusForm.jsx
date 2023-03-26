@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { BusContext } from "../../../../contexts/useBus";
 import InputText from "../../../custom/InputText/InputText";
 import SaveBtn from "../../../custom/Button/Button";
 import "./BusForm.css";
 
-export default function () {
-  const { busItems, addBus, goToSubpage, subpage } = useContext(BusContext);
+export default function ({ submitForm, bus }) {
+  const { subpage } = useContext(BusContext);
 
   const busSchema = Yup.object().shape({
     number: Yup.string().required("Обязательное поле"),
@@ -19,24 +19,15 @@ export default function () {
       .positive("Введите положительное число"),
   });
 
-  const handleSubmit = (values, { resetForm }) => {
-    console.log("Values: " + values);
-    const id = busItems.length > 0 ? busItems[busItems.length - 1].id + 1 : 0;
-    const newBus = { id, ...values, selected: false };
-    addBus(newBus);
-    resetForm();
-    goToSubpage("all");
-  };
-
   return (
     <Formik
       initialValues={{
-        number: "",
-        capacity: "",
-        seatNumber: "",
+        number: bus ? bus.number : "",
+        capacity: bus ? bus.capacity : "",
+        seatNumber: bus ? bus.seatNumber : "",
       }}
       validationSchema={busSchema}
-      onSubmit={handleSubmit}
+      onSubmit={(values) => submitForm(values, bus)}
     >
       {({ isValid, errors, touched, handleChange, values }) => (
         <Form className="form">
@@ -47,7 +38,7 @@ export default function () {
             <InputText
               placeholder="Введите номер автобуса"
               onChange={handleChange}
-              value={values.name}
+              value={values.number}
               name="number"
               type="text"
               style={inputStyle}
@@ -60,7 +51,7 @@ export default function () {
             <InputText
               placeholder="Введите вместимость автобуса"
               onChange={handleChange}
-              value={values.name}
+              value={values.capacity}
               name="capacity"
               type="number"
               style={inputStyle}
@@ -75,7 +66,7 @@ export default function () {
             <InputText
               placeholder="Введите количество сидячих мест"
               onChange={handleChange}
-              value={values.name}
+              value={values.seatNumber}
               name="seatNumber"
               type="number"
               style={inputStyle}
@@ -100,4 +91,7 @@ const inputStyle = {
 const btnStyle = {
   backgroundColor: "#014E6D",
   color: "#FFF",
+  marginTop: "10px",
+  height: "40px",
+  marginInline: 0,
 };

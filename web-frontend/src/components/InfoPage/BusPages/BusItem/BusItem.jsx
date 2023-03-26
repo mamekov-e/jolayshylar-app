@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import "./BusItem.css";
 import { BusContext } from "../../../../contexts/useBus";
 
-export default function BusItem({ busItem, selected, onSelect }) {
+export default function BusItem({ busItem, selected, onSelect, onOpen }) {
   const { deleteOn } = useContext(BusContext);
   const [icon, setIcon] = useState(openIcon);
 
@@ -23,12 +23,11 @@ export default function BusItem({ busItem, selected, onSelect }) {
         <h3>Автобус</h3>
         <h4>{busItem.number}</h4>
       </div>
-      <div className="openOrSelectIcon">
-        <img
-          src={icon}
-          onClick={() => onSelect(busItem)}
-          className="iconStyle"
-        />
+      <div
+        className="openOrSelectIcon"
+        onClick={() => (deleteOn ? onSelect(busItem) : onOpen(busItem))}
+      >
+        <img src={icon} className="iconStyle" />
       </div>
     </div>
   );
