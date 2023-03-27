@@ -30,7 +30,7 @@ dist-ssr
 node_modules/
 
 # Ignore virtual environment files
-venv/
+env/
 
 # Ignore React build files
 web-frontend/build/

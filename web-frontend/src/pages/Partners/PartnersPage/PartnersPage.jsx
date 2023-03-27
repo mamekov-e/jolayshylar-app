@@ -12,7 +12,7 @@ export default function PartnersPage() {
   return (
     <>
       <p onClick={auth} style={{ position: "absolute" }}>
-        Nazhmi
+        ~
       </p>
       {authorized ? <PartnersMainPage /> : <LoginPage />}
     </>

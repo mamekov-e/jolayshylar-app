@@ -5,7 +5,7 @@ import busesImg from "../../assets/partners/homePage/buses-icon.svg";
 import reportsImg from "../../assets/partners/homePage/reports-icon.png";
 import "./Card.css";
 import { BreadcrumbContext } from "../../contexts/useBreadcrumb";
-import { AllBusesSubpageCrumb } from "../../constants/BreadcrumbItems";
+import {AllBusesSubpageCrumb, AllRoutesSubpageCrumb} from "../../constants/BreadcrumbItems";
 import { BusContext } from "../../contexts/useBus";
 
 export default function Card({ data }) {
@@ -17,6 +17,7 @@ export default function Card({ data }) {
 
   if (imgSrc === "routes-icon.svg") {
     img = routesImg;
+    subpageToOpen = AllRoutesSubpageCrumb;
   } else if (imgSrc === "buses-icon.svg") {
     img = busesImg;
     subpageToOpen = AllBusesSubpageCrumb;

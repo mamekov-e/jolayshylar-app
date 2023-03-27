@@ -1,0 +1,20 @@
+.openedPage {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+}
+
+.separatorIcon {
+    margin-inline: 10px;
+}
+
+.subpage {
+    color: #014E6D
+}
+
+.pageName {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    cursor: pointer;
+}

@@ -1,12 +1,7 @@
 import React, { useContext, useState } from "react";
-import AllBusesSubpage from "../components/InfoPage/BusPages/AllBusesPage/AllBusesSubpage";
-import BusActionsSubpage from "../components/InfoPage/BusPages/BusActionsPage/BusActionsSubpage";
 import buses from "../staticData/busItemsData.json";
-import BusForm from "../components/InfoPage/BusPages/BusForm/BusForm";
-import BusInfo from "../components/InfoPage/BusPages/BusInfo/BusInfo";
 import {
-  AllBusesSubpageCrumb,
-  BusInfoSubpageCrumb,
+  AllBusesSubpageCrumb
 } from "../constants/BreadcrumbItems";
 import { BreadcrumbContext } from "./useBreadcrumb";
 const BusContext = React.createContext();
@@ -18,34 +13,11 @@ function BusContextProvider({ children }) {
   const [busItems, setBusItems] = useState(buses);
   const { openSubpage } = useContext(BreadcrumbContext);
 
-  function goToSubpages({ subPageName, bus }) {
-    if (subPageName === "all") {
-      setSubpage({ name: "Все автобусы", component: <AllBusesSubpage /> });
-    } else if (subPageName === "busInfo") {
-      setSubpage({
-        name: bus.number,
-        component: <BusActionsSubpage page={<BusInfo bus={bus} />} />,
-      });
-    } else if (subPageName === "edit") {
-      setSubpage({
-        name: "Редактировать автобус",
-        component: (
-          <BusActionsSubpage
-            page={<BusForm submitForm={updateBus} bus={bus} />}
-          />
-        ),
-      });
-    } else if (subPageName === "add") {
-      setSubpage({
-        name: "Добавить автобус",
-        component: <BusActionsSubpage page={<BusForm submitForm={addBus} />} />,
-      });
-    }
-  }
-
   function goToSubpage(subpageToOpen) {
     setSubpage(subpageToOpen);
     openSubpage(subpageToOpen);
+    if (deleteOn)
+      setDeleteOn(false)
   }
 
   function addBus(values) {

@@ -1,0 +1,22 @@
+.deleteActions {
+    display: flex;
+    justify-content: right;
+    gap: 15px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.deleteAll {
+    color:  #A23A34;
+    text-decoration: underline;
+}
+
+.selectAll {
+    color:   #5B5B5B;
+    text-decoration: underline;
+}
+
+.cancel {
+    color:  #014E6D;;
+    text-decoration: underline;
+}

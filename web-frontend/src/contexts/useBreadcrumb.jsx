@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  AllBusesSubpageCrumb,
+  AllBusesSubpageCrumb, AllRoutesSubpageCrumb,
   MainPageCrumb,
 } from "../constants/BreadcrumbItems";
 const BreadcrumbContext = React.createContext();
@@ -14,8 +14,8 @@ function BreadcrumbContextProvider({ children }) {
   useEffect(() => {
     if (pathname.includes("/buses")) {
       openSubpage(AllBusesSubpageCrumb);
-    } else if (pathname.includes("/reports")) {
-      openSubpage(AllBusesSubpageCrumb);
+    } else if (pathname.includes("/routes")) {
+      openSubpage(AllRoutesSubpageCrumb);
     }
   }, [location]);
 
