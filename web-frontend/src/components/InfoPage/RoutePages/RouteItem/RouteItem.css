@@ -1,17 +1,53 @@
-.panel {
+.routePanel {
+    /*min-width: 200px;*/
     display: flex;
+    cursor: pointer;
 }
 
-.busDescription {
+.routeDescription {
+    min-width: 200px;
     display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-around;
-    gap: 5px;
-    padding-inline: 10px;
+    /*gap: 5px;*/
+    /*padding-inline: 10px;*/
     border: 1px solid #014E6D;
     border-right: 0;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
+}
+
+.busInfoLine {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.routeInfoLine {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.routeName {
+    /*inline-size: min-content;*/
+    margin-inline-start: 10px;
+}
+
+.itemLines {
+    width:auto;
+    padding: 15px;
+}
+
+.hr {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-top: 1px solid #014E6D;
 }
 
 .openOrSelectIcon {
@@ -21,7 +57,6 @@
     padding: 8px 10px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    cursor: pointer;
 }
 
 .iconStyle {

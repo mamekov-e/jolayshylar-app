@@ -1,30 +1,18 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import buses from "../staticData/busItemsData.json";
-import {
-  AllBusesSubpageCrumb
-} from "../constants/BreadcrumbItems";
-import { BreadcrumbContext } from "./useBreadcrumb";
+import {AddBusSubpageCrumb} from "../constants/BreadcrumbItems.jsx";
 const BusContext = React.createContext();
 
 function BusContextProvider({ children }) {
-  const [subpage, setSubpage] = useState(AllBusesSubpageCrumb);
-  const [deleteOn, setDeleteOn] = useState(false);
-
   const [busItems, setBusItems] = useState(buses);
-  const { openSubpage } = useContext(BreadcrumbContext);
-
-  function goToSubpage(subpageToOpen) {
-    setSubpage(subpageToOpen);
-    openSubpage(subpageToOpen);
-    if (deleteOn)
-      setDeleteOn(false)
-  }
+  const [deleteOn, setDeleteOn] = useState(false);
+  const AddComponent = AddBusSubpageCrumb(addBus)
 
   function addBus(values) {
     const id = busItems.length > 0 ? busItems[busItems.length - 1].id + 1 : 0;
     const newBus = { id, ...values, selected: false };
     setBusItems((prevItems) => [...prevItems, newBus]);
-    goToSubpage(AllBusesSubpageCrumb);
+    return true
   }
 
   function editBus(values, bus) {
@@ -35,8 +23,7 @@ function BusContextProvider({ children }) {
       return item;
     });
     setBusItems(updatedItems);
-    // const editedBus = updatedItems.find((prevItem) => prevItem.id === bus.id);
-    goToSubpage(AllBusesSubpageCrumb);
+    return true
   }
 
   function removeBuses(busIds) {
@@ -59,19 +46,23 @@ function BusContextProvider({ children }) {
     setBusItems(updatedBuses);
   }
 
+  function resetDelete() {
+    if (deleteOn)
+      setDeleteOn(false)
+  }
+
   return (
     <BusContext.Provider
       value={{
-        subpage,
         deleteOn,
-        busItems,
-        goToSubpage,
+        items:busItems,
         setDeleteOn,
-        removeBuses,
-        addBus,
-        editBus,
+        remove:removeBuses,
+        AddComponent,
+        edit:editBus,
         selectAll,
-        getBus,
+        get:getBus,
+        resetDelete
       }}
     >
       {children}

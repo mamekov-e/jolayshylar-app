@@ -1,13 +1,13 @@
 import React, {useContext} from "react";
 import {AddBusSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
-import AddBtn from "../../../custom/Button/Button.jsx";
-import RemoveBtn from "../../../custom/Button/Button.jsx";
+import AddBtn from "../../../CustomComponents/Button/Button.jsx";
+import RemoveBtn from "../../../CustomComponents/Button/Button.jsx";
 import "./Operations.css";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 
 export default function Operations() {
     const {goToSubpage, context} = useContext(BreadcrumbContext);
-    const {items, deleteOn, setDeleteOn, add} = context;
+    const {items, deleteOn, setDeleteOn, AddComponent} = context;
     console.log("operations", context)
 
     function onDelete() {
@@ -15,8 +15,7 @@ export default function Operations() {
     }
 
     function onAdd() {
-        const subpagecrumb = AddBusSubpageCrumb(add);
-        goToSubpage(subpagecrumb);
+        goToSubpage(AddComponent);
     }
 
     return (

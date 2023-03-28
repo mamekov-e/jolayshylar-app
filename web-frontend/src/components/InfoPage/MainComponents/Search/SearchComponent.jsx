@@ -1,6 +1,6 @@
 import React from "react";
-import InputText from "../../../custom/InputText/InputText.jsx";
-import SearchBtn from "../../../custom/Button/Button.jsx";
+import InputText from "../../../CustomComponents/InputText/InputText.jsx";
+import SearchBtn from "../../../CustomComponents/Button/Button.jsx";
 import "./SearchComponent.css";
 
 export default function SearchComponent() {

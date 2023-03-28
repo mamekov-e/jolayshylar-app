@@ -1,88 +1,87 @@
-import AllBusesSubpage from "../components/InfoPage/BusPages/Subpages/AllBusesSubpage/AllBusesSubpage.jsx";
-import BusActionsFormSubpage from "../components/InfoPage/BusPages/Subpages/BusActionsFormSubpage/BusActionsFormSubpage.jsx";
-import BusForm from "../components/InfoPage/BusPages/Subpages/BusActionsFormSubpage/BusForm/BusForm";
+import AllItemsSubpage from "../components/InfoPage/MainComponents/AllItemsSubpage/AllItemsSubpage.jsx";
+import ItemActionsFormSubpage from "../components/InfoPage/BusPages/Subpages/ItemActionsFormSubpage/ItemActionsFormSubpage.jsx";
+import BusForm from "../components/InfoPage/BusPages/BusForm/BusForm";
 import BusInfoSubpage from "../components/InfoPage/BusPages/Subpages/BusInfoSubpage/BusInfoSubpage.jsx";
-import AllRoutesSubpage from "../components/InfoPage/RoutePages/Subpages/AllRoutesSubpage/AllRoutesSubpage.jsx";
-import RouteActionsFormSubpage
-  from "../components/InfoPage/RoutePages/Subpages/RouteActionsFormSubpage/RouteActionsFormSubpage.jsx";
-import RouteInfoSubpage from "../components/InfoPage/RoutePages/Subpages/RouteInfoSubpage/RouteInfoSubpage";
-import RouteForm from "../components/InfoPage/RoutePages/Subpages/RouteActionsFormSubpage/RouteForm/RouteForm.jsx";
+import RouteForm from "../components/InfoPage/RoutePages/RouteForm/RouteForm.jsx";
+import BusItem from "../components/InfoPage/BusPages/BusItem/BusItem.jsx";
+import RouteInfoSubpage from "../components/InfoPage/RoutePages/Subpages/RouteInfoSubpage/RouteInfoSubpage.jsx";
+import RouteItem from "../components/InfoPage/RoutePages/RouteItem/RouteItem.jsx";
 
 export const MainPageCrumb = {
-  name: "Главная",
-  component: null,
-  link: "/partners",
-  subPageName: "#",
+    name: "Главная",
+    component: null,
+    link: "/partners",
+    subPageName: "#",
 };
 
 export const AllBusesSubpageCrumb = {
-  name: "Все автобусы",
-  component: <AllBusesSubpage />,
-  link: "#",
-  subPageName: "all",
+    name: "Все автобусы",
+    component: <AllItemsSubpage Item={BusItem} InfoSubpage={BusInfoSubpageCrumb}/>,
+    link: "#",
+    subPageName: "all",
 };
 
 export const AllRoutesSubpageCrumb = {
-  name: "Все маршруты",
-  component: <AllRoutesSubpage />,
-  link: "#",
-  subPageName: "all",
+    name: "Все маршруты",
+    component: <AllItemsSubpage Item={RouteItem} InfoSubpage={RouteInfoSubpageCrumb}/>,
+    link: "#",
+    subPageName: "all",
 };
 
-export const BusInfoSubpageCrumb = (bus) => {
-  return {
-    name: bus.number,
-    component: <BusActionsFormSubpage page={<BusInfoSubpage bus={bus} />} />,
-    link: "#",
-    subPageName: "busInfo",
-  };
+export function BusInfoSubpageCrumb(bus) {
+    return {
+        name: bus.number,
+        component: <ItemActionsFormSubpage page={<BusInfoSubpage bus={bus}/>}/>,
+        link: "#",
+        subPageName: "busInfo",
+    };
+}
+
+export function RouteInfoSubpageCrumb(route) {
+    return {
+        name: route.number,
+        component: <ItemActionsFormSubpage page={<RouteInfoSubpage route={route}/>}/>,
+        link: "#",
+        subPageName: "routeInfo",
+    };
+}
+
+export function EditBusSubpageCrumb(bus, editBus) {
+    return {
+        name: "Редактировать автобус",
+        component: (
+            <ItemActionsFormSubpage page={<BusForm submitForm={editBus} bus={bus}/>}/>
+        ),
+        link: "#",
+        subPageName: "edit",
+    };
+}
+
+export function EditRouteSubpageCrumb(route, editRoute) {
+    return {
+        name: "Редактировать маршрут",
+        component: (
+            <ItemActionsFormSubpage page={<RouteForm submitForm={editRoute} route={route}/>}/>
+        ),
+        link: "#",
+        subPageName: "edit",
+    };
+}
+
+export const AddBusSubpageCrumb = (add) => {
+    return {
+        name: "Добавить автобус",
+        component: <ItemActionsFormSubpage page={<BusForm submitForm={add}/>}/>,
+        link: "#",
+        subPageName: "add",
+    };
 };
 
-export const RouteInfoSubpageCrumb = (route) => {
-  return {
-    name: route.number,
-    component: <RouteActionsFormSubpage page={<RouteInfoSubpage bus={route} />} />,
-    link: "#",
-    subPageName: "busInfo",
-  };
-};
-
-export const EditBusSubpageCrumb = (bus, editBus) => {
-  return {
-    name: "Редактировать автобус",
-    component: (
-      <BusActionsFormSubpage page={<BusForm submitForm={editBus} bus={bus} />} />
-    ),
-    link: "#",
-    subPageName: "edit",
-  };
-};
-
-export const EditRouteSubpageCrumb = (bus, editBus) => {
-  return {
-    name: "Редактировать маршрут",
-    component: (
-        <RouteActionsFormSubpage page={<RouteForm submitForm={editBus} bus={bus} />} />
-    ),
-    link: "#",
-    subPageName: "edit",
-  };
-};
-
-export const AddBusSubpageCrumb = (addBus) => {
-  return {
-    name: "Добавить автобус",
-    component: <BusActionsFormSubpage page={<BusForm submitForm={addBus} />} />,
-    link: "#",
-    subPageName: "add",
-  };
-};
-
-export const AddRouteSubpageCrumb = (addBus) => {
-  return {
-    name: "Добавить маршрут",
-    component: <RouteActionsFormSubpage page={<RouteForm submitForm={addBus} />} />,
-    link: "#",
-    subPageName: "add",
-  };
+export const AddRouteSubpageCrumb = (add) => {
+    return {
+        name: "Добавить маршрут",
+        component: <ItemActionsFormSubpage page={<RouteForm submitForm={add}/>}/>,
+        link: "#",
+        subPageName: "add",
+    };
 };

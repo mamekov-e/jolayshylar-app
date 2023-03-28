@@ -6,14 +6,13 @@ import reportsImg from "../../assets/partners/homePage/reports-icon.png";
 import "./Card.css";
 import { BreadcrumbContext } from "../../contexts/useBreadcrumb";
 import {AllBusesSubpageCrumb, AllRoutesSubpageCrumb} from "../../constants/BreadcrumbItems";
-import { BusContext } from "../../contexts/useBus";
 
 export default function Card({ data }) {
-  const { goToSubpage } = useContext(BusContext);
+  const { goToSubpage } = useContext(BreadcrumbContext);
 
   const { imgSrc, linkToValue, description, btnName } = data;
-  var img = "";
-  var subpageToOpen;
+  let img = "";
+  let subpageToOpen;
 
   if (imgSrc === "routes-icon.svg") {
     img = routesImg;

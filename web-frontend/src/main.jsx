@@ -6,17 +6,20 @@ import "./index.css";
 import {BusContextProvider} from "./contexts/useBus";
 import {BreadcrumbContextProvider} from "./contexts/useBreadcrumb";
 import {RouteContextProvider} from "./contexts/useRoute.jsx";
+import {BusRouteContextProvider} from "./contexts/useBusRoute";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <BrowserRouter>
-            <BreadcrumbContextProvider>
-                <RouteContextProvider>
-                    <BusContextProvider>
-                        <App/>
-                    </BusContextProvider>
-                </RouteContextProvider>
-            </BreadcrumbContextProvider>
+            <RouteContextProvider>
+                <BusContextProvider>
+                    <BusRouteContextProvider>
+                        <BreadcrumbContextProvider>
+                            <App/>
+                        </BreadcrumbContextProvider>
+                    </BusRouteContextProvider>
+                </BusContextProvider>
+            </RouteContextProvider>
         </BrowserRouter>
     </React.StrictMode>
 );

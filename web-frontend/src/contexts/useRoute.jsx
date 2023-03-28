@@ -1,29 +1,20 @@
-import React, {useContext, useState} from "react";
-import buses from "../staticData/busItemsData.json";
-import {AllRoutesSubpageCrumb,} from "../constants/BreadcrumbItems";
-import {BreadcrumbContext} from "./useBreadcrumb";
+import React, {useState} from "react";
+import routes from "../staticData/routeItemsData.json";
+import {AddRouteSubpageCrumb} from "../constants/BreadcrumbItems.jsx";
 
 const RouteContext = React.createContext();
 
 function RouteContextProvider({children}) {
-    const [subpage, setSubpage] = useState(AllRoutesSubpageCrumb);
+    const [routeItems, setRouteItems] = useState(routes);
     const [deleteOn, setDeleteOn] = useState(false);
 
-    const [routeItems, setRouteItems] = useState(buses);
-    const {openSubpage} = useContext(BreadcrumbContext);
-
-    function goToSubpage(subpageToOpen) {
-        setSubpage(subpageToOpen);
-        openSubpage(subpageToOpen);
-        if (deleteOn)
-            setDeleteOn(false)
-    }
+    const AddComponent = AddRouteSubpageCrumb(addRoute)
 
     function addRoute(values) {
         const id = routeItems.length > 0 ? routeItems[routeItems.length - 1].id + 1 : 0;
         const newRoute = {id, ...values, selected: false};
         setRouteItems((prevItems) => [...prevItems, newRoute]);
-        goToSubpage(AllRoutesSubpageCrumb);
+        return true
     }
 
     function editRoute(values, bus) {
@@ -34,8 +25,7 @@ function RouteContextProvider({children}) {
             return item;
         });
         setRouteItems(updatedItems);
-        // const editedRoute = updatedItems.find((prevItem) => prevItem.id === bus.id);
-        goToSubpage(AllRoutesSubpageCrumb);
+        return true
     }
 
     function removeRoutes(busIds) {
@@ -58,19 +48,23 @@ function RouteContextProvider({children}) {
         setRouteItems(updatedRoutes);
     }
 
+    function resetDelete() {
+        if (deleteOn)
+            setDeleteOn(false)
+    }
+
     return (
         <RouteContext.Provider
             value={{
-                subpage,
                 deleteOn,
-                routeItems,
-                goToSubpage,
+                items: routeItems,
                 setDeleteOn,
-                removeRoutes,
-                addRoute,
-                editRoute,
+                remove: removeRoutes,
+                AddComponent,
+                edit: editRoute,
                 selectAll,
-                getRoute,
+                get: getRoute,
+                resetDelete
             }}
         >
             {children}

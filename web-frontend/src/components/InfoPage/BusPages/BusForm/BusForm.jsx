@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { BusContext } from "../../../../../../contexts/useBus.jsx";
-import InputText from "../../../../../custom/InputText/InputText.jsx";
-import SaveBtn from "../../../../../custom/Button/Button.jsx";
+import { BusContext } from "../../../../contexts/useBus.jsx";
+import InputText from "../../../CustomComponents/InputText/InputText.jsx";
+import SaveBtn from "../../../CustomComponents/Button/Button.jsx";
 import "./BusForm.css";
-import {BreadcrumbContext} from "../../../../../../contexts/useBreadcrumb.jsx";
+import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 
 export default function BusForm({ submitForm, bus }) {
   const { subpage, goToSubpage, allItemsPage } = useContext(BreadcrumbContext);

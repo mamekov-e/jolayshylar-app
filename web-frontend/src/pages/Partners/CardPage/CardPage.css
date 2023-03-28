@@ -4,7 +4,14 @@
     align-items: center;
     gap: 2px;
     margin-inline: 10%;
-    padding-block: 5px;
+    padding-inline-start: 20px;
+}
+
+.subpageTitle {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 29px;
 }
 
 .section {

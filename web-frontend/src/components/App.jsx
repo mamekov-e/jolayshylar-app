@@ -9,13 +9,11 @@ import AboutPage from "../pages/AboutPage";
 import Header from "./Header/Header";
 import LoginPage from "../pages/AuthPages/LoginPage";
 import RegistrationPage from "../pages/AuthPages/RegistrationPage";
+import {BusRouteContext} from "../contexts/useBusRoute.jsx";
 import {useContext} from "react";
-import {RouteContext} from "../contexts/useRoute.jsx";
-import {BusContext} from "../contexts/useBus";
 
 function App() {
-  const {subpage:routeSubpages} = useContext(RouteContext)
-  const {subpage:busSubpages} = useContext(BusContext)
+  const commonContext = useContext(BusRouteContext);
 
   return (
     <>
@@ -24,8 +22,8 @@ function App() {
         <Route index path="/" element={<HomePage />} />
         <Route path="/passengers" element={<PassengersPage />} />
         <Route exact="true" path="/partners" element={<PartnersPage />} />
-        <Route path="/partners/routes" element={<CardPage pageName={"Маршруты"} subpage={routeSubpages}/>} />
-        <Route path="/partners/buses" element={<CardPage pageName={"Автобусы"} subpage={busSubpages}/>}/>} />
+        <Route path="/partners/routes" element={<CardPage pageName={"Маршруты"} context={commonContext.routeContext}/>} />
+        <Route path="/partners/buses" element={<CardPage pageName={"Автобусы"} context={commonContext.busContext}/>}/>
         <Route path="/partners/reports" element={<ReportsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />

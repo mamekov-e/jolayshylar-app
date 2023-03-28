@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
-import DeleteActions from "../../../MainComponents/DeleteActions/DeleteActions.jsx";
+import DeleteActions from "../DeleteActions/DeleteActions.jsx";
 import "./AllItemsSubpage.css"
-import {BreadcrumbContext} from "../../../../../contexts/useBreadcrumb.jsx";
+import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 
 export default function AllItemsSubpage({Item, InfoSubpage}) {
     const {context, goToSubpage} = useContext(BreadcrumbContext);

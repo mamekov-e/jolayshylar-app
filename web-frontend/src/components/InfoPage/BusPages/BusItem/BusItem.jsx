@@ -1,34 +1,30 @@
-import React, { useContext } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import openIcon from "../../../../assets/partners/pages/open.svg";
 import selectedIcon from "../../../../assets/partners/pages/selected.svg";
 import notSelectedIcon from "../../../../assets/partners/pages/notselected.svg";
-import { useState } from "react";
-import { useEffect } from "react";
 import "./BusItem.css";
-import { BusContext } from "../../../../contexts/useBus";
+import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 
-export default function BusItem({ busItem, selected, onSelect, onOpen }) {
-  const { deleteOn } = useContext(BusContext);
-  const [icon, setIcon] = useState(openIcon);
+export default function BusItem({item, selected, onSelect, onOpen}) {
+    const {context} = useContext(BreadcrumbContext);
+    const {deleteOn} = context;
+    const [icon, setIcon] = useState(openIcon);
 
-  useEffect(() => {
-    if (!deleteOn) setIcon(openIcon);
-    else if (selected) setIcon(selectedIcon);
-    else setIcon(notSelectedIcon);
-  }, [deleteOn, selected]);
+    useEffect(() => {
+        if (!deleteOn) setIcon(openIcon);
+        else if (selected) setIcon(selectedIcon);
+        else setIcon(notSelectedIcon);
+    }, [deleteOn, selected]);
 
-  return (
-    <div className="panel">
-      <div className="busDescription">
-        <h3>Автобус</h3>
-        <h4>{busItem.number}</h4>
-      </div>
-      <div
-        className="openOrSelectIcon"
-        onClick={() => (deleteOn ? onSelect(busItem) : onOpen(busItem))}
-      >
-        <img src={icon} className="iconStyle" />
-      </div>
-    </div>
-  );
+    return (
+        <div className="panel" onClick={() => (deleteOn ? onSelect(item) : onOpen(item))}>
+            <div className="busDescription">
+                <h3>Автобус</h3>
+                <h4>{item.number}</h4>
+            </div>
+            <div className="openOrSelectIcon">
+                <img src={icon} className="iconStyle"/>
+            </div>
+        </div>
+    );
 }

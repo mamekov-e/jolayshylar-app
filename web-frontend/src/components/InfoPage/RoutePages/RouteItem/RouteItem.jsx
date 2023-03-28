@@ -1,34 +1,36 @@
-import React, { useContext } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import openIcon from "../../../../assets/partners/pages/open.svg";
 import selectedIcon from "../../../../assets/partners/pages/selected.svg";
 import notSelectedIcon from "../../../../assets/partners/pages/notselected.svg";
-import { useState } from "react";
-import { useEffect } from "react";
 import "./RouteItem.css";
-import { RouteContext } from "../../../../contexts/useRoute.jsx";
+import {RouteContext} from "../../../../contexts/useRoute.jsx";
 
-export default function RouteItem({ routeItem, selected, onSelect, onOpen }) {
-  const { deleteOn } = useContext(RouteContext);
-  const [icon, setIcon] = useState(openIcon);
+export default function RouteItem({item, selected, onSelect, onOpen}) {
+    const {deleteOn} = useContext(RouteContext);
+    const [icon, setIcon] = useState(openIcon);
 
-  useEffect(() => {
-    if (!deleteOn) setIcon(openIcon);
-    else if (selected) setIcon(selectedIcon);
-    else setIcon(notSelectedIcon);
-  }, [deleteOn, selected]);
+    useEffect(() => {
+        if (!deleteOn) setIcon(openIcon);
+        else if (selected) setIcon(selectedIcon);
+        else setIcon(notSelectedIcon);
+    }, [deleteOn, selected]);
 
-  return (
-    <div className="panel">
-      <div className="busDescription">
-        <h3>Автобус</h3>
-        <h4>{routeItem.number}</h4>
-      </div>
-      <div
-        className="openOrSelectIcon"
-        onClick={() => (deleteOn ? onSelect(routeItem) : onOpen(routeItem))}
-      >
-        <img src={icon} className="iconStyle" />
-      </div>
-    </div>
-  );
+    return (
+        <div className="routePanel" onClick={() => (deleteOn ? onSelect(item) : onOpen(item))}>
+            <div className="routeDescription">
+                <div className={"itemLines routeInfoLine"}>
+                    <h3 style={{fontSize:"20px"}}>20</h3>
+                    <h3 className={"routeName"}>{item.number}</h3>
+                </div>
+                <hr className={"hr"}/>
+                <div className={"itemLines busInfoLine"}>
+                    <h3>Автобус</h3>
+                    <h4>{item.number}</h4>
+                </div>
+            </div>
+            <div className="openOrSelectIcon">
+                <img src={icon} className="iconStyle"/>
+            </div>
+        </div>
+    );
 }

@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Ж/д вокзал Астана 1 → Больница Медицинского центра УДП РК",
+    "selected": false
+  },
+  {
+    "id": 2,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Гипермаркет Строймарт → Театр танца Наз",
+    "selected": false
+  },
+  {
+    "id": 3,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Парк Коктал → Ж/д вокзал Нурлы жол",
+    "selected": false
+  },
+  {
+    "id": 4,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Ж/д вокзал Астана 1 → Международный аэропорт",
+    "selected": false
+  },
+  {
+    "id": 5,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Шугыла (ул. Шугыла) → Промышленный ж/м",
+    "selected": false
+  },
+  {
+    "id": 6,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Магазин Айдана → Бағыстан",
+    "selected": false
+  },
+  {
+    "id": 7,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Промышленный ж/м → Промышленный ж/м",
+    "selected": false
+  },
+  {
+    "id": 8,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Теплотранзит → Теплотранзит",
+    "selected": false
+  },
+  {
+    "id": 9,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Акмолинская областная больница №2 → ж/м Пригородный",
+    "selected": false
+  },
+  {
+    "id": 10,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "ПМСП Достык → Стелла Звезда Астаны",
+    "selected": false
+  },
+  {
+    "id": 11,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Ж/д вокзал Астана 1 → Больница Медицинского центра УДП РК",
+    "selected": false
+  },
+  {
+    "id": 12,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Ж/д вокзал Астана 1 → Больница Медицинского центра УДП РК",
+    "selected": false
+  },
+  {
+    "id": 13,
+    "seatNumber": 50,
+    "capacity": 60,
+    "number": "Парк Коктал → Ж/д вокзал Нурлы жол",
+    "selected": false
+  }
+]

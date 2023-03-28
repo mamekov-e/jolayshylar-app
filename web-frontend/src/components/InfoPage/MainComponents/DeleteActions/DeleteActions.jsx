@@ -6,7 +6,7 @@ export default function DeleteActions({
                                           onSelectAll,
                                           onDeleteSelected,
                                           isAllSelected,
-                                          selectedBuses,
+                                          selectedItems,
                                       }) {
     const {context} = useContext(BreadcrumbContext);
     const {setDeleteOn, items} = context;
@@ -15,7 +15,7 @@ export default function DeleteActions({
         setDeleteOn(false);
     }
 
-    const atLeastOneSelected = selectedBuses.length > 0;
+    const atLeastOneSelected = selectedItems.length > 0;
 
     return (
         <>

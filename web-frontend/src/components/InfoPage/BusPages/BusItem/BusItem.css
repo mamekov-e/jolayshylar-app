@@ -1,5 +1,6 @@
 .panel {
     display: flex;
+    cursor: pointer;
 }
 
 .busDescription {
@@ -21,7 +22,6 @@
     padding: 8px 10px;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    cursor: pointer;
 }
 
 .iconStyle {

@@ -1,6 +1,6 @@
 import React from "react";
-import "./BusActionsFormSubpage.css";
+import "./ItemActionsFormSubpage.css";
 
-export default function BusActionsFormSubpage(props) {
-  return <div className="busActionsPage">{props.page}</div>;
+export default function ItemActionsFormSubpage(props) {
+  return <div className="itemActionsFormPage">{props.page}</div>;
 }
