@@ -1,12 +1,7 @@
 from django.urls import path
 from .views import (
-    get_transports_of_company,
-    get_record_for_transport,
-    get_transport,
-    get_route,
-    get_stop,
-    get_company_routes,
-    get_routes_stops,
+    get_transports_of_company, get_record_for_transport, get_transport,
+    get_route, get_stop, get_company_routes, get_routes_stops,
 
     TransportView, edit_transport, delete_transport,
     StopView, edit_stop, delete_stop,
