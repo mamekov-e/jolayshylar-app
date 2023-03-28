@@ -1,13 +1,14 @@
 import React, { useContext } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { BusContext } from "../../../../../../contexts/useBus.jsx";
 import InputText from "../../../../../custom/InputText/InputText.jsx";
 import SaveBtn from "../../../../../custom/Button/Button.jsx";
-import "./RouteForm.css";
-import {RouteContext} from "../../../../../../contexts/useRoute.jsx";
+import "./BusForm.css";
+import {BreadcrumbContext} from "../../../../../../contexts/useBreadcrumb.jsx";
 
-export default function RouteForm({ submitForm, bus }) {
-  const { subpage } = useContext(RouteContext);
+export default function BusForm({ submitForm, bus }) {
+  const { subpage, goToSubpage, allItemsPage } = useContext(BreadcrumbContext);
 
   const busSchema = Yup.object().shape({
     number: Yup.string().required("Обязательное поле"),
@@ -27,7 +28,12 @@ export default function RouteForm({ submitForm, bus }) {
         seatNumber: bus ? bus.seatNumber : "",
       }}
       validationSchema={busSchema}
-      onSubmit={(values) => submitForm(values, bus)}
+      onSubmit={(values) => {
+        const result = submitForm(values, bus)
+          console.log("allItemsPage",allItemsPage)
+        if (result)
+          goToSubpage(allItemsPage)
+      }}
     >
       {({ isValid, errors, touched, handleChange, values }) => (
         <Form className="form">

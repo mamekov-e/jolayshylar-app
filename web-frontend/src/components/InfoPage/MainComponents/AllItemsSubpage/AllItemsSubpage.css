@@ -1,10 +1,10 @@
-.allBusesSubpage {
+.allItemsSubpage {
     display: flex;
     justify-content: center;
 }
 
 
-.busesList {
+.itemsList {
     display: flex;
     width: auto;
     flex-direction: row;

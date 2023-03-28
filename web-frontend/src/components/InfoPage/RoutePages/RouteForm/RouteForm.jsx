@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { BusContext } from "../../../../../../contexts/useBus.jsx";
 import InputText from "../../../../../custom/InputText/InputText.jsx";
 import SaveBtn from "../../../../../custom/Button/Button.jsx";
-import "./BusForm.css";
+import "./RouteForm.css";
+import {RouteContext} from "../../../../../../contexts/useRoute.jsx";
 
-export default function BusForm({ submitForm, bus }) {
-  const { subpage } = useContext(BusContext);
+export default function RouteForm({ submitForm, route }) {
+  const { subpage } = useContext(RouteContext);
 
   const busSchema = Yup.object().shape({
     number: Yup.string().required("Обязательное поле"),
@@ -22,12 +22,12 @@ export default function BusForm({ submitForm, bus }) {
   return (
     <Formik
       initialValues={{
-        number: bus ? bus.number : "",
-        capacity: bus ? bus.capacity : "",
-        seatNumber: bus ? bus.seatNumber : "",
+        number: route ? route.number : "",
+        capacity: route ? route.capacity : "",
+        seatNumber: route ? route.seatNumber : "",
       }}
       validationSchema={busSchema}
-      onSubmit={(values) => submitForm(values, bus)}
+      onSubmit={(values) => submitForm(values, route)}
     >
       {({ isValid, errors, touched, handleChange, values }) => (
         <Form className="form">
