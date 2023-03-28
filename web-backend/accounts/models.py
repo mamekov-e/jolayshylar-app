@@ -24,7 +24,6 @@ class City(models.Model):
 
 class Company(models.Model):
     user_id = models.IntegerField(default=0)
-    city_id = models.IntegerField(default=0)
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     contacts = models.CharField(max_length=255)

@@ -48,6 +48,45 @@ def get_transports_of_company(request):
     data = TransportSerializer(transport, many=True)
     return Response(data.data)
 
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_transport(request):
+    transport_id = request.query_params['id']
+    transport = Transport.objects.filter(id__exact=transport_id).first()
+    data = TransportSerializer(transport)
+    return Response(data.data)
+
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_route(request):
+    route_id = request.query_params['id']
+    route = Route.objects.filter(id__exact=route_id).first()
+    data = RouteSerializer(route)
+    return Response(data.data)
+
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_stop(request):
+    stop_id = request.query_params['id']
+    stop = Stop.objects.filter(id__exact=stop_id).first()
+    data = StopSerializer(stop)
+    return Response(data.data)
+
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_company_routes(request):
+    company_routes_id = request.query_params['id']
+    company_routes = Companies_routes.objects.filter(id__exact=company_routes_id).first()
+    data = Companies_routesSerializer(company_routes)
+    return Response(data.data)
+
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_routes_stops(request):
+    routes_stops_id = request.query_params['id']
+    routes_stops = Routes_stops.objects.filter(id__exact=routes_stops_id).first()
+    data = Routes_stopsSerializer(routes_stops)
+    return Response(data.data)
 
 @permission_classes([IsAuthenticated])
 class RecordView(APIView):
