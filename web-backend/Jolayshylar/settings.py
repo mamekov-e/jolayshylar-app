@@ -196,4 +196,3 @@ EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "amirsaduov6@gmail.com"
 EMAIL_HOST_PASSWORD = "tbbmctptmfbeqyer"
-
