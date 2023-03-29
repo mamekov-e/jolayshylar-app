@@ -65,6 +65,7 @@ class RegisterEmail(APIView):
         })
 
 
+
 class LoginView(APIView):
     def post(self, request):
         login = request.data['login']
