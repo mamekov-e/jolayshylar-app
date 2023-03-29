@@ -30,3 +30,4 @@ urlpatterns = [
     path('get-companies-cities-by-company/', get_companies_cities_by_company, name='get-companies-cities-by-company'),
     path('get-companies-cities-by-city/', get_companies_cities_by_city, name='get-companies-cities-by-city'),
 ]
+

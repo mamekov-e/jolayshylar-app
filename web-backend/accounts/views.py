@@ -64,6 +64,7 @@ class RegisterEmail(APIView):
             'success': 'True'
         })
 
+
 class LoginView(APIView):
     def post(self, request):
         login = request.data['login']
