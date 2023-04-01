@@ -1,10 +1,10 @@
 import AllItemsSubpage from "../components/InfoPage/MainComponents/AllItemsSubpage/AllItemsSubpage.jsx";
-import ItemActionsFormSubpage from "../components/InfoPage/BusPages/Subpages/ItemActionsFormSubpage/ItemActionsFormSubpage.jsx";
+import ItemActionsFormSubpage from "../components/InfoPage/MainComponents/ItemActionsFormSubpage/ItemActionsFormSubpage.jsx";
 import BusForm from "../components/InfoPage/BusPages/BusForm/BusForm";
-import BusInfoSubpage from "../components/InfoPage/BusPages/Subpages/BusInfoSubpage/BusInfoSubpage.jsx";
+import BusInfoSubpage from "../components/InfoPage/BusPages/BusInfoSubpage/BusInfoSubpage.jsx";
 import RouteForm from "../components/InfoPage/RoutePages/RouteForm/RouteForm.jsx";
 import BusItem from "../components/InfoPage/BusPages/BusItem/BusItem.jsx";
-import RouteInfoSubpage from "../components/InfoPage/RoutePages/Subpages/RouteInfoSubpage/RouteInfoSubpage.jsx";
+import RouteInfoSubpage from "../components/InfoPage/RoutePages/RouteInfoSubpage/RouteInfoSubpage.jsx";
 import RouteItem from "../components/InfoPage/RoutePages/RouteItem/RouteItem.jsx";
 
 export const MainPageCrumb = {
@@ -39,7 +39,7 @@ export function BusInfoSubpageCrumb(bus) {
 
 export function RouteInfoSubpageCrumb(route) {
     return {
-        name: route.number,
+        name: route.routeName,
         component: <ItemActionsFormSubpage page={<RouteInfoSubpage route={route}/>}/>,
         link: "#",
         subPageName: "routeInfo",

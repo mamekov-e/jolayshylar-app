@@ -8,7 +8,6 @@ import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 export default function Operations() {
     const {goToSubpage, context} = useContext(BreadcrumbContext);
     const {items, deleteOn, setDeleteOn, AddComponent} = context;
-    console.log("operations", context)
 
     function onDelete() {
         setDeleteOn(!deleteOn);

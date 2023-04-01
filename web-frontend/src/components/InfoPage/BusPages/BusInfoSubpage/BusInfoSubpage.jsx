@@ -1,16 +1,16 @@
 import React, {useContext} from "react";
-import EditBtn from "../../../../CustomComponents/Button/Button.jsx";
-import busInfoImg from "../../../../../assets/partners/pages/busInfoImg.svg";
-import "./RouteInfoSubpage.css";
-import {EditRouteSubpageCrumb} from "../../../../../constants/BreadcrumbItems.jsx";
-import {BreadcrumbContext} from "../../../../../contexts/useBreadcrumb.jsx";
+import EditBtn from "../../../CustomComponents/Button/Button.jsx";
+import busInfoImg from "../../../../assets/partners/pages/busInfoImg.svg";
+import "./BusInfoSubpage.css";
+import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
+import {EditBusSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
 
-export default function RouteInfoSubpage({route}) {
-    const {context, goToSubpage} = useContext(BreadcrumbContext);
-    const {edit} = context
+export default function BusInfoSubpage({bus}) {
+    const {goToSubpage, context} = useContext(BreadcrumbContext);
+    const {edit} = context;
 
     function onEdit() {
-        const subpagecrumb = EditRouteSubpageCrumb(route, edit);
+        const subpagecrumb = EditBusSubpageCrumb(bus, edit);
         goToSubpage(subpagecrumb);
     }
 
@@ -19,11 +19,11 @@ export default function RouteInfoSubpage({route}) {
             <img src={busInfoImg}/>
             <div className="busInfoDetails">
                 <p>Номер автобуса:</p>
-                <h3>{route.number}</h3>
+                <h3>{bus.number}</h3>
                 <p>Вместимость автобуса:</p>
-                <h3>{route.capacity}</h3>
+                <h3>{bus.capacity}</h3>
                 <p>Количество сидячих мест:</p>
-                <h3>{route.seatNumber}</h3>
+                <h3>{bus.seatNumber}</h3>
             </div>
             <EditBtn name="Редактировать" style={editBtnStyle} onClick={onEdit}/>
         </div>

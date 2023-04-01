@@ -4,6 +4,20 @@ import {AddBusSubpageCrumb} from "../constants/BreadcrumbItems.jsx";
 const BusContext = React.createContext();
 
 function BusContextProvider({ children }) {
+  const columns = React.useMemo(() => [
+    {
+      Header: "Номер автобуса",
+      accessor: 'number',
+    },
+    {
+      Header: "Сидячих мест",
+      accessor: 'seatNumber',
+    },
+    {
+      Header: "Вместимость",
+      accessor: 'capacity',
+    },
+  ], [])
   const [busItems, setBusItems] = useState(buses);
   const [deleteOn, setDeleteOn] = useState(false);
   const AddComponent = AddBusSubpageCrumb(addBus)
@@ -56,6 +70,7 @@ function BusContextProvider({ children }) {
       value={{
         deleteOn,
         items:busItems,
+        columns,
         setDeleteOn,
         remove:removeBuses,
         AddComponent,

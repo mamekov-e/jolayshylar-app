@@ -1,0 +1,8 @@
+.tableToolbar {
+    display: flex;
+    flex-direction: column;
+}
+
+td {
+    text-align: center;
+}
