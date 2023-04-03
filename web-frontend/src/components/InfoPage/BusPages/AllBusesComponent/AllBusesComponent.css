@@ -1,0 +1,9 @@
+.busesList {
+    display: flex;
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+    align-content: flex-start;
+}

@@ -12,7 +12,7 @@ export default function RouteForm({submitForm, route}) {
     const {allBusesList, allStopsList} = context;
 
     const routeSchema = Yup.object().shape({
-        routeNumber: Yup.string().required("Обязательное поле"),
+        routeNumber: Yup.number().required("Обязательное поле"),
         stops: Yup.array()
             .of(Yup.object().shape({
                 value: Yup.string(),
@@ -36,13 +36,15 @@ export default function RouteForm({submitForm, route}) {
         >
             {({
                   isValid, errors, touched, handleChange, values,
-                  setFieldValue
+                  setFieldValue, setFieldTouched
               }) => {
+                console.log("touched", touched)
+                console.log("errors", errors)
 
                 return <Form className="form">
                     <div className="formGroup">
                         <span className="dangerText">
-                          {touched.routeNumber || errors.routeNumber ? errors.routeNumber : "*"}
+                          {touched.routeNumber && errors.routeNumber ? errors.routeNumber : "*"}
                         </span>
                         <InputText
                             placeholder="Введите номер маршрута"
@@ -51,15 +53,16 @@ export default function RouteForm({submitForm, route}) {
                                 console.log("StopError", errors)
                                 setFieldValue("routeNumber", value)
                             }}
+                            onBlur={()=> setFieldTouched("routeNumber", true)}
                             value={values.routeNumber}
                             name="number"
-                            type="text"
+                            type="number"
                             style={inputStyle}
                         />
                     </div>
                     <div className="formGroup">
                         <span className="dangerText">
-                          {touched.stops || errors.stops ? errors.stops : "*"}
+                          {touched.stops && errors.stops ? errors.stops : "*"}
                         </span>
                         <Dropdown
                             isSearchable
@@ -69,14 +72,16 @@ export default function RouteForm({submitForm, route}) {
                             onChange={(value) => {
                                 setFieldValue("stops", value)
                             }}
+                            onBlur={()=> setFieldTouched("stops", true)}
+                            onFocus={()=> setFieldTouched("stops", false)}
                             value={values.stops}
                             name="stops"
-                            style={inputStyle}
+                            style={{...inputStyle, ...dropdownStyle}}
                         />
                     </div>
                     <div className="formGroup">
                         <span className="dangerText">
-                          {touched.busNumber || errors.busNumber ? errors.busNumber : "*"}
+                          {touched.busNumber && errors.busNumber ? errors.busNumber : "*"}
                         </span>
                         <Dropdown
                             isSearchable
@@ -89,8 +94,10 @@ export default function RouteForm({submitForm, route}) {
                             onChange={(value) => {
                                 setFieldValue("busNumber", value.label)
                             }}
+                            onBlur={()=> setFieldTouched("busNumber", true)}
+                            onFocus={()=> setFieldTouched("busNumber", false)}
                             name={"busNumber"}
-                            style={dropdownStyle}
+                            style={{...inputStyle, ...dropdownStyle}}
                         />
                     </div>
                     <SaveBtn
@@ -111,8 +118,9 @@ const inputStyle = {
     borderRadius: "5px",
 };
 const dropdownStyle = {
-    border: "0.5px solid #014E6D",
-    borderRadius: "5px",
+    paddingInlineStart: "10px",
+    minHeight: "30px",
+    width: "250px"
 };
 const btnStyle = {
     backgroundColor: "#014E6D",

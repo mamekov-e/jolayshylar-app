@@ -1,13 +1,13 @@
 .dropdown-container {
     width: 100%;
     text-align: left;
-    border: 1px solid #ccc;
+    font-size: 13px;
     position: relative;
     border-radius: 5px;
 }
 
 .dropdown-input {
-    padding: 5px;
+    padding: 0.3em;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -36,7 +36,7 @@
 }
 
 .dropdown-item.selected {
-    background-color: #0d6efd;
+    background-color: #3483A2;
     color: #fff;
 }
 
@@ -54,9 +54,8 @@
     align-items: center;
 }
 
-.dropdown-tag-close {
-    display: flex;
-    align-items: center;
+.dropdown-tool {
+    margin-right: 5px;
 }
 
 .search-box {
@@ -70,4 +69,5 @@
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    outline: none;
 }

@@ -6,6 +6,8 @@ import RouteForm from "../components/InfoPage/RoutePages/RouteForm/RouteForm.jsx
 import BusItem from "../components/InfoPage/BusPages/BusItem/BusItem.jsx";
 import RouteInfoSubpage from "../components/InfoPage/RoutePages/RouteInfoSubpage/RouteInfoSubpage.jsx";
 import RouteItem from "../components/InfoPage/RoutePages/RouteItem/RouteItem.jsx";
+import AllRoutesComponent from "../components/InfoPage/RoutePages/AllRoutesComponent/AllRoutesComponent.jsx";
+import AllBusesComponent from "../components/InfoPage/BusPages/AllBusesComponent/AllBusesComponent.jsx";
 
 export const MainPageCrumb = {
     name: "Главная",
@@ -16,14 +18,14 @@ export const MainPageCrumb = {
 
 export const AllBusesSubpageCrumb = {
     name: "Все автобусы",
-    component: <AllItemsSubpage Item={BusItem} InfoSubpage={BusInfoSubpageCrumb}/>,
+    component: <AllItemsSubpage Item={BusItem} InfoSubpage={BusInfoSubpageCrumb} AllItemsComponent={AllBusesComponent}/>,
     link: "#",
     subPageName: "all",
 };
 
 export const AllRoutesSubpageCrumb = {
     name: "Все маршруты",
-    component: <AllItemsSubpage Item={RouteItem} InfoSubpage={RouteInfoSubpageCrumb}/>,
+    component: <AllItemsSubpage Item={RouteItem} InfoSubpage={RouteInfoSubpageCrumb} AllItemsComponent={AllRoutesComponent}/>,
     link: "#",
     subPageName: "all",
 };

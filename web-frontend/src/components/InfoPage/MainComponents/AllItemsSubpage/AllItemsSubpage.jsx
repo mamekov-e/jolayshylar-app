@@ -2,9 +2,8 @@ import React, {useContext, useEffect, useState} from "react";
 import DeleteActions from "../DeleteActions/DeleteActions.jsx";
 import "./AllItemsSubpage.css"
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
-import ReactTable from "../Table/ReactTable.jsx";
 
-export default function AllItemsSubpage({Item, InfoSubpage}) {
+export default function AllItemsSubpage({Item, InfoSubpage, AllItemsComponent}) {
     const {context, goToSubpage} = useContext(BreadcrumbContext);
     const {items, columns, deleteOn, remove} = context;
     const [selectedItems, setSelectedItems] = useState([]);
@@ -68,7 +67,9 @@ export default function AllItemsSubpage({Item, InfoSubpage}) {
             <div className="allItemsSubpage">
                 {/*<ReactTable data={items} columns={columns}/>*/}
                 {items.length ? (
-                    <div className="itemsList">{getAllItems()}</div>
+                        // AllItemsComponent(getAllItems())
+                    <AllItemsComponent allItems={getAllItems()}/>
+                    // <div className="itemsList">{getAllItems()}</div>
                 ) : (
                     <h3 className="emptyListText">Список пуст</h3>
                 )}
