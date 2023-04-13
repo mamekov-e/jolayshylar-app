@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'login', 'password', 'role']
+        depth = 1
 
 
 class RoleSerializer(serializers.ModelSerializer):
@@ -28,13 +29,15 @@ class CitySerializer(serializers.ModelSerializer):
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['id', 'user_id', 'name', 'address', 'contacts']
+        fields = ['id', 'user', 'name', 'address', 'contacts']
+        depth = 1
 
 
 class Companies_citiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = companies_cities
-        fields = ['id', 'city_id', 'company_id']
+        fields = ['id', 'city', 'company']
+        depth = 2
 
 
 class MyTokenRefreshSerializer(serializers.Serializer):

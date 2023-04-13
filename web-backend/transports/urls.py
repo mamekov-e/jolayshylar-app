@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (
     get_transports_of_company, get_record_for_transport, get_transport,
-    get_route, get_stop, get_company_routes, get_routes_stops,
+    get_route, get_stop, get_company_routes, get_routes_stops, get_routes_of_company,
+    get_stops_of_company,
 
     TransportView, edit_transport, delete_transport,
     StopView, edit_stop, delete_stop,
@@ -26,12 +27,14 @@ urlpatterns = [
     path('edit-stop/', edit_stop, name='edit-stop'),
     path('delete-stop/', delete_stop, name='delete-stop'),
     path('get-stop/', get_stop, name='get-stop'),
+    path('get-stops-of-company/', get_stops_of_company, name='get-stops-of-company'),
 
     # Routes
     path('add-route/', RouteView.as_view(), name='add-route'),
     path('edit-route/', edit_route, name='edit-route'),
     path('delete-route/', delete_route, name='delete-route'),
     path('get-route/', get_route, name='get-route'),
+    path('get-routes-of-company/', get_routes_of_company, name='get-routes-of-company'),
 
     # Company routes
     path('add-company-routes/', CompanyRoutesView.as_view(), name='add-company-route'),
