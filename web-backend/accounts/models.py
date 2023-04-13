@@ -5,7 +5,7 @@ from django.db import models
 class User(models.Model):
     login = models.CharField(max_length=255)
     password = models.CharField(max_length=255, unique=True)
-    role = models.IntegerField(default=0)
+    role = models.ForeignKey('Role', on_delete=models.CASCADE)
 
     def check_password(self, request):
         if User.objects.filter(password=request).first():
@@ -23,12 +23,12 @@ class City(models.Model):
 
 
 class Company(models.Model):
-    user_id = models.IntegerField(default=0)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     contacts = models.CharField(max_length=255)
 
 
 class companies_cities(models.Model):
-    city_id = models.IntegerField(default=0)
-    company_id = models.IntegerField(default=0)
+    city = models.ForeignKey('City', on_delete=models.CASCADE)
+    company = models.ForeignKey('Company', on_delete=models.CASCADE)

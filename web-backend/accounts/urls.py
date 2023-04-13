@@ -10,11 +10,13 @@ from .views import (
     CityView,
     Companies_citiesView,
     get_company, get_companies_cities_by_company,
-    get_city, get_companies_cities_by_city
+    get_city, get_companies_cities_by_city,
+    RegisterEmail
 )
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
+    path('register-email/', RegisterEmail.as_view(), name='register-email'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     # path('get-user-by-token/', getUserByToken, name='get-user-by-token'),
@@ -28,3 +30,4 @@ urlpatterns = [
     path('get-companies-cities-by-company/', get_companies_cities_by_company, name='get-companies-cities-by-company'),
     path('get-companies-cities-by-city/', get_companies_cities_by_city, name='get-companies-cities-by-city'),
 ]
+

@@ -35,7 +35,7 @@ from .serializers import (
 @permission_classes([IsAuthenticated])
 def get_record_for_transport(request):
     transport_id = request.query_params['id']
-    stop_record = Stop_record.objects.filter(transport_id__exact=transport_id)
+    stop_record = Stop_record.objects.filter(transport__exact=transport_id)
     data = Stop_recordSerializer(stop_record, many=True)
     return Response(data.data)
 
@@ -44,8 +44,25 @@ def get_record_for_transport(request):
 @permission_classes([IsAuthenticated])
 def get_transports_of_company(request):
     company_id = request.query_params['id']
-    transport = Transport.objects.filter(company_id__exact=company_id)
+    transport = Transport.objects.filter(company__exact=company_id)
     data = TransportSerializer(transport, many=True)
+    return Response(data.data)
+
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_routes_of_company(request):
+    company_id = request.query_params['id']
+    route_ids = Companies_routes.objects.filter(company_id__exact=company_id).select_related('route_id')
+    data = Routes_stopsSerializer(route_ids, many=True)
+    return Response(data.data)
+
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_stops_of_company(request):
+    company_id = request.query_params['id']
+    route_ids = Companies_routes.objects.filter(company_id__exact=company_id).select_related('route_id')
+    stops = Stop.objects.filter(routes_stops__route_id__companies_routes__in=route_ids)
+    data = StopSerializer(stops, many=True)
     return Response(data.data)
 
 @api_view([static.HTTPMethod.get])
@@ -84,8 +101,8 @@ def get_company_routes(request):
 @permission_classes([IsAuthenticated])
 def get_routes_stops(request):
     routes_stops_id = request.query_params['id']
-    routes_stops = Routes_stops.objects.filter(id__exact=routes_stops_id).first()
-    data = Routes_stopsSerializer(routes_stops)
+    routes_stops = Routes_stops.objects.filter(id__exact=routes_stops_id)
+    data = Routes_stopsSerializer(routes_stops, many=True)
     return Response(data.data)
 
 @permission_classes([IsAuthenticated])
