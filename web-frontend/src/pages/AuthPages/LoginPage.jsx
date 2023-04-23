@@ -41,7 +41,7 @@ function LoginPage(props) {
           </Form>
           <div className="redirectTo">
             <h4>Хотите пользоваться нашей системой?</h4>
-            <Link to="/register">
+            <Link to="/partners/register">
               <p className="redirectText">Отправьте заявку</p>
             </Link>
           </div>

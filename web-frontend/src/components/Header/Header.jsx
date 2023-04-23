@@ -8,8 +8,8 @@ import Nav from "./Nav";
 const links = [
   { name: "Пассажирам", path: "/passengers" },
   { name: "Партнерам", path: "/partners" },
-  { name: "О проекте", path: "/about" },
-  { name: "Контакты", path: "/contacts" },
+  // { name: "О проекте", path: "/about" },
+  // { name: "Контакты", path: "/contacts" },
 ];
 
 export default function Header() {

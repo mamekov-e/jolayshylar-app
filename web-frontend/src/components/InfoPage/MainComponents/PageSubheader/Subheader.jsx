@@ -9,7 +9,7 @@ export default function Subheader() {
   return (
     <div className="subheader">
       <OpenedPage />
-      {breadcrumb.length < 3 && <Operations />}
+      {(breadcrumb.length < 3 && !location.pathname.includes("/reports")) && <Operations />}
     </div>
   );
 }

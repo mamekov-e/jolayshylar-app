@@ -1,24 +1,16 @@
 import React, {useContext, useMemo, useState} from "react";
 import EditBtn from "../../../CustomComponents/Button/Button.jsx";
-import "./RouteInfoSubpage.css";
+import "./ReportInfoSubpage.css";
 import {EditRouteSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import transportRecordStop from "../../../../staticData/transportRecordStop.json"
 import MaterialReactTable from 'material-react-table';
 
-export default function RouteInfoSubpage({route}) {
-    const {context, goToSubpage} = useContext(BreadcrumbContext);
-    const {edit} = context
-
+export default function ReportInfoSubpage({route}) {
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: route.stops.length,
     });
-
-    function onEdit() {
-        const subpagecrumb = EditRouteSubpageCrumb(route, edit);
-        goToSubpage(subpagecrumb);
-    }
 
     const columns = useMemo(
         () => [
@@ -79,18 +71,9 @@ export default function RouteInfoSubpage({route}) {
                             <div className="routeInfoDetails">
                                 <p>Номер автобуса:</p><h3>{route.busNumber}</h3>
                             </div>
-                            <EditBtn name="Редактировать" style={editBtnStyle} onClick={onEdit}/>
                         </div>
                     )}/>
             </div>
         </>
     );
 }
-
-const editBtnStyle = {
-    backgroundColor: "#014E6D",
-    color: "white",
-    padding: "7px 12px",
-    width: "auto",
-    height: "30px",
-};

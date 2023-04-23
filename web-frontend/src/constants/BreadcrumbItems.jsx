@@ -8,6 +8,8 @@ import RouteInfoSubpage from "../components/InfoPage/RoutePages/RouteInfoSubpage
 import RouteItem from "../components/InfoPage/RoutePages/RouteItem/RouteItem.jsx";
 import AllRoutesComponent from "../components/InfoPage/RoutePages/AllRoutesComponent/AllRoutesComponent.jsx";
 import AllBusesComponent from "../components/InfoPage/BusPages/AllBusesComponent/AllBusesComponent.jsx";
+import AllReportsComponent from "../components/InfoPage/ReportsPages/AllReportsComponent/AllReportsComponent.jsx";
+import ReportInfoSubpage from "../components/InfoPage/ReportsPages/ReportInfoSubpage/ReportInfoSubpage.jsx";
 
 export const MainPageCrumb = {
     name: "Главная",
@@ -30,6 +32,13 @@ export const AllRoutesSubpageCrumb = {
     subPageName: "all",
 };
 
+export const AllReportsSubpageCrumb = {
+    name: "Все отчеты",
+    component: <AllReportsComponent InfoSubpage={ReportInfoSubpageCrumb}/>,
+    link: "#",
+    subPageName: "all",
+};
+
 export function BusInfoSubpageCrumb(bus) {
     return {
         name: bus.number,
@@ -43,6 +52,15 @@ export function RouteInfoSubpageCrumb(route) {
     return {
         name: route.routeName,
         component: <ItemActionsFormSubpage page={<RouteInfoSubpage route={route}/>}/>,
+        link: "#",
+        subPageName: "routeInfo",
+    };
+}
+
+export function ReportInfoSubpageCrumb(report) {
+    return {
+        name: report.routeName + " - " +report.busNumber,
+        component: <ItemActionsFormSubpage page={<ReportInfoSubpage route={report}/>}/>,
         link: "#",
         subPageName: "routeInfo",
     };

@@ -1,0 +1,54 @@
+/* I hate CSS */
+
+._styles-module__search_clear__3tSC1 {
+  position: absolute;
+  top: 0;
+  right: 40px;
+  z-index: 100;
+}
+
+._styles-module__header_actions__2U1uI button {
+  margin: 0px 0px 0px 5px;
+}
+
+._styles-module__header_actions__2U1uI ._styles-module__badge__uz9st {
+  padding-top: 5px !important;
+}
+
+._styles-module__table_style__1sX7Q thead tr th {
+  vertical-align: middle;
+}
+
+._styles-module__table_style__1sX7Q tbody tr td button._styles-module__btn-link__1xz4p {
+  margin: 0px;
+  padding: 0px;
+  text-decoration: none;
+}
+
+._styles-module__table_style__1sX7Q tbody tr td {
+  vertical-align: middle;
+}
+
+._styles-module__table_style__1sX7Q tbody tr td ._styles-module__body-checkbox__3qjk4 {
+  margin: -6px 0px 0px 0px;
+}
+
+._styles-module__table_style__1sX7Q tbody tr td._styles-module__action-col__3HR0n {
+  text-align: center;
+  position: relative;
+  min-width: 100px;
+}
+
+._styles-module__table_style__1sX7Q tbody tr td._styles-module__action-col__3HR0n span button {
+  padding: 0px 5px 0px 5px;
+}
+
+._styles-module__header-section__1JY0i {
+  margin-bottom: 0px;
+}
+
+@media only screen and (max-width: 768px) {
+  ._styles-module__header_actions__2U1uI {
+    margin-top: 1rem;
+  }
+}

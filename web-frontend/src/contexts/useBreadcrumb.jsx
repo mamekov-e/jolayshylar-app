@@ -1,6 +1,9 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {MainPageCrumb,} from "../constants/BreadcrumbItems";
+import {MainPageCrumb, RouteInfoSubpageCrumb,} from "../constants/BreadcrumbItems";
+import AllItemsSubpage from "../components/InfoPage/MainComponents/AllItemsSubpage/AllItemsSubpage.jsx";
+import RouteItem from "../components/InfoPage/RoutePages/RouteItem/RouteItem.jsx";
+import AllRoutesComponent from "../components/InfoPage/RoutePages/AllRoutesComponent/AllRoutesComponent.jsx";
 
 const BreadcrumbContext = React.createContext();
 
@@ -26,6 +29,9 @@ function BreadcrumbContextProvider({children}) {
     }
 
     function goToSubpage(subpageToOpen) {
+        if (!subpageToOpen)
+            return
+        console.log("subpageToOpen", subpageToOpen)
         pushOrMoveSubpageInSubheader(subpageToOpen);
         setSubpage(subpageToOpen);
         context.resetDelete()

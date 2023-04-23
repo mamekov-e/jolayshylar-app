@@ -65,7 +65,7 @@ function RegistrationPage(props) {
           </Form>
           <div className="redirectTo">
             <h4>Уже сотрудничаете с нами?</h4>
-            <Link to="/login">
+            <Link to="/partners/login">
               <p className="redirectText">Войдите в систему</p>
             </Link>
           </div>

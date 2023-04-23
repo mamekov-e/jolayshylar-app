@@ -5,21 +5,24 @@ import {BrowserRouter} from "react-router-dom";
 import "./index.css";
 import {BusContextProvider} from "./contexts/useBus";
 import {BreadcrumbContextProvider} from "./contexts/useBreadcrumb";
+import {FeaturesContextProvider} from "./contexts/useFeatures.jsx";
+import {ReportContextProvider} from "./contexts/useReport.jsx";
 import {RouteContextProvider} from "./contexts/useRoute.jsx";
-import {BusRouteContextProvider} from "./contexts/useBusRoute";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <BrowserRouter>
-            <RouteContextProvider>
-                <BusContextProvider>
-                    <BusRouteContextProvider>
-                        <BreadcrumbContextProvider>
-                            <App/>
-                        </BreadcrumbContextProvider>
-                    </BusRouteContextProvider>
-                </BusContextProvider>
-            </RouteContextProvider>
+            <ReportContextProvider>
+                <RouteContextProvider>
+                    <BusContextProvider>
+                        <FeaturesContextProvider>
+                            <BreadcrumbContextProvider>
+                                <App/>
+                            </BreadcrumbContextProvider>
+                        </FeaturesContextProvider>
+                    </BusContextProvider>
+                </RouteContextProvider>
+            </ReportContextProvider>
         </BrowserRouter>
     </React.StrictMode>
 );
