@@ -12,6 +12,9 @@ from Jolayshylar import static
 from .models import *
 from rest_framework.response import Response
 from .serializers import *
+from django.core.mail import EmailMessage, get_connection
+from django.conf import settings
+
 
 # Create your views here.
 
@@ -32,6 +35,34 @@ class RegisterView(APIView):
         else:
             data = serializer.errors
             return Response(data, status=400)
+
+class RegisterEmail(APIView):
+    def post(self, request):
+        if request.method == "POST":
+            with get_connection(
+                    host=settings.EMAIL_HOST,
+                    port=settings.EMAIL_PORT,
+                    username=settings.EMAIL_HOST_USER,
+                    password=settings.EMAIL_HOST_PASSWORD,
+                    use_tls=settings.EMAIL_USE_TLS
+            ) as connection:
+                subject = "Заявка на подключение услуг Jolayshylar"
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = "201145@astanait.edu.kz"
+                city = request.POST.get("city")
+                company = request.POST.get("company")
+                email = request.POST.get("email")
+                contacts = request.POST.get("contacts")
+                message = "Что-то про приветствие. Мы компания пассажироперевозок - " + company \
+                          + " - оперируем на территории " + city \
+                          + ". Наш email: " + email \
+                          + ". Кроме того, вы можете связаться с нами, используя следующие контактные данные: " \
+                          + contacts
+                EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()
+
+        return Response({
+            'success': 'True'
+        })
 
 
 class LoginView(APIView):
