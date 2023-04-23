@@ -1,20 +1,14 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import LoginPage from "../../AuthPages/LoginPage";
 import PartnersMainPage from "./PartnersMainPage";
+import {AuthContext} from "../../../contexts/useAuth.jsx";
 
 export default function PartnersPage() {
-  const [authorized, setAuthorized] = useState(true);
-
-  function auth() {
-    setAuthorized(!authorized);
-  }
+  const {user} = useContext(AuthContext);
 
   return (
     <>
-      <p onClick={auth} style={{ position: "absolute" }}>
-        ~
-      </p>
-      {authorized ? <PartnersMainPage /> : <LoginPage />}
+      {user ? <PartnersMainPage /> : <LoginPage />}
     </>
   );
 }

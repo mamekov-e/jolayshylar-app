@@ -6,7 +6,7 @@ import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {Box, Button, IconButton} from "@mui/material";
 import openRow from "../../../../assets/partners/pages/openRow.svg"
 import importIcon from "../../../../assets/partners/pages/importIcon.svg"
-import {exportToCSV} from "../../../../utils/objectsUtil.jsx";
+import {exportToCSV} from "../../../../utils/fileUtil.jsx";
 
 export default function AllReportsComponent({InfoSubpage}) {
     const {goToSubpage} = useContext(BreadcrumbContext);

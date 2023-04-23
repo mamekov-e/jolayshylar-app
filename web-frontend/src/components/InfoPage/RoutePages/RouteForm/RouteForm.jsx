@@ -38,9 +38,6 @@ export default function RouteForm({submitForm, route}) {
                   isValid, errors, touched, handleChange, values,
                   setFieldValue, setFieldTouched
               }) => {
-                console.log("touched", touched)
-                console.log("errors", errors)
-
                 return <Form className="form">
                     <div className="formGroup">
                         <span className="dangerText">
@@ -53,7 +50,7 @@ export default function RouteForm({submitForm, route}) {
                                 console.log("StopError", errors)
                                 setFieldValue("routeNumber", value)
                             }}
-                            onBlur={()=> setFieldTouched("routeNumber", true)}
+                            onBlur={() => setFieldTouched("routeNumber", true)}
                             value={values.routeNumber}
                             name="number"
                             type="number"
@@ -72,8 +69,8 @@ export default function RouteForm({submitForm, route}) {
                             onChange={(value) => {
                                 setFieldValue("stops", value)
                             }}
-                            onBlur={()=> setFieldTouched("stops", true)}
-                            onFocus={()=> setFieldTouched("stops", false)}
+                            onBlur={() => setFieldTouched("stops", true)}
+                            onFocus={() => setFieldTouched("stops", false)}
                             value={values.stops}
                             name="stops"
                             style={{...inputStyle, ...dropdownStyle}}
@@ -94,8 +91,8 @@ export default function RouteForm({submitForm, route}) {
                             onChange={(value) => {
                                 setFieldValue("busNumber", value.label)
                             }}
-                            onBlur={()=> setFieldTouched("busNumber", true)}
-                            onFocus={()=> setFieldTouched("busNumber", false)}
+                            onBlur={() => setFieldTouched("busNumber", true)}
+                            onFocus={() => setFieldTouched("busNumber", false)}
                             name={"busNumber"}
                             style={{...inputStyle, ...dropdownStyle}}
                         />

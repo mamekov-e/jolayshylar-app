@@ -3,16 +3,29 @@ import { withFormik, Form, Field } from "formik";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import "./FormStyle.css";
+import {useContext} from "react";
+import {AuthContext} from "../../contexts/useAuth.jsx";
 
 function RegistrationPage(props) {
-  const { touched, errors } = props;
+  const {registerUser} = useContext(AuthContext)
+  const {touched, errors} = props;
+
+  const handleSubmit = e => {
+    // e.preventDefault();
+    const city = e.target.city.value;
+    const companyName = e.target.companyName.value;
+    const email = e.target.email.value;
+    const contacts = e.target.contacts.value;
+
+    registerUser({city, companyName, email, contacts})
+  }
 
   return (
     <main>
       <dir className="content">
         <div className="wrapper">
           <h2>Форма заявки</h2>
-          <Form className="formContainer">
+          <Form className="formContainer" onSubmit={handleSubmit}>
             <div className="formGroup">
               <span className="dangerText">
                 {touched.city && errors.city ? errors.city : "*"}
@@ -89,30 +102,7 @@ const RegistrationFormik = withFormik({
     companyName: Yup.string().required("Обязательное поле"),
     email: Yup.string().email("Почта не валидна").required("Обязательное поле"),
     contacts: Yup.string().required("Обязательное поле"),
-  }),
-  handleSubmit: (values) => {
-    const REST_API_URL = "YOUR_REST_API_URL";
-    fetch(REST_API_URL, {
-      method: "post",
-      body: JSON.stringify(values),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          // HANDLE ERROR
-          throw new Error("Something went wrong");
-        }
-      })
-      .then((data) => {
-        // HANDLE RESPONSE DATA
-        console.log(data);
-      })
-      .catch((error) => {
-        // HANDLE ERROR
-        console.log(error);
-      });
-  },
+  })
 })(RegistrationPage);
 
 export default RegistrationFormik;

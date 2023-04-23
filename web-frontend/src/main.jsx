@@ -8,6 +8,7 @@ import {BreadcrumbContextProvider} from "./contexts/useBreadcrumb";
 import {FeaturesContextProvider} from "./contexts/useFeatures.jsx";
 import {ReportContextProvider} from "./contexts/useReport.jsx";
 import {RouteContextProvider} from "./contexts/useRoute.jsx";
+import {AuthContextProvider} from "./contexts/useAuth.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
@@ -17,7 +18,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                     <BusContextProvider>
                         <FeaturesContextProvider>
                             <BreadcrumbContextProvider>
-                                <App/>
+                                <AuthContextProvider>
+                                    <App/>
+                                </AuthContextProvider>
                             </BreadcrumbContextProvider>
                         </FeaturesContextProvider>
                     </BusContextProvider>

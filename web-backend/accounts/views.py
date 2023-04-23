@@ -67,6 +67,7 @@ class RegisterEmail(APIView):
 
 class LoginView(APIView):
     def post(self, request):
+        print("REQUEST------------------------------------------",request.data)
         login = request.data['login']
         password = request.data['password']
 
