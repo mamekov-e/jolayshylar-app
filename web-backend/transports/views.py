@@ -48,6 +48,7 @@ def get_transports_of_company(request):
     data = TransportSerializer(transport, many=True)
     return Response(data.data)
 
+
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_routes_of_company(request):
@@ -55,6 +56,7 @@ def get_routes_of_company(request):
     route_ids = Companies_routes.objects.filter(company_id__exact=company_id).select_related('route_id')
     data = Routes_stopsSerializer(route_ids, many=True)
     return Response(data.data)
+
 
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
@@ -65,6 +67,7 @@ def get_stops_of_company(request):
     data = StopSerializer(stops, many=True)
     return Response(data.data)
 
+
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_transport(request):
@@ -72,6 +75,7 @@ def get_transport(request):
     transport = Transport.objects.filter(id__exact=transport_id).first()
     data = TransportSerializer(transport)
     return Response(data.data)
+
 
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
@@ -81,6 +85,7 @@ def get_route(request):
     data = RouteSerializer(route)
     return Response(data.data)
 
+
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_stop(request):
@@ -88,6 +93,7 @@ def get_stop(request):
     stop = Stop.objects.filter(id__exact=stop_id).first()
     data = StopSerializer(stop)
     return Response(data.data)
+
 
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
@@ -97,6 +103,7 @@ def get_company_routes(request):
     data = Companies_routesSerializer(company_routes)
     return Response(data.data)
 
+
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_routes_stops(request):
@@ -104,6 +111,7 @@ def get_routes_stops(request):
     routes_stops = Routes_stops.objects.filter(id__exact=routes_stops_id)
     data = Routes_stopsSerializer(routes_stops, many=True)
     return Response(data.data)
+
 
 @permission_classes([IsAuthenticated])
 class RecordView(APIView):
@@ -128,9 +136,10 @@ class TransportView(APIView):
         if serializer.is_valid():
             transport = serializer.save()
             serializer = TransportSerializer(transport)
-            return Response(
-                {"transport": serializer.data}
-            )
+            data = {
+                "transport": serializer.data
+            }
+            return Response(data)
         else:
             data = serializer.errors
             return Response(data, status=400)

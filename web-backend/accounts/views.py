@@ -1,19 +1,20 @@
-import datetime
-
-import jwt
-from django.shortcuts import render
+from django.contrib.auth import authenticate
+from rest_framework import status
+from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
-from Jolayshylar import static
-from .models import *
+from .models import User, Company, City, companies_cities
 from rest_framework.response import Response
-from .serializers import *
+from .serializers import MyTokenRefreshSerializer, CompanyPOSTSerializer, CompanyGETSerializer, CitySerializer, \
+    RoleSerializer, UserPOSTSerializer, UserGETSerializer, Companies_citiesGETSerializer, \
+    Companies_citiesPOSTSerializer
 from django.core.mail import EmailMessage, get_connection
 from django.conf import settings
+from Jolayshylar.static import HTTPMethod
 
 
 # Create your views here.
@@ -21,20 +22,19 @@ from django.conf import settings
 
 class RegisterView(APIView):
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
+        serializer = UserPOSTSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
-            serializer = UserSerializer(user)
+            serializer = UserPOSTSerializer(user)
+            user.is_active = True
             return Response(
                 {
                     "user": serializer.data,
                     "token": {'refresh': str(refresh), 'access': str(refresh.access_token)}
                 }
             )
-        else:
-            data = serializer.errors
-            return Response(data, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RegisterEmail(APIView):
     def post(self, request):
@@ -51,7 +51,7 @@ class RegisterEmail(APIView):
                 recipient_list = "201145@astanait.edu.kz"
                 city = request.POST.get("city")
                 company = request.POST.get("company")
-                email = request.POST.get("email")
+                email = email_from
                 contacts = request.POST.get("contacts")
                 message = "Что-то про приветствие. Мы компания пассажироперевозок - " + company \
                           + " - оперируем на территории " + city \
@@ -67,26 +67,22 @@ class RegisterEmail(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        login = request.data['login']
-        password = request.data['password']
+        # try:
+            login = request.data['login']
+            password = request.data['password']
 
-        user = User.objects.filter(login=login).first()
+            user = User.objects.filter(login=login).filter(password__exact=password).first()
 
-        refresh = RefreshToken.for_user(user)
-        serializer = UserSerializer(user)
-
-        if user is None:
-            raise AuthenticationFailed('User was not found!')
-
-        if not user.check_password(password):
-            raise AuthenticationFailed('Incorrect password!')
-
-        return Response({
-            'user': serializer.data,
-            'token': {'refresh': str(refresh),
-                      'access': str(refresh.access_token)}
-            #company_id
-        })
+            refresh = RefreshToken.for_user(user)
+            serializer = UserPOSTSerializer(user)
+            user = authenticate(request, login=login, password=password)
+            return Response({
+                'user': serializer.data,
+                'token': {'refresh': str(refresh),
+                          'access': str(refresh.access_token)}
+            })
+        # except AttributeError:
+        #     return Response({"error": "invalid login or password provided"}, status=400)
 
 
 class LogoutView(APIView):
@@ -103,24 +99,23 @@ class LogoutView(APIView):
 class MyTokenRefreshView(TokenRefreshView):
     serializer_class = MyTokenRefreshSerializer
 
-#send email
 
-@api_view([static.HTTPMethod.get])
+@api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_user(request):
     user_id = request.query_params['id']
     user = User.objects.get(id__exact=user_id)
-    data = UserSerializer(user)
+    data = UserGETSerializer(user)
     return Response(data.data)
 
 
 @permission_classes([IsAuthenticated])
 class CompanyView(APIView):
     def post(self, request):
-        serializer = CompanySerializer(data=request.data)
+        serializer = CompanyPOSTSerializer(data=request.data)
         if serializer.is_valid():
             serialData = serializer.save()
-            serializer = CompanySerializer(serialData)
+            serializer = CompanyPOSTSerializer(serialData)
             return Response(
                 {"company": serializer.data}
             )
@@ -128,13 +123,15 @@ class CompanyView(APIView):
             data = serializer.errors
             return Response(data, status=400)
 
-@api_view([static.HTTPMethod.get])
+
+@api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_company(request):
     company_id = request.query_params['id']
     company = Company.objects.filter(id__exact=company_id).first()
-    data = CompanySerializer(company)
+    data = CompanyGETSerializer(company)
     return Response(data.data)
+
 
 @permission_classes([IsAuthenticated])
 class CityView(APIView):
@@ -150,7 +147,8 @@ class CityView(APIView):
             data = serializer.errors
             return Response(data, status=400)
 
-@api_view([static.HTTPMethod.get])
+
+@api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_city(request):
     city_id = request.query_params['id']
@@ -158,13 +156,14 @@ def get_city(request):
     data = CitySerializer(city)
     return Response(data.data)
 
+
 @permission_classes([IsAuthenticated])
 class Companies_citiesView(APIView):
     def post(self, request):
-        serializer = Companies_citiesSerializer(data=request.data)
+        serializer = Companies_citiesPOSTSerializer(data=request.data)
         if serializer.is_valid():
             serialData = serializer.save()
-            serializer = Companies_citiesSerializer(serialData)
+            serializer = Companies_citiesPOSTSerializer(serialData)
             return Response(
                 {"companies_cities": serializer.data}
             )
@@ -172,20 +171,22 @@ class Companies_citiesView(APIView):
             data = serializer.errors
             return Response(data, status=400)
 
-@api_view([static.HTTPMethod.get])
+
+@api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_companies_cities_by_company(request):
     company_id = request.query_params['id']
     cities = companies_cities.objects.filter(company_id__exact=company_id)
-    data = Companies_citiesSerializer(cities, many=True)
+    data = Companies_citiesGETSerializer(cities, many=True)
     return Response(data.data)
 
-@api_view([static.HTTPMethod.get])
+
+@api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_companies_cities_by_city(request):
     city_id = request.query_params['id']
     companies = companies_cities.objects.filter(city_id__exact=city_id)
-    data = Companies_citiesSerializer(companies, many=True)
+    data = Companies_citiesGETSerializer(companies, many=True)
     return Response(data.data)
 
 
