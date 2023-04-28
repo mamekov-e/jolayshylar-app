@@ -7,18 +7,23 @@ from Jolayshylar.settings import SIMPLE_JWT
 from accounts.auth_backend import MyAuth
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'login', 'password', 'role']
-        depth = 1
-
-
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = ['id', 'role']
+        fields = '__all__'
 
+class UserPOSTSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'login', 'password', 'role']
+
+class UserGETSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = '__all__'
+        depth = 1
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,14 +31,25 @@ class CitySerializer(serializers.ModelSerializer):
         fields = ['id', 'city_name']
 
 
-class CompanySerializer(serializers.ModelSerializer):
+class CompanyPOSTSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['id', 'user', 'name', 'address', 'contacts']
+
+
+class CompanyGETSerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = ['id', 'user', 'name', 'address', 'contacts']
         depth = 1
 
+class Companies_citiesPOSTSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = companies_cities
+        fields = ['id', 'city', 'company']
+        depth = 2
 
-class Companies_citiesSerializer(serializers.ModelSerializer):
+class Companies_citiesGETSerializer(serializers.ModelSerializer):
     class Meta:
         model = companies_cities
         fields = ['id', 'city', 'company']
