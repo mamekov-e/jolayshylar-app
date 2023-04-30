@@ -48,16 +48,16 @@ class RegisterEmail(APIView):
             ) as connection:
                 subject = "Заявка на подключение услуг Jolayshylar"
                 email_from = settings.EMAIL_HOST_USER
-                recipient_list = "201145@astanait.edu.kz"
-                city = request.POST.get("city")
-                company = request.POST.get("company")
-                email = email_from
-                contacts = request.POST.get("contacts")
-                message = "Что-то про приветствие. Мы компания пассажироперевозок - " + company \
-                          + " - оперируем на территории " + city \
-                          + ". Наш email: " + email \
+                recipient_list = ["201145@astanait.edu.kz"]
+                city = request.data["city"]
+                company = request.data["company"]
+                email = request.data["company"]
+                contacts = request.data["contacts"]
+                message = "Приветствуем вас! Мы компания пассажироперевозок - " + str(company) \
+                          + " - оперируем на территории " + str(city) \
+                          + ". Наш email: " + str(email) \
                           + ". Кроме того, вы можете связаться с нами, используя следующие контактные данные: " \
-                          + contacts
+                          + str(contacts)
                 EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()
 
         return Response({

@@ -29,35 +29,36 @@ function AuthContextProvider({children}) {
                 login: values.email,
                 password: values.password
             })
-        });
-        const data = await response.json();
-
+        })
         if (response.status === 200) {
+            const data = await response.json();
             setAuthTokens(data.token);
             setUser(jwt_decode(data.token.access));
             localStorage.setItem("authTokens", JSON.stringify(data.token));
             navigate("/partners");
-        } else {
-            console.log("response",response)
+        }
+        if (response.status >= 400) {
+            return "Ошибка с сервера"
         }
     };
 
-    const registerUser = async (username, password, password2) => {
-        const response = await fetch("http://127.0.0.1:8000/api/register/", {
+    const registerUser = async (values) => {
+        const response = await fetch("http://127.0.0.1:8000/accounts/register-email/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                username,
-                password,
-                password2
+                city: values.city,
+                company: values.companyName,
+                email: values.email,
+                contacts: values.contacts,
             })
         });
-        if (response.status === 201) {
+        if (response.status === 200) {
             navigate("/partners/login");
         } else {
-            alert("Something went wrong!");
+            return "Ошибка с сервера"
         }
     };
 

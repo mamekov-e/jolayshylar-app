@@ -19,7 +19,27 @@
     width: 100%;
 }
 
-.searchPanel {
+.featureBtns {
+    position: absolute;
+    z-index: 1;
+    right: 30px;
+    bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.locationBtn {
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
+    background-color: #ffffff;
+    color: #014E6D;
+    cursor: pointer;
+}
+
+.featuresPanel {
+    min-width: 45vw;
     display: flex;
     flex-direction: column;
     padding: 10px;
@@ -71,16 +91,9 @@
     border-radius: 5px;
 }
 
-.locationBtn {
-    height: 35px;
-    width: 35px;
-    border: none;
-    border-radius: 25px;
-}
-
 .responsePanel {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 }
 

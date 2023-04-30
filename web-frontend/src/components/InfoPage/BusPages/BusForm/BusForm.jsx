@@ -29,7 +29,6 @@ export default function BusForm({ submitForm, bus }) {
       validationSchema={busSchema}
       onSubmit={(values) => {
         const result = submitForm(values, bus)
-          console.log("allItemsPage",allItemsPage)
         if (result)
           goToSubpage(allItemsPage)
       }}
