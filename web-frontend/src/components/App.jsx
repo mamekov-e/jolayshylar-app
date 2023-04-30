@@ -2,7 +2,7 @@ import {Route, Routes} from "react-router-dom";
 import HomePage from "../pages/HomePage/HomePage";
 import PartnersPage from "../pages/Partners/PartnersPage/PartnersPage";
 import CardPage from "../pages/Partners/CardPage/CardPage.jsx";
-import PassengersPage from "../pages/PassengersPage";
+import PassengersPage from "../pages/PassengersPage/PassengersPage.jsx";
 import Header from "./Header/Header";
 import LoginPage from "../pages/AuthPages/LoginPage";
 import RegistrationPage from "../pages/AuthPages/RegistrationPage";

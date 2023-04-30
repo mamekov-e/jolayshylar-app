@@ -9,9 +9,11 @@ import {FeaturesContextProvider} from "./contexts/useFeatures.jsx";
 import {ReportContextProvider} from "./contexts/useReport.jsx";
 import {RouteContextProvider} from "./contexts/useRoute.jsx";
 import {AuthContextProvider} from "./contexts/useAuth.jsx";
+import {ChakraProvider, theme} from '@chakra-ui/react'
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
+                                    {/*<ChakraProvider theme={theme}>*/}
         <BrowserRouter>
             <ReportContextProvider>
                 <RouteContextProvider>
@@ -19,7 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                         <FeaturesContextProvider>
                             <BreadcrumbContextProvider>
                                 <AuthContextProvider>
-                                    <App/>
+                                        <App/>
                                 </AuthContextProvider>
                             </BreadcrumbContextProvider>
                         </FeaturesContextProvider>
@@ -27,5 +29,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 </RouteContextProvider>
             </ReportContextProvider>
         </BrowserRouter>
+                                    {/*</ChakraProvider>*/}
     </React.StrictMode>
 );
