@@ -22,19 +22,21 @@ from Jolayshylar.static import HTTPMethod
 
 class RegisterView(APIView):
     def post(self, request):
-        serializer = UserPOSTSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.save()
-            refresh = RefreshToken.for_user(user)
-            serializer = UserPOSTSerializer(user)
-            user.is_active = True
-            return Response(
-                {
-                    "user": serializer.data,
-                    "token": {'refresh': str(refresh), 'access': str(refresh.access_token)}
-                }
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            serializer = UserPOSTSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                user = serializer.save()
+                refresh = RefreshToken.for_user(user)
+                serializer = UserPOSTSerializer(user)
+                user.is_active = True
+                return Response(
+                    {
+                        "user": serializer.data,
+                        "token": {'refresh': str(refresh), 'access': str(refresh.access_token)}
+                    }
+                )
+        except AttributeError:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RegisterEmail(APIView):
     def post(self, request):
@@ -49,15 +51,15 @@ class RegisterEmail(APIView):
                 subject = "Заявка на подключение услуг Jolayshylar"
                 email_from = settings.EMAIL_HOST_USER
                 recipient_list = ["201145@astanait.edu.kz"]
-                city = request.data["city"]
-                company = request.data["company"]
-                email = request.data["company"]
-                contacts = request.data["contacts"]
-                message = "Приветствуем вас! Мы компания пассажироперевозок - " + str(company) \
-                          + " - оперируем на территории " + str(city) \
-                          + ". Наш email: " + str(email) \
+                city = request.POST.get("city")
+                company = request.POST.get("company")
+                email = request.POST.get("email")
+                contacts = request.POST.get("contacts")
+                message = "Что-то про приветствие. Мы компания пассажироперевозок - " + company \
+                          + " - оперируем на территории " + city \
+                          + ". Наш email: " + email \
                           + ". Кроме того, вы можете связаться с нами, используя следующие контактные данные: " \
-                          + str(contacts)
+                          + contacts
                 EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()
 
         return Response({
@@ -67,7 +69,7 @@ class RegisterEmail(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        # try:
+        try:
             login = request.data['login']
             password = request.data['password']
 
@@ -81,8 +83,8 @@ class LoginView(APIView):
                 'token': {'refresh': str(refresh),
                           'access': str(refresh.access_token)}
             })
-        # except AttributeError:
-        #     return Response({"error": "invalid login or password provided"}, status=400)
+        except AttributeError:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(APIView):
@@ -103,91 +105,104 @@ class MyTokenRefreshView(TokenRefreshView):
 @api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_user(request):
-    user_id = request.query_params['id']
-    user = User.objects.get(id__exact=user_id)
-    data = UserGETSerializer(user)
-    return Response(data.data)
+    try:
+        user_id = request.query_params['id']
+        user = User.objects.get(id__exact=user_id)
+        data = UserGETSerializer(user)
+        return Response(data.data)
+    except AttributeError:
+        return Response({'No such user'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @permission_classes([IsAuthenticated])
 class CompanyView(APIView):
     def post(self, request):
-        serializer = CompanyPOSTSerializer(data=request.data)
-        if serializer.is_valid():
-            serialData = serializer.save()
-            serializer = CompanyPOSTSerializer(serialData)
-            return Response(
-                {"company": serializer.data}
-            )
-        else:
-            data = serializer.errors
-            return Response(data, status=400)
-
+        try:
+            serializer = CompanyPOSTSerializer(data=request.data)
+            if serializer.is_valid():
+                serialData = serializer.save()
+                serializer = CompanyPOSTSerializer(serialData)
+                return Response(
+                    {"company": serializer.data}
+                )
+        except AttributeError:
+            return Response(serializer.errors, status=400)
 
 @api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_company(request):
-    company_id = request.query_params['id']
-    company = Company.objects.filter(id__exact=company_id).first()
-    data = CompanyGETSerializer(company)
-    return Response(data.data)
+    try:
+        company_id = request.query_params['id']
+        company = Company.objects.filter(id__exact=company_id).first()
+        data = CompanyGETSerializer(company)
+        return Response(data.data)
+    except AttributeError:
+        return Response(data.errors, status=400)
 
 
 @permission_classes([IsAuthenticated])
 class CityView(APIView):
     def post(self, request):
-        serializer = CitySerializer(data=request.data)
-        if serializer.is_valid():
-            serialData = serializer.save()
-            serializer = CitySerializer(serialData)
-            return Response(
-                {"city": serializer.data}
-            )
-        else:
-            data = serializer.errors
-            return Response(data, status=400)
-
+        try:
+            serializer = CitySerializer(data=request.data)
+            if serializer.is_valid():
+                serialData = serializer.save()
+                serializer = CitySerializer(serialData)
+                return Response(
+                    {"city": serializer.data}
+                )
+        except AttributeError:
+            return Response(serializer.errors, status=400)
 
 @api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_city(request):
-    city_id = request.query_params['id']
-    city = City.objects.filter(id__exact=city_id).first()
-    data = CitySerializer(city)
-    return Response(data.data)
+    try:
+        city_id = request.query_params['id']
+        city = City.objects.filter(id__exact=city_id).first()
+        data = CitySerializer(city)
+        return Response(data.data)
+    except AttributeError:
+        return Response(data.errors, status=400)
 
 
 @permission_classes([IsAuthenticated])
 class Companies_citiesView(APIView):
     def post(self, request):
-        serializer = Companies_citiesPOSTSerializer(data=request.data)
-        if serializer.is_valid():
-            serialData = serializer.save()
-            serializer = Companies_citiesPOSTSerializer(serialData)
-            return Response(
-                {"companies_cities": serializer.data}
-            )
-        else:
-            data = serializer.errors
-            return Response(data, status=400)
+        try:
+            serializer = Companies_citiesPOSTSerializer(data=request.data)
+            if serializer.is_valid():
+                serialData = serializer.save()
+                serializer = Companies_citiesPOSTSerializer(serialData)
+                return Response(
+                    {"companies_cities": serializer.data}
+                )
+        except AttributeError:
+            return Response(serializer.errors, status=400)
 
 
 @api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_companies_cities_by_company(request):
-    company_id = request.query_params['id']
-    cities = companies_cities.objects.filter(company_id__exact=company_id)
-    data = Companies_citiesGETSerializer(cities, many=True)
-    return Response(data.data)
+    try:
+        company_id = request.query_params['id']
+        cities = companies_cities.objects.filter(company_id__exact=company_id)
+        data = Companies_citiesGETSerializer(cities, many=True)
+        return Response(data.data)
+    except AttributeError:
+        return Response(data.errors, status=400)
 
 
 @api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_companies_cities_by_city(request):
-    city_id = request.query_params['id']
-    companies = companies_cities.objects.filter(city_id__exact=city_id)
-    data = Companies_citiesGETSerializer(companies, many=True)
-    return Response(data.data)
+    try:
+        city_id = request.query_params['id']
+        companies = companies_cities.objects.filter(city_id__exact=city_id)
+        data = Companies_citiesGETSerializer(companies, many=True)
+        return Response(data.data)
+    except AttributeError:
+        return Response(data.errors, status=400)
 
 
 # def getUserByToken(request):

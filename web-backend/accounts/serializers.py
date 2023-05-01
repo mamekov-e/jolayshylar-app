@@ -47,7 +47,6 @@ class Companies_citiesPOSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = companies_cities
         fields = ['id', 'city', 'company']
-        depth = 2
 
 class Companies_citiesGETSerializer(serializers.ModelSerializer):
     class Meta:
