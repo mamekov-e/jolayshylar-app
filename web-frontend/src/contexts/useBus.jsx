@@ -1,25 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import buses from "../staticData/busItemsData.json";
 import {AddBusSubpageCrumb} from "../constants/BreadcrumbItems.jsx";
 const BusContext = React.createContext();
 
 function BusContextProvider({ children }) {
-  const columns = React.useMemo(() => [
-    {
-      Header: "Номер автобуса",
-      accessor: 'number',
-    },
-    {
-      Header: "Сидячих мест",
-      accessor: 'seatNumber',
-    },
-    {
-      Header: "Вместимость",
-      accessor: 'capacity',
-    },
-  ], [])
+  const columns = useMemo(
+      () => [
+        {
+          header: '#',
+          accessorKey: 'id',
+        },
+        {
+          header: 'Кол-во сидячих мест',
+          accessorKey: 'seatNumber',
+        },
+        {
+          header: 'Вместимость',
+          accessorKey: 'capacity',
+        },
+        {
+          header: 'Номер автобуса',
+          accessorKey: 'number',
+        }
+      ],
+      [],
+  );
   const [busItems, setBusItems] = useState(buses);
-  const [deleteOn, setDeleteOn] = useState(false);
   const AddComponent = AddBusSubpageCrumb(addBus)
 
   function addBus(values) {
@@ -41,43 +47,23 @@ function BusContextProvider({ children }) {
   }
 
   function removeBuses(busIds) {
+    console.log("busIds", busIds)
     setBusItems((prevItems) => {
       const filteredItems = prevItems.filter(
-        (item) => !busIds.includes(item.id)
+        (item) => !busIds.includes(item)
       );
       return filteredItems;
     });
   }
 
-  function getBus(busId) {
-    return busItems.filter((prevItem) => prevItem.id === busId);
-  }
-
-  function selectAll() {
-    const updatedBuses = busItems.map((bus) => {
-      return { ...bus, selected: !bus.selected };
-    });
-    setBusItems(updatedBuses);
-  }
-
-  function resetDelete() {
-    if (deleteOn)
-      setDeleteOn(false)
-  }
-
   return (
     <BusContext.Provider
       value={{
-        deleteOn,
         items:busItems,
         columns,
-        setDeleteOn,
         remove:removeBuses,
         AddComponent,
-        edit:editBus,
-        selectAll,
-        get:getBus,
-        resetDelete
+        edit:editBus
       }}
     >
       {children}

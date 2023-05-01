@@ -26,6 +26,12 @@
     border-radius: 5px;
 }
 
+.subheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .subpagesStyle {
     margin-bottom: 30px;
 }

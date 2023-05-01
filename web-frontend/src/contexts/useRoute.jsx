@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useMemo} from "react";
 import routes from "../staticData/routeItemsData.json";
 import busItemsData from "../staticData/busItemsData.json";
 import allStopsList from "../staticData/allStopsList.json";
@@ -7,24 +7,30 @@ import {AddRouteSubpageCrumb} from "../constants/BreadcrumbItems.jsx";
 const RouteContext = React.createContext();
 
 function RouteContextProvider({children}) {
-    const columns = React.useMemo(() => [
-        {
-            Header: "Номер маршрута",
-            accessor: 'id',
-        },
-        {
-            Header: "Название",
-            accessor: 'routeName',
-        },
-        {
-            Header: "Номер автобуса",
-            accessor: 'number',
-        },
-    ], [])
+    const columns = useMemo(
+        () => [
+            {
+                header: '#',
+                accessorKey: 'id',
+            },
+            {
+                header: "Номер маршрута",
+                accessorKey: 'routeNumber',
+            },
+            {
+                header: "Название",
+                accessorKey: 'routeName',
+            },
+            {
+                header: "Номер автобуса",
+                accessorKey: 'busNumber',
+            },
+        ],
+        [],
+    );
     const [routeItems, setRouteItems] = useState(routes);
     const [busesList, setBusesList] = useState(busItemsData);
     const [stopsList, setStopsList] = useState(allStopsList);
-    const [deleteOn, setDeleteOn] = useState(false);
 
     const AddComponent = AddRouteSubpageCrumb(addRoute)
 
@@ -73,43 +79,22 @@ function RouteContextProvider({children}) {
     function removeRoutes(busIds) {
         setRouteItems((prevItems) => {
             const filteredItems = prevItems.filter(
-                (item) => !busIds.includes(item.id)
+                (item) => !busIds.includes(item)
             );
             return filteredItems;
         });
     }
 
-    function getRoute(busId) {
-        return routeItems.filter((prevItem) => prevItem.id === busId);
-    }
-
-    function selectAll() {
-        const updatedRoutes = routeItems.map((bus) => {
-            return {...bus, selected: !bus.selected};
-        });
-        setRouteItems(updatedRoutes);
-    }
-
-    function resetDelete() {
-        if (deleteOn)
-            setDeleteOn(false)
-    }
-
     return (
         <RouteContext.Provider
             value={{
-                deleteOn,
                 items: routeItems,
                 allBusesList: initBusesOptions(),
                 allStopsList: initStopsOptions(),
                 columns,
-                setDeleteOn,
                 remove: removeRoutes,
                 AddComponent,
-                edit: editRoute,
-                selectAll,
-                get: getRoute,
-                resetDelete
+                edit: editRoute
             }}
         >
             {children}

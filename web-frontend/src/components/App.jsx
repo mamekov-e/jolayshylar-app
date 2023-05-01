@@ -33,8 +33,6 @@ function App() {
                 </Route>
                 <Route  path="/partners/login" element={<LoginPage/>}/>
                 <Route  path="/partners/register" element={<RegistrationPage/>}/>
-                {/*<Route path="/contacts" element={<ContactsPage />} />*/}
-                {/*<Route path="/about" element={<AboutPage />} />*/}
             </Routes>
         </>
     );

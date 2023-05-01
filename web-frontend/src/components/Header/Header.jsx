@@ -8,8 +8,6 @@ import {AuthContext} from "../../contexts/useAuth.jsx";
 const links = [
     {name: "Пассажирам", path: "/passengers"},
     {name: "Партнерам", path: "/partners"},
-    // { name: "О проекте", path: "/about" },
-    // { name: "Контакты", path: "/contacts" },
 ];
 
 export default function Header() {
@@ -23,9 +21,8 @@ export default function Header() {
             </Link>
             <Nav links={links}/>
             <div className="navLogin">
-                {/*{isLoggedIn && <img className="profileIcon" src={profile}/>}*/}
                 {user ? (
-                    <Link onClick={logoutUser}>Logout</Link>
+                    <Link onClick={logoutUser}>Выйти</Link>
                 ) : (
                     <Link to="/partners/login">Войти</Link>
                 )}

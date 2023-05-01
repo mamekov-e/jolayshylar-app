@@ -7,6 +7,7 @@ import {Box, Button, IconButton} from "@mui/material";
 import openRow from "../../../../assets/partners/pages/openRow.svg"
 import importIcon from "../../../../assets/partners/pages/importIcon.svg"
 import {exportToCSV} from "../../../../utils/fileUtil.jsx";
+import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
 
 export default function AllReportsComponent({InfoSubpage}) {
     const {goToSubpage} = useContext(BreadcrumbContext);
@@ -164,6 +165,7 @@ export default function AllReportsComponent({InfoSubpage}) {
                             </Button>
                         </Box>
                     )}
+                    localization={MRT_Localization_RU}
                 />
             )}
         </main>

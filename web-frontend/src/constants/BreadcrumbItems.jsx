@@ -1,15 +1,12 @@
-import AllItemsSubpage from "../components/InfoPage/MainComponents/AllItemsSubpage/AllItemsSubpage.jsx";
 import ItemActionsFormSubpage from "../components/InfoPage/MainComponents/ItemActionsFormSubpage/ItemActionsFormSubpage.jsx";
 import BusForm from "../components/InfoPage/BusPages/BusForm/BusForm";
 import BusInfoSubpage from "../components/InfoPage/BusPages/BusInfoSubpage/BusInfoSubpage.jsx";
 import RouteForm from "../components/InfoPage/RoutePages/RouteForm/RouteForm.jsx";
-import BusItem from "../components/InfoPage/BusPages/BusItem/BusItem.jsx";
 import RouteInfoSubpage from "../components/InfoPage/RoutePages/RouteInfoSubpage/RouteInfoSubpage.jsx";
-import RouteItem from "../components/InfoPage/RoutePages/RouteItem/RouteItem.jsx";
-import AllRoutesComponent from "../components/InfoPage/RoutePages/AllRoutesComponent/AllRoutesComponent.jsx";
-import AllBusesComponent from "../components/InfoPage/BusPages/AllBusesComponent/AllBusesComponent.jsx";
 import AllReportsComponent from "../components/InfoPage/ReportsPages/AllReportsComponent/AllReportsComponent.jsx";
 import ReportInfoSubpage from "../components/InfoPage/ReportsPages/ReportInfoSubpage/ReportInfoSubpage.jsx";
+import AllBusesComponent from "../components/InfoPage/BusPages/AllBusesComponent/AllBusesComponent.jsx";
+import AllRoutesComponent from "../components/InfoPage/RoutePages/AllRoutesComponent/AllRoutesComponent.jsx";
 
 export const MainPageCrumb = {
     name: "Главная",
@@ -20,14 +17,14 @@ export const MainPageCrumb = {
 
 export const AllBusesSubpageCrumb = {
     name: "Все автобусы",
-    component: <AllItemsSubpage Item={BusItem} InfoSubpage={BusInfoSubpageCrumb} AllItemsComponent={AllBusesComponent}/>,
+    component: <AllBusesComponent InfoSubpage={BusInfoSubpageCrumb} />,
     link: "#",
     subPageName: "all",
 };
 
 export const AllRoutesSubpageCrumb = {
     name: "Все маршруты",
-    component: <AllItemsSubpage Item={RouteItem} InfoSubpage={RouteInfoSubpageCrumb} AllItemsComponent={AllRoutesComponent}/>,
+    component: <AllRoutesComponent InfoSubpage={RouteInfoSubpageCrumb} />,
     link: "#",
     subPageName: "all",
 };

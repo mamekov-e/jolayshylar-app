@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.6.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.11",
@@ -24,13 +23,11 @@
     "leaflet": "^1.9.3",
     "material-react-table": "^1.9.3",
     "react": "^18.2.0",
-    "react-csv": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.6.2",
     "react-scripts": "^5.0.1",
-    "react-table": "^7.8.0",
     "react-tabs": "^6.0.1",
     "reactstrap": "^9.1.8",
     "regenerator-runtime": "^0.13.11",

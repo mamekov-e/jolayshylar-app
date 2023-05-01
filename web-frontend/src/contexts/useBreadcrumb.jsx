@@ -7,12 +7,7 @@ const BreadcrumbContext = React.createContext();
 function BreadcrumbContextProvider({children}) {
     const [allItemsPage, setAllItemsPage] = useState({})
     const [context, setContext] = useState({
-        items: [],
-        resetDelete: function () {
-            return true
-        },
-        setDeleteOn: function () {
-        }
+        items: []
     })
 
     const [breadcrumb, setBreadcrumb] = useState([MainPageCrumb]);
@@ -30,7 +25,6 @@ function BreadcrumbContextProvider({children}) {
             return
         pushOrMoveSubpageInSubheader(subpageToOpen);
         setSubpage(subpageToOpen);
-        context.resetDelete()
     }
 
     function pushOrMoveSubpageInSubheader(subpageToOpen) {
