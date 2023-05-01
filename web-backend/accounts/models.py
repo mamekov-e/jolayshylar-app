@@ -73,8 +73,8 @@ class Company(models.Model):
 
 
 class companies_cities(models.Model):
-    city = models.ManyToManyField(City)
-    company = models.ManyToManyField(Company)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'companies_cities'

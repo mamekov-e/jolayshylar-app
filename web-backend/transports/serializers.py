@@ -4,13 +4,13 @@ from .models import Transport, Route, Stop, Routes_stops, Companies_routes, Stop
 class TransportGETSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transport
-        fields = ['id', 'company', 'route', 'total_seats', 'normal_seats', 'disabled_seats', 'transport_number']
+        fields = ['id', 'company', 'total_seats', 'normal_seats', 'disabled_seats', 'transport_number', 'route']
         depth = 1
 
 class TransportPOSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transport
-        fields = ['id', 'company', 'route', 'total_seats', 'normal_seats', 'disabled_seats', 'transport_number']
+        fields = ['id', 'company', 'total_seats', 'normal_seats', 'disabled_seats', 'transport_number', 'route']
 
 class StopGETSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,7 +23,13 @@ class StopPOSTSerializer(serializers.ModelSerializer):
         model = Stop
         fields = ['id', 'city', 'stop_name']
 
-class RouteSerializer(serializers.ModelSerializer):
+class RouteGETSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Route
+        fields = ['id', 'route_number', 'route_name']
+        depth = 1
+
+class RoutePOSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
         fields = ['id', 'route_number', 'route_name']
