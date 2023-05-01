@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {MapContainer, TileLayer, Polyline, Marker, Popup, useMap} from 'react-leaflet';
 import axios from 'axios';
-import {busesData, routesData} from '../../staticData/mapData.jsx'
+import {busesData, routesData} from '../../staticData/serverData/mapData.jsx'
 import { Icon } from 'leaflet';
 import {DEFAULT_LAT, DEFAULT_LONG} from "../../constants/Data.jsx";
 

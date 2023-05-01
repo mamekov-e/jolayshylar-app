@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from "react";
 import "./ReportInfoSubpage.css";
-import transportRecordStop from "../../../../staticData/transportRecordStop.json"
+import transportRecordStop from "../../../../staticData/serverData/transportRecordStop.json"
 import MaterialReactTable from 'material-react-table';
 
 export default function ReportInfoSubpage({route}) {

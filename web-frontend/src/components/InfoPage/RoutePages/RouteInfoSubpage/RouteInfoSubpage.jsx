@@ -3,7 +3,7 @@ import EditBtn from "../../../CustomComponents/Button/Button.jsx";
 import "./RouteInfoSubpage.css";
 import {EditRouteSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
-import transportRecordStop from "../../../../staticData/transportRecordStop.json"
+import transportRecordStop from "../../../../staticData/serverData/transportRecordStop.json"
 import MaterialReactTable from 'material-react-table';
 
 export default function RouteInfoSubpage({route}) {

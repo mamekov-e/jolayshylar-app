@@ -1,6 +1,6 @@
 import React from "react";
 import "./PartnersPage.css";
-import partnersMainPageData from "../../../staticData/partnersHomePageData.json";
+import partnersMainPageData from "../../../staticData/frontData/partnersHomePageData.json";
 import Card from "../../../components/Cards/Card";
 
 export default function PartnersMainPage() {

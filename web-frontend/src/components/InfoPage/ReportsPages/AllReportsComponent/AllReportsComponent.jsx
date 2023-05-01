@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
 import "./AllReportsComponent.css"
 import MaterialReactTable from "material-react-table";
-import reports from "../../../../staticData/reports.json";
+import reports from "../../../../staticData/serverData/reports.json";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {Box, Button, IconButton} from "@mui/material";
 import openRow from "../../../../assets/partners/pages/openRow.svg"

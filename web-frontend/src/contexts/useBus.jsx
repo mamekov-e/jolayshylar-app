@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import buses from "../staticData/busItemsData.json";
+import buses from "../staticData/serverData/busItemsData.json";
 import {AddBusSubpageCrumb} from "../constants/BreadcrumbItems.jsx";
 const BusContext = React.createContext();
 

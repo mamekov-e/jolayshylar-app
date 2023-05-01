@@ -1,7 +1,7 @@
 import React, {useState, useMemo} from "react";
-import routes from "../staticData/routeItemsData.json";
-import busItemsData from "../staticData/busItemsData.json";
-import allStopsList from "../staticData/allStopsList.json";
+import routes from "../staticData/serverData/routeItemsData.json";
+import busItemsData from "../staticData/serverData/busItemsData.json";
+import allStopsList from "../staticData/serverData/allStopsList.json";
 import {AddRouteSubpageCrumb} from "../constants/BreadcrumbItems.jsx";
 
 const RouteContext = React.createContext();

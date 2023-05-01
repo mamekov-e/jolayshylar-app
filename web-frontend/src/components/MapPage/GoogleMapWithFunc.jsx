@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Circle, GoogleMap, InfoWindow, LoadScript, MarkerF, Polyline,} from '@react-google-maps/api';
-import {busesData, routesData} from '../../staticData/mapData.jsx';
+import {busesData, routesData} from '../../staticData/serverData/mapData.jsx';
 import {API_KEY, DEFAULT_LAT, DEFAULT_LONG} from "../../constants/Data.jsx";
 
 const containerStyle = {

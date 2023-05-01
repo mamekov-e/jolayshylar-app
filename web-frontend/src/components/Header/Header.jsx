@@ -3,12 +3,8 @@ import {Link} from "react-router-dom";
 import styled from "styled-components";
 import logo from "../../../public/logo.svg";
 import Nav from "./Nav";
+import navLinks from "../../staticData/frontData/navLinks.json"
 import {AuthContext} from "../../contexts/useAuth.jsx";
-
-const links = [
-    {name: "Пассажирам", path: "/passengers"},
-    {name: "Партнерам", path: "/partners"},
-];
 
 export default function Header() {
     const {user, logoutUser} = useContext(AuthContext);
@@ -19,7 +15,7 @@ export default function Header() {
                 <img className="logoImage" src={logo}/>
                 <p className="appName">Jolaýshylar</p>
             </Link>
-            <Nav links={links}/>
+            <Nav links={navLinks}/>
             <div className="navLogin">
                 {user ? (
                     <Link onClick={logoutUser}>Выйти</Link>
