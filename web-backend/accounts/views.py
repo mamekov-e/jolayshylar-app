@@ -1,10 +1,10 @@
+from sqlite3 import IntegrityError
+
 from django.contrib.auth import authenticate
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
 from .models import User, Company, City, companies_cities
@@ -35,36 +35,41 @@ class RegisterView(APIView):
                         "token": {'refresh': str(refresh), 'access': str(refresh.access_token)}
                     }
                 )
-        except AttributeError:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except IntegrityError:
+            return Response('Пользователь с таким логином уже существует', status=status.HTTP_400_BAD_REQUEST)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 class RegisterEmail(APIView):
     def post(self, request):
-        if request.method == "POST":
-            with get_connection(
-                    host=settings.EMAIL_HOST,
-                    port=settings.EMAIL_PORT,
-                    username=settings.EMAIL_HOST_USER,
-                    password=settings.EMAIL_HOST_PASSWORD,
-                    use_tls=settings.EMAIL_USE_TLS
-            ) as connection:
-                subject = "Заявка на подключение услуг Jolayshylar"
-                email_from = settings.EMAIL_HOST_USER
-                recipient_list = ["201145@astanait.edu.kz"]
-                city = request.POST.get("city")
-                company = request.POST.get("company")
-                email = request.POST.get("email")
-                contacts = request.POST.get("contacts")
-                message = "Что-то про приветствие. Мы компания пассажироперевозок - " + company \
-                          + " - оперируем на территории " + city \
-                          + ". Наш email: " + email \
-                          + ". Кроме того, вы можете связаться с нами, используя следующие контактные данные: " \
-                          + contacts
-                EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()
+        try:
+            if request.method == "POST":
+                with get_connection(
+                        host=settings.EMAIL_HOST,
+                        port=settings.EMAIL_PORT,
+                        username=settings.EMAIL_HOST_USER,
+                        password=settings.EMAIL_HOST_PASSWORD,
+                        use_tls=settings.EMAIL_USE_TLS
+                ) as connection:
+                    subject = "Заявка на подключение услуг Jolayshylar"
+                    email_from = settings.EMAIL_HOST_USER
+                    recipient_list = ["201145@astanait.edu.kz"]
+                    city = request.POST.get("city")
+                    company = request.POST.get("company")
+                    email = request.POST.get("email")
+                    contacts = request.POST.get("contacts")
+                    message = "Что-то про приветствие. Мы компания пассажироперевозок - " + company \
+                              + " - оперируем на территории " + city \
+                              + ". Наш email: " + email \
+                              + ". Кроме того, вы можете связаться с нами, используя следующие контактные данные: " \
+                              + contacts
+                    EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()
 
-        return Response({
-            'success': 'True'
-        })
+            return Response({
+                'success': 'True'
+            })
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(APIView):
@@ -84,7 +89,9 @@ class LoginView(APIView):
                           'access': str(refresh.access_token)}
             })
         except AttributeError:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(APIView):
@@ -111,7 +118,9 @@ def get_user(request):
         data = UserGETSerializer(user)
         return Response(data.data)
     except AttributeError:
-        return Response({'No such user'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response('Пользователь с таким идентификатором не существует', status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @permission_classes([IsAuthenticated])
@@ -125,8 +134,8 @@ class CompanyView(APIView):
                 return Response(
                     {"company": serializer.data}
                 )
-        except AttributeError:
-            return Response(serializer.errors, status=400)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
@@ -137,7 +146,9 @@ def get_company(request):
         data = CompanyGETSerializer(company)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response('Компании с таким идентификатором нет', status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @permission_classes([IsAuthenticated])
@@ -151,8 +162,10 @@ class CityView(APIView):
                 return Response(
                     {"city": serializer.data}
                 )
-        except AttributeError:
-            return Response(serializer.errors, status=400)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+        except IntegrityError:
+            return Response('Пользователь с таким логином уже существует', status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
@@ -163,7 +176,9 @@ def get_city(request):
         data = CitySerializer(city)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response('Города с таким идентификатором нет', status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @permission_classes([IsAuthenticated])
@@ -178,7 +193,9 @@ class Companies_citiesView(APIView):
                     {"companies_cities": serializer.data}
                 )
         except AttributeError:
-            return Response(serializer.errors, status=400)
+            return Response('Данные недействительны', status=status.HTTP_400_BAD_REQUEST)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([HTTPMethod.get])
@@ -190,19 +207,23 @@ def get_companies_cities_by_company(request):
         data = Companies_citiesGETSerializer(cities, many=True)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response('Компании с таким идентификатором нет', status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_companies_cities_by_city(request):
     try:
-        city_id = request.query_params['id']
-        companies = companies_cities.objects.filter(city_id__exact=city_id)
+        city_name = request.query_params['name']
+        companies = companies_cities.objects.filter(city__city_name__exact=city_name)
         data = Companies_citiesGETSerializer(companies, many=True)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response('Ошибка в названии города', status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 # def getUserByToken(request):

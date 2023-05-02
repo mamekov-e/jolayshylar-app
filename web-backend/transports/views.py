@@ -3,6 +3,7 @@ import datetime
 import jwt
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -40,7 +41,9 @@ def get_record_for_transport(request):
         data = Stop_recordGETSerializer(stop_record, many=True)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.get])
@@ -52,7 +55,9 @@ def get_transports_of_company(request):
         data = TransportGETSerializer(transport, many=True)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.get])
@@ -64,7 +69,9 @@ def get_routes_of_company(request):
         data = Routes_stopsGETSerializer(route_ids, many=True)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.get])
@@ -77,7 +84,9 @@ def get_stops_of_company(request):
         data = StopGETSerializer(stops, many=True)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.get])
@@ -89,7 +98,9 @@ def get_transport(request):
         data = TransportGETSerializer(transport)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.get])
@@ -101,7 +112,9 @@ def get_route(request):
         data = RouteGETSerializer(route)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.get])
@@ -113,7 +126,9 @@ def get_stop(request):
         data = StopGETSerializer(stop)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.get])
@@ -125,7 +140,9 @@ def get_company_routes(request):
         data = Companies_routesGETSerializer(company_routes)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.get])
@@ -137,7 +154,9 @@ def get_routes_stops(request):
         data = Routes_stopsGETSerializer(routes_stops, many=True)
         return Response(data.data)
     except AttributeError:
-        return Response(data.errors, status=400)
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @permission_classes([IsAuthenticated])
@@ -152,7 +171,9 @@ class RecordView(APIView):
                     {"stop_record": serializer.data}
                 )
         except AttributeError:
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 # Transports
@@ -169,7 +190,9 @@ class TransportView(APIView):
                 }
                 return Response(data)
         except AttributeError:
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.put])
@@ -184,19 +207,23 @@ def edit_transport(request):
         new_data = TransportPOSTSerializer.update(transport, edited_transport_serializer.validated_data)
         return Response(new_data.data)
     except AttributeError:
-        return Response(new_data.errors, status=400)
+        return Response(new_data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.delete])
 @permission_classes([IsAuthenticated])
 def delete_transport(request):
     try:
-        transport_id = request.data['id']
-        transport = Transport.objects.get(id__exact=transport_id)
+        transport_id = request.POST.getlist('id')
+        transport = Transport.objects.filter(id__in=transport_id)
         transport.delete()
         return Response({'success': True})
     except AttributeError:
-        return Response({'No such entry'}, status=400)
+        return Response({'No such entry'}, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 # Stops
@@ -212,7 +239,9 @@ class StopView(APIView):
                     {"stop": serializer.data}
                 )
         except AttributeError:
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.put])
@@ -227,7 +256,9 @@ def edit_stop(request):
         new_data = StopPOSTSerializer.update(stop, edited_stop_serializer.validated_data)
         return Response(new_data.data)
     except AttributeError:
-        return Response(new_data.errors, status=400)
+        return Response(new_data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.delete])
@@ -235,11 +266,13 @@ def edit_stop(request):
 def delete_stop(request):
     try:
         stop_id = request.data['id']
-        stop = Stop.objects.get(id__exact=stop_id)
+        stop = Stop.objects.get(id__in=stop_id)
         stop.delete()
         return Response({'success': True})
     except AttributeError:
-        return Response({'No such entry'}, status=400)
+        return Response({'No such entry'}, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 # Routes
@@ -247,15 +280,32 @@ def delete_stop(request):
 class RouteView(APIView):
     def post(self, request):
         try:
-            serializer = RoutePOSTSerializer(data=request.data)
-            if serializer.is_valid():
-                route = serializer.save()
-                serializer = RoutePOSTSerializer(route)
+            route_serializer = RoutePOSTSerializer(data={
+                'route_name': request.data['route_name'],
+                'route_number': request.data['route_number']
+            })
+            route_object = Route.objects.get(route_number__exact=request.data['route_number'])
+            route_id_object = Route._meta.get_field('id')
+            route_id_value = route_id_object.value_from_object(route_object)
+            stops_list = request.POST.getlist('stops')
+            routes_stops_serializer = Routes_stopsPOSTSerializer(data={
+                'order': 1,
+                'route': route_id_value,
+                'stop': 9009
+            }, many=True)
+            if route_serializer.is_valid()\
+                    and routes_stops_serializer.is_valid():
+                route = route_serializer.save()
+                routes_stops = routes_stops_serializer.save()
+                route_serial = RoutePOSTSerializer(route)
+                routes_stops_serial = Routes_stopsPOSTSerializer(routes_stops)
                 return Response(
-                    {"route": serializer.data}
+                    {'Ok.'}, status=status.HTTP_200_OK
                 )
-        except AttributeError:
-            return Response(serializer.errors, status=400)
+        # except AttributeError:
+        #     return Response('Запрос содержит недействительные данные', status=status.HTTP_400_BAD_REQUEST)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.put])
@@ -270,19 +320,30 @@ def edit_route(request):
         new_data = RoutePOSTSerializer.update(route, edited_route_serializer.validated_data)
         return Response(new_data.data)
     except AttributeError:
-        return Response(new_data.errors, status=400)
+        return Response(new_data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view([static.HTTPMethod.delete])
 @permission_classes([IsAuthenticated])
-def delete_route(request):
-    try:
-        route_id = request.data['id']
-        route = Route.objects.get(id__exact=route_id)
-        route.delete()
-        return Response({'success': True})
-    except AttributeError:
-        return Response({'No such entry'}, status=400)
+class DeleteRouteView(APIView):
+    def get(self, request, *args, **kwargs):
+        ids = request.query_params.get('ids').split(',')
+        queryset = Route.objects.filter(id__in=ids)
+        serializer = RouteGETSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            route_id = request.query_params.get('ids').split(',')
+            print(route_id)
+            route = Route.objects.filter(id__in=route_id)
+            route.delete()
+            return Response({'success': True})
+        except AttributeError:
+            return Response('Маршрутов с такими идентификаторами не существует', status=status.HTTP_400_BAD_REQUEST)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 # Companies Routes
@@ -298,7 +359,9 @@ class CompanyRoutesView(APIView):
                     {"companies_routes": serializer.data}
                 )
         except AttributeError:
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.put])
@@ -313,7 +376,9 @@ def edit_company_routes(request):
         new_data = Companies_routesPOSTSerializer.update(companies_routes, edited_companies_routes_serializer.validated_data)
         return Response(new_data.data)
     except AttributeError:
-        return Response(new_data.errors, status=400)
+        return Response('', status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.delete])
@@ -325,7 +390,9 @@ def delete_company_routes(request):
         companies_routes.delete()
         return Response({'success': True})
     except AttributeError:
-        return Response({'No such entry'}, status=400)
+        return Response({'No such entry'}, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 # Routes Stops
@@ -341,7 +408,9 @@ class RoutesStopsView(APIView):
                     {"routes_stops": serializer.data}
                 )
         except AttributeError:
-            return Response(serializer.errors, status=400)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except TypeError:
+            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.put])
@@ -356,7 +425,9 @@ def edit_routes_stops(request):
         new_data = Routes_stopsPOSTSerializer.update(routes_stops, edited_routes_stops_serializer.validated_data)
         return Response(new_data.data)
     except AttributeError:
-        return Response(new_data.errors, status=400)
+        return Response(new_data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([static.HTTPMethod.delete])
@@ -368,4 +439,6 @@ def delete_routes_stops(request):
         routes_stops.delete()
         return Response({'success': True})
     except AttributeError:
-        return Response({'No such entry'}, status=400)
+        return Response({'No such entry'}, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)

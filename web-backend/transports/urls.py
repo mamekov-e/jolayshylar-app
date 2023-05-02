@@ -6,7 +6,7 @@ from .views import (
 
     TransportView, edit_transport, delete_transport,
     StopView, edit_stop, delete_stop,
-    RouteView, edit_route, delete_route,
+    RouteView, edit_route, DeleteRouteView,
     CompanyRoutesView, edit_company_routes, delete_company_routes,
     RoutesStopsView, edit_routes_stops, delete_routes_stops, RecordView
 )
@@ -32,7 +32,7 @@ urlpatterns = [
     # Routes
     path('add-route/', RouteView.as_view(), name='add-route'),
     path('edit-route/', edit_route, name='edit-route'),
-    path('delete-route/', delete_route, name='delete-route'),
+    path('delete-route/', DeleteRouteView.as_view(), name='delete-route'),
     path('get-route/', get_route, name='get-route'),
     path('get-routes-of-company/', get_routes_of_company, name='get-routes-of-company'),
 
