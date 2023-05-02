@@ -41,7 +41,6 @@ class Routes_stopsGETSerializer(serializers.ModelSerializer):
         depth = 1
 
 class Routes_stopsPOSTSerializer(serializers.ModelSerializer):
-    class Meta:
         model = Routes_stops
         fields = ['id', 'order', 'route', 'stop']
 
