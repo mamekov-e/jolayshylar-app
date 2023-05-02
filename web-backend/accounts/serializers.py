@@ -16,7 +16,7 @@ class UserPOSTSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'login', 'password', 'role']
+        fields = ['id', 'login', 'password', 'role', 'company']
 
 class UserGETSerializer(serializers.ModelSerializer):
 
@@ -34,13 +34,13 @@ class CitySerializer(serializers.ModelSerializer):
 class CompanyPOSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['id', 'user', 'name', 'address', 'contacts']
+        fields = ['id', 'name', 'address', 'contacts']
 
 
 class CompanyGETSerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['id', 'user', 'name', 'address', 'contacts']
+        fields = ['id', 'name', 'address', 'contacts']
         depth = 1
 
 class Companies_citiesPOSTSerializer(serializers.ModelSerializer):
