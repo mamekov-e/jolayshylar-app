@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {Form, Formik} from "formik";
 import * as Yup from "yup";
 import InputText from "../../../CustomComponents/InputText/InputText.jsx";
@@ -6,13 +6,35 @@ import SaveBtn from "../../../CustomComponents/Button/Button.jsx";
 import "./RouteForm.css";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import Dropdown from "../../../CustomComponents/Dropdown/Dropdown.jsx";
+import allStopsList from "../../../../staticData/serverData/allStopsList.json";
 
 export default function RouteForm({submitForm, route}) {
-    const {subpage, context} = useContext(BreadcrumbContext);
-    const {allBusesList, allStopsList} = context;
+    const {subpage} = useContext(BreadcrumbContext);
+    const [stopOptions, setStopOptions] = useState([])
+
+    const loadStopsData = () => {
+        const dataToOptions = allStopsList.map(item => ({
+            value: item.id,
+            label: item.stop_name
+        }));
+        setStopOptions(dataToOptions)
+    }
+
+    const routeStopsToOptions = (list) => {
+        const listObj = list[0]
+        if ('value' in listObj && 'label' in listObj) {
+            return list;
+        }
+        return list.map(item => ({
+            value: item.id,
+            label: item.stop_name
+        }));
+    }
 
     const routeSchema = Yup.object().shape({
-        routeNumber: Yup.number().required("Обязательное поле"),
+        route_number: Yup.number()
+            .required("Обязательное поле")
+            .positive("Введите положительное число"),
         stops: Yup.array()
             .of(Yup.object().shape({
                 value: Yup.string(),
@@ -20,16 +42,13 @@ export default function RouteForm({submitForm, route}) {
             }))
             .required("Обязательное поле")
             .min(2, "Выберите как минимум 2 остановки"),
-        busNumber: Yup.string()
-            .required("Обязательное поле")
     });
 
     return (
         <Formik
             initialValues={{
-                routeNumber: route ? route.routeNumber : "",
-                stops: route ? route.stops : "",
-                busNumber: route ? route.busNumber : "",
+                route_number: route ? route.route_number : "",
+                stops: route ? routeStopsToOptions(route.stops) : "",
             }}
             validationSchema={routeSchema}
             onSubmit={(values) => submitForm(values, route)}
@@ -41,17 +60,16 @@ export default function RouteForm({submitForm, route}) {
                 return <Form className="form">
                     <div className="formGroup">
                         <span className="dangerText">
-                          {touched.routeNumber && errors.routeNumber ? errors.routeNumber : "*"}
+                          {touched.route_number && errors.route_number ? errors.route_number : "*"}
                         </span>
                         <InputText
                             placeholder="Введите номер маршрута"
                             onChange={(e) => {
                                 const {value} = e.target
-                                console.log("StopError", errors)
-                                setFieldValue("routeNumber", value)
+                                setFieldValue("route_number", value)
                             }}
-                            onBlur={() => setFieldTouched("routeNumber", true)}
-                            value={values.routeNumber}
+                            onBlur={() => setFieldTouched("route_number", true)}
+                            value={values.route_number}
                             name="number"
                             type="number"
                             style={inputStyle}
@@ -65,35 +83,17 @@ export default function RouteForm({submitForm, route}) {
                             isSearchable
                             isMulti
                             placeHolder="Выберите остановку"
-                            options={allStopsList}
+                            options={stopOptions}
                             onChange={(value) => {
                                 setFieldValue("stops", value)
                             }}
                             onBlur={() => setFieldTouched("stops", true)}
-                            onFocus={() => setFieldTouched("stops", false)}
+                            onFocus={() => {
+                                loadStopsData()
+                                setFieldTouched("stops", false)
+                            }}
                             value={values.stops}
                             name="stops"
-                            style={{...inputStyle, ...dropdownStyle}}
-                        />
-                    </div>
-                    <div className="formGroup">
-                        <span className="dangerText">
-                          {touched.busNumber && errors.busNumber ? errors.busNumber : "*"}
-                        </span>
-                        <Dropdown
-                            isSearchable
-                            placeHolder="Выберите номер автобуса"
-                            options={allBusesList}
-                            value={values.busNumber ? {
-                                value: values.busNumber,
-                                label: values.busNumber
-                            } : values.busNumber}
-                            onChange={(value) => {
-                                setFieldValue("busNumber", value.label)
-                            }}
-                            onBlur={() => setFieldTouched("busNumber", true)}
-                            onFocus={() => setFieldTouched("busNumber", false)}
-                            name={"busNumber"}
                             style={{...inputStyle, ...dropdownStyle}}
                         />
                     </div>
@@ -101,7 +101,6 @@ export default function RouteForm({submitForm, route}) {
                         type="submit"
                         name={subpage.name}
                         style={btnStyle}
-                        disabled={!isValid}
                     />
                 </Form>
             }

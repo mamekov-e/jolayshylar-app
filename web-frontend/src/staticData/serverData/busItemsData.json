@@ -1,211 +1,82 @@
 [
   {
     "id": 1,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х129КLG",
-    "selected": false
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х129КLG",
+    "route_number":1
   },
   {
     "id": 2,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х139КLG",
-    "selected": false
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х139КLG",
+    "route_number": 1
   },
   {
     "id": 3,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х149КLG",
-    "selected": false
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х149КLG",
+    "route_number": 1
   },
   {
     "id": 4,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х159КLG",
-    "selected": false
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х159КLG",
+    "route_number": 1
   },
   {
     "id": 5,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х169КLG",
-    "selected": false
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х169КLG",
+    "route_number": 1
   },
   {
     "id": 6,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х179КLG",
-    "selected": false
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х179КLG",
+    "route_number": 1
   },
   {
     "id": 7,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х189КLG",
-    "selected": false
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х189КLG",
+    "route_number": 1
   },
   {
     "id": 8,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х199КLG",
-    "selected": false
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х199КLG",
+    "route_number": 1
   },
   {
     "id": 9,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х999КLG",
-    "selected": false
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х999КLG",
+    "route_number": 1
   },
   {
     "id": 10,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х109КLG",
-    "selected": false
-  },
-  {
-    "id": 11,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х135КLG",
-    "selected": false
-  },
-  {
-    "id": 12,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х144КLG",
-    "selected": false
-  },
-  {
-    "id": 13,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х469КLG",
-    "selected": false
-  },
-  {
-    "id": 14,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х259КLG",
-    "selected": false
-  },
-  {
-    "id": 15,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х669КLG",
-    "selected": false
-  },
-  {
-    "id": 16,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х579КLG",
-    "selected": false
-  },
-  {
-    "id": 17,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х188КLG",
-    "selected": false
-  },
-  {
-    "id": 18,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х100КLG",
-    "selected": false
-  },
-  {
-    "id": 19,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х699КLG",
-    "selected": false
-  },
-  {
-    "id": 20,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х119КLG",
-    "selected": false
-  },{
-  "id": 21,
-  "seatNumber": 50,
-  "capacity": 60,
-  "number": "Х128КLG",
-  "selected": false
-},
-  {
-    "id": 22,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х147КLG",
-    "selected": false
-  },
-  {
-    "id": 23,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х111КLG",
-    "selected": false
-  },
-  {
-    "id": 24,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х299КLG",
-    "selected": false
-  },
-  {
-    "id": 25,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х769КLG",
-    "selected": false
-  },
-  {
-    "id": 26,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "617КLG",
-    "selected": false
-  },
-  {
-    "id": 27,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х389КLG",
-    "selected": false
-  },
-  {
-    "id": 28,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х899КLG",
-    "selected": false
-  },
-  {
-    "id": 29,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х959КLG",
-    "selected": false
-  },
-  {
-    "id": 30,
-    "seatNumber": 50,
-    "capacity": 60,
-    "number": "Х599КLG",
-    "selected": false
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х109КLG",
+    "route_number": 1
   }
 ]

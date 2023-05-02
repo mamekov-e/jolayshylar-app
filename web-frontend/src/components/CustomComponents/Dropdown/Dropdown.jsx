@@ -132,8 +132,11 @@ const Dropdown = ({
         }
 
         return options.filter(
-            (option) =>
-                option.label.toLowerCase().indexOf(searchValue.toLowerCase()) >= 0
+            (option) => {
+                const optLabelStr = ''+option.label
+                const sValueStr = ''+searchValue
+                return optLabelStr.toLowerCase().indexOf(sValueStr.toLowerCase()) >= 0
+            }
         );
     };
 

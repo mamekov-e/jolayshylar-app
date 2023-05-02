@@ -14,7 +14,7 @@ function ReportContextProvider({children}) {
         },
         {
             Header: "Название",
-            accessor: 'routeName',
+            accessor: 'route_name',
         },
         {
             Header: "Номер автобуса",
@@ -31,7 +31,7 @@ function ReportContextProvider({children}) {
     const initStopsOptions = () => {
         return stopsList.map(item => ({
             value: item.id,
-            label: item.stopName
+            label: item.stop_name
         }));
     }
 
@@ -44,13 +44,13 @@ function ReportContextProvider({children}) {
 
     function addRoute(values) {
         const id = routeItems.length > 0 ? routeItems[routeItems.length - 1].id + 1 : 0;
-        const routeName = values.stops[0].label + " → " + values.stops[values.stops.length - 1].label
+        const route_name = values.stops[0].label + " → " + values.stops[values.stops.length - 1].label
         const newRoute = {
             id,
-            routeNumber: values.routeNumber,
-            routeName,
+            route_number: values.route_number,
+            route_name,
             stops: values.stops,
-            busNumber: values.busNumber,
+            transport_number: values.transport_number,
             selected: false
         };
         setRouteItems((prevItems) => [...prevItems, newRoute]);
@@ -60,9 +60,9 @@ function ReportContextProvider({children}) {
     function editRoute(values, bus) {
         const updatedItems = routeItems.map((item) => {
             if (item.id === bus.id) {
-                const routeName = values.stops[0].label + " → " + values.stops[values.stops.length - 1].label
+                const route_name = values.stops[0].label + " → " + values.stops[values.stops.length - 1].label
 
-                return {...item, ...values, routeName};
+                return {...item, ...values, route_name};
             }
             return item;
         });

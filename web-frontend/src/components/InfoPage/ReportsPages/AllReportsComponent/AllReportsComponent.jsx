@@ -4,10 +4,10 @@ import MaterialReactTable from "material-react-table";
 import reports from "../../../../staticData/serverData/reports.json";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {Box, Button, IconButton} from "@mui/material";
-import openRow from "../../../../assets/partners/pages/openRow.svg"
 import importIcon from "../../../../assets/partners/pages/importIcon.svg"
 import {exportToCSV} from "../../../../utils/fileUtil.jsx";
 import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
+import {MdOpenInNew} from "react-icons/all.js";
 
 export default function AllReportsComponent({InfoSubpage}) {
     const {goToSubpage} = useContext(BreadcrumbContext);
@@ -43,7 +43,6 @@ export default function AllReportsComponent({InfoSubpage}) {
             // url.searchParams.set('filters', JSON.stringify(columnFilters ?? []));
             // url.searchParams.set('globalFilter', globalFilter ?? '');
             // url.searchParams.set('sorting', JSON.stringify(sorting ?? []));
-
             // try {
             //     const response = await fetch(url.href);
             //     const json = await response.json();
@@ -69,20 +68,20 @@ export default function AllReportsComponent({InfoSubpage}) {
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'routeNumber',
+                accessorKey: 'date',
+                header: 'Дата',
+            },
+            {
+                accessorKey: 'route_number',
                 header: 'Номер маршрута',
             },
             {
-                accessorKey: 'routeName',
+                accessorKey: 'route_name',
                 header: 'Название маршрута',
             },
             {
-                accessorKey: 'busNumber',
+                accessorKey: 'transport_number',
                 header: 'Номер автобуса',
-            },
-            {
-                accessorKey: 'date',
-                header: 'Дата',
             }
         ],
         [],
@@ -103,8 +102,10 @@ export default function AllReportsComponent({InfoSubpage}) {
                     columns={columns}
                     enableHiding={false}
                     enableDensityToggle={false}
+                    enableMultiSort={true}
                     initialState={{
                         pagination,
+                        density: 'compact',
                         sorting: [
                             {
                                 id: 'date',
@@ -112,6 +113,7 @@ export default function AllReportsComponent({InfoSubpage}) {
                             },
                         ],
                     }}
+                    localization={MRT_Localization_RU}
                     muiTablePaginationProps={{
                         sx: {
                             margin: '0',
@@ -134,7 +136,7 @@ export default function AllReportsComponent({InfoSubpage}) {
                                     onOpen(row.original)
                                 }}
                             >
-                                <img src={openRow}/>
+                                <MdOpenInNew color={"black"}/>
                             </IconButton>
                         </div>
                     )}
@@ -144,7 +146,6 @@ export default function AllReportsComponent({InfoSubpage}) {
                         >
                             <Button
                                 disabled={table.getPrePaginationRowModel().rows.length === 0}
-                                //export all rows, including from the next page, (still respects filtering and sorting)
                                 onClick={() =>
                                     handleExportRows(table.getPrePaginationRowModel().rows)
                                 }
@@ -165,7 +166,6 @@ export default function AllReportsComponent({InfoSubpage}) {
                             </Button>
                         </Box>
                     )}
-                    localization={MRT_Localization_RU}
                 />
             )}
         </main>

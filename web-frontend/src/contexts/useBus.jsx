@@ -1,74 +1,63 @@
-import React, { useState, useMemo } from "react";
-import buses from "../staticData/serverData/busItemsData.json";
+import React, {useState} from "react";
 import {AddBusSubpageCrumb} from "../constants/BreadcrumbItems.jsx";
+
 const BusContext = React.createContext();
 
-function BusContextProvider({ children }) {
-  const columns = useMemo(
-      () => [
-        {
-          header: '#',
-          accessorKey: 'id',
-        },
-        {
-          header: 'Кол-во сидячих мест',
-          accessorKey: 'seatNumber',
-        },
-        {
-          header: 'Вместимость',
-          accessorKey: 'capacity',
-        },
-        {
-          header: 'Номер автобуса',
-          accessorKey: 'number',
-        }
-      ],
-      [],
-  );
-  const [busItems, setBusItems] = useState(buses);
-  const AddComponent = AddBusSubpageCrumb(addBus)
+function BusContextProvider({children}) {
+    const [busItems, setBusItems] = useState([]);
+    const AddComponent = AddBusSubpageCrumb(addBus)
 
-  function addBus(values) {
-    const id = busItems.length > 0 ? busItems[busItems.length - 1].id + 1 : 0;
-    const newBus = { id, ...values, selected: false };
-    setBusItems((prevItems) => [...prevItems, newBus]);
-    return true
-  }
+    function changeBusTrackingState(buses, state) {
+        setBusItems(prevItems => {
+            return prevItems.map((bus) => {
+                if (!buses.includes(bus))
+                    return bus
+                bus.is_tracking = state;
+                return bus;
+            });
+        })
+    }
 
-  function editBus(values, bus) {
-    const updatedItems = busItems.map((item) => {
-      if (item.id === bus.id) {
-        return { ...item, ...values };
-      }
-      return item;
-    });
-    setBusItems(updatedItems);
-    return true
-  }
+    function addBus(values) {
+        const id = busItems.length > 0 ? busItems[busItems.length - 1].id + 1 : 0;
+        const newBus = {id, ...values, is_tracking: false};
+        setBusItems((prevItems) => [...prevItems, newBus]);
+        return true
+    }
 
-  function removeBuses(busIds) {
-    console.log("busIds", busIds)
-    setBusItems((prevItems) => {
-      const filteredItems = prevItems.filter(
-        (item) => !busIds.includes(item)
-      );
-      return filteredItems;
-    });
-  }
+    function editBus(values, bus) {
+        setBusItems(prevItems => {
+            return prevItems.map((item) => {
+                if (item.id === bus.id) {
+                    return {...item, ...values};
+                }
+                return item;
+            });
+        });
+        return true
+    }
 
-  return (
-    <BusContext.Provider
-      value={{
-        items:busItems,
-        columns,
-        remove:removeBuses,
-        AddComponent,
-        edit:editBus
-      }}
-    >
-      {children}
-    </BusContext.Provider>
-  );
+    function removeBuses(buses) {
+        setBusItems((prevItems) => {
+            return prevItems.filter(
+                (item) => !buses.includes(item)
+            );
+        });
+    }
+
+    return (
+        <BusContext.Provider
+            value={{
+                changeBusTrackingState,
+                items: busItems,
+                remove: removeBuses,
+                AddComponent,
+                edit: editBus
+            }}
+        >
+            {children}
+        </BusContext.Provider>
+    );
 }
 
-export { BusContextProvider, BusContext };
+export {BusContextProvider, BusContext};

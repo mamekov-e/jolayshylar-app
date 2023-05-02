@@ -7,6 +7,7 @@ import AllReportsComponent from "../components/InfoPage/ReportsPages/AllReportsC
 import ReportInfoSubpage from "../components/InfoPage/ReportsPages/ReportInfoSubpage/ReportInfoSubpage.jsx";
 import AllBusesComponent from "../components/InfoPage/BusPages/AllBusesComponent/AllBusesComponent.jsx";
 import AllRoutesComponent from "../components/InfoPage/RoutePages/AllRoutesComponent/AllRoutesComponent.jsx";
+import BusMapInfoSubpage from "../components/InfoPage/BusPages/BusMapInfoSubpage/BusMapInfoSubpage.jsx";
 
 export const MainPageCrumb = {
     name: "Главная",
@@ -17,14 +18,14 @@ export const MainPageCrumb = {
 
 export const AllBusesSubpageCrumb = {
     name: "Все автобусы",
-    component: <AllBusesComponent InfoSubpage={BusInfoSubpageCrumb} />,
+    component: <AllBusesComponent />,
     link: "#",
     subPageName: "all",
 };
 
 export const AllRoutesSubpageCrumb = {
     name: "Все маршруты",
-    component: <AllRoutesComponent InfoSubpage={RouteInfoSubpageCrumb} />,
+    component: <AllRoutesComponent />,
     link: "#",
     subPageName: "all",
 };
@@ -38,8 +39,8 @@ export const AllReportsSubpageCrumb = {
 
 export function BusInfoSubpageCrumb(bus) {
     return {
-        name: bus.number,
-        component: <ItemActionsFormSubpage page={<BusInfoSubpage bus={bus}/>}/>,
+        name: bus.transport_number,
+        component: <ItemActionsFormSubpage page={<BusMapInfoSubpage bus={bus}/>}/>,
         link: "#",
         subPageName: "busInfo",
     };
@@ -47,7 +48,7 @@ export function BusInfoSubpageCrumb(bus) {
 
 export function RouteInfoSubpageCrumb(route) {
     return {
-        name: route.routeName,
+        name: route.route_name,
         component: <ItemActionsFormSubpage page={<RouteInfoSubpage route={route}/>}/>,
         link: "#",
         subPageName: "routeInfo",
@@ -56,7 +57,7 @@ export function RouteInfoSubpageCrumb(route) {
 
 export function ReportInfoSubpageCrumb(report) {
     return {
-        name: report.routeName + " - " +report.busNumber,
+        name: report.route_name + " - " +report.transport_number,
         component: <ItemActionsFormSubpage page={<ReportInfoSubpage route={report}/>}/>,
         link: "#",
         subPageName: "routeInfo",

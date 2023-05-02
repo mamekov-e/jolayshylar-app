@@ -13,7 +13,7 @@
     },
     {
         "imgSrc":"reports-icon.png",
-        "description":"В этом разделе можно управлять данными отчетов",
+        "description":"В этом разделе можно получать данные отчетов",
         "btnName":"Отчеты",
         "linkToValue": "/partners/reports"
     }

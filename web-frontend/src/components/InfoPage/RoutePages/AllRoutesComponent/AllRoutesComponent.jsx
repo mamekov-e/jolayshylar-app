@@ -3,10 +3,11 @@ import "./AllRoutesComponent.css"
 import MaterialReactTable from "material-react-table";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {Box, Button, IconButton} from "@mui/material";
-import openRow from "../../../../assets/partners/pages/openRow.svg"
 import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
+import {MdOpenInNew} from "react-icons/all.js";
+import {RouteInfoSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
 
-export default function AllRoutesComponent({InfoSubpage}) {
+export default function AllRoutesComponent() {
     const {goToSubpage, context} = useContext(BreadcrumbContext);
     const {items, remove, AddComponent} = context;
     const [error, setError] = useState(false);
@@ -24,17 +25,13 @@ export default function AllRoutesComponent({InfoSubpage}) {
                 accessorKey: 'id',
             },
             {
-                accessorKey: 'routeNumber',
+                accessorKey: 'route_number',
                 header: "Номер маршрута",
             },
             {
-                accessorKey: 'routeName',
-                header: "Название",
-            },
-            {
-                accessorKey: 'busNumber',
-                header: "Номер автобуса",
-            },
+                accessorKey: 'route_name',
+                header: "Название маршрута",
+            }
         ],
         [],
     );
@@ -81,7 +78,7 @@ export default function AllRoutesComponent({InfoSubpage}) {
     }, []);
 
     function onOpen(item) {
-        const subpagecrumb = InfoSubpage(item);
+        const subpagecrumb = RouteInfoSubpageCrumb(item);
         goToSubpage(subpagecrumb);
     }
 
@@ -109,6 +106,7 @@ export default function AllRoutesComponent({InfoSubpage}) {
                     columns={columns}
                     enableHiding={false}
                     enableDensityToggle={false}
+                    enableMultiSort={true}
                     initialState={{
                         pagination,
                         density: 'compact',
@@ -117,6 +115,7 @@ export default function AllRoutesComponent({InfoSubpage}) {
                         ],
                         columnVisibility: {id: false}
                     }}
+                    localization={MRT_Localization_RU}
                     muiTablePaginationProps={{
                         sx: {
                             margin: '0',
@@ -139,7 +138,7 @@ export default function AllRoutesComponent({InfoSubpage}) {
                                     onOpen(row.original)
                                 }}
                             >
-                                <img src={openRow}/>
+                                <MdOpenInNew color={"black"}/>
                             </IconButton>
                         </div>
                     )}
@@ -166,7 +165,6 @@ export default function AllRoutesComponent({InfoSubpage}) {
                             {error && (<p>Ошибка при отправке запроса</p>)}
                         </Box>
                     )}
-                    localization={MRT_Localization_RU}
                 />
             )}
         </main>

@@ -63,10 +63,10 @@ export default function ReportInfoSubpage({route}) {
                     renderTopToolbarCustomActions={() => (
                         <div className="firstInfo">
                             <div className="routeInfoDetails">
-                                <p>Номер маршрута:</p><h3>{route.routeNumber}</h3>
+                                <p>Номер маршрута:</p><h3>{route.route_number}</h3>
                             </div>
                             <div className="routeInfoDetails">
-                                <p>Номер автобуса:</p><h3>{route.busNumber}</h3>
+                                <p>Номер автобуса:</p><h3>{route.transport_number}</h3>
                             </div>
                         </div>
                     )}/>

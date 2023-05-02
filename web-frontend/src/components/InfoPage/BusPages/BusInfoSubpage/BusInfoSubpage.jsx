@@ -19,11 +19,15 @@ export default function BusInfoSubpage({bus}) {
             <img src={busInfoImg}/>
             <div className="busInfoDetails">
                 <p>Номер автобуса:</p>
-                <h3>{bus.number}</h3>
+                <h3>{bus.transport_number}</h3>
                 <p>Вместимость автобуса:</p>
-                <h3>{bus.capacity}</h3>
+                <h3>{bus.total_seats}</h3>
                 <p>Количество сидячих мест:</p>
-                <h3>{bus.seatNumber}</h3>
+                <h3>{bus.normal_seats}</h3>
+                <p>Количество спец. мест:</p>
+                <h3>{bus.disabled_seats}</h3>
+                <p>Номер маршрута:</p>
+                <h3>{bus.route_number}</h3>
             </div>
             <EditBtn name="Редактировать" style={editBtnStyle} onClick={onEdit}/>
         </div>

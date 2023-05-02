@@ -5,10 +5,12 @@ import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {Box, Button, IconButton} from "@mui/material";
 import openRow from "../../../../assets/partners/pages/openRow.svg"
 import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
+import {MdModeEditOutline, MdOpenInNew, VscDebugPause, VscDebugStart} from "react-icons/all";
+import {BusInfoSubpageCrumb, EditBusSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
 
-export default function AllBusesComponent({InfoSubpage}) {
+export default function AllBusesComponent() {
     const {goToSubpage, context} = useContext(BreadcrumbContext);
-    const {items, remove, AddComponent} = context;
+    const {items, changeBusTrackingState, remove, edit, AddComponent} = context;
     const [error, setError] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -24,17 +26,21 @@ export default function AllBusesComponent({InfoSubpage}) {
                 accessorKey: 'id',
             },
             {
-                header: 'Кол-во сидячих мест',
-                accessorKey: 'seatNumber',
+                header: 'Гос. номер',
+                accessorKey: 'transport_number',
             },
             {
                 header: 'Вместимость',
-                accessorKey: 'capacity',
+                accessorKey: 'total_seats',
             },
             {
-                header: 'Номер автобуса',
-                accessorKey: 'number',
-            }
+                header: 'Сидячих мест',
+                accessorKey: 'normal_seats',
+            },
+            {
+                header: 'Спец. мест',
+                accessorKey: 'disabled_seats',
+            },
         ],
         [],
     );
@@ -44,7 +50,6 @@ export default function AllBusesComponent({InfoSubpage}) {
             if (!items.length) {
                 setIsLoading(true);
             }
-
             if (typeof window !== 'undefined') {
                 // setData(busItemsData);
                 setIsLoading(false);
@@ -63,7 +68,6 @@ export default function AllBusesComponent({InfoSubpage}) {
             // url.searchParams.set('filters', JSON.stringify(columnFilters ?? []));
             // url.searchParams.set('globalFilter', globalFilter ?? '');
             // url.searchParams.set('sorting', JSON.stringify(sorting ?? []));
-
             // try {
             //     const response = await fetch(url.href);
             //     const json = await response.json();
@@ -79,12 +83,20 @@ export default function AllBusesComponent({InfoSubpage}) {
             // setIsRefetching(false);
         };
         fetchData();
-    }, []);
+    }, [items]);
 
-    function onOpen(item) {
-        const subpagecrumb = InfoSubpage(item);
+    function onOpen(bus) {
+        const subpagecrumb = BusInfoSubpageCrumb(bus);
         goToSubpage(subpagecrumb);
     }
+
+    const handleEditRow = useCallback(
+        (bus) => {
+            const subpagecrumb = EditBusSubpageCrumb(bus, edit);
+            goToSubpage(subpagecrumb);
+        },
+        [items],
+    );
 
     const handleDeleteRow = useCallback(
         (table, rows) => {
@@ -98,6 +110,30 @@ export default function AllBusesComponent({InfoSubpage}) {
         [items],
     );
 
+    const handleAddTrackingBuses = useCallback(
+        (table, rows) => {
+            if (!confirm(`Вы уверены что хотите запустить отслеживание автобусов?`)) {
+                return;
+            }
+            const selected = rows.map((row) => row.original)
+            changeBusTrackingState(selected, true)
+            table.resetRowSelection(true)
+        },
+        [items],
+    );
+
+    const handleRemoveTrackingBuses = useCallback(
+        (table, rows) => {
+            if (!confirm(`Вы уверены что хотите удалить из отслеживаемых автобусы?`)) {
+                return;
+            }
+            const selected = rows.map((row) => row.original)
+            changeBusTrackingState(selected, false)
+            table.resetRowSelection(true)
+        },
+        [items],
+    );
+
     function handleAdd() {
         goToSubpage(AddComponent);
     }
@@ -106,10 +142,11 @@ export default function AllBusesComponent({InfoSubpage}) {
         <main>
             {items && (
                 <MaterialReactTable
-                    data={[]}
+                    data={items}
                     columns={columns}
                     enableHiding={false}
                     enableDensityToggle={false}
+                    enableMultiSort={true}
                     initialState={{
                         pagination,
                         density: 'compact',
@@ -126,6 +163,7 @@ export default function AllBusesComponent({InfoSubpage}) {
                     onPaginationChange={setPagination}
                     positionPagination={"top"}
                     state={{pagination, isLoading}}
+                    localization={MRT_Localization_RU}
                     enableRowActions
                     enableRowSelection
                     rowCount={items.length}
@@ -134,13 +172,38 @@ export default function AllBusesComponent({InfoSubpage}) {
                     positionActionsColumn={"last"}
                     renderRowActions={({row, table}) => (
                         <div sx={{display: 'flex', flexWrap: 'nowrap', gap: '8px'}}>
+                            {row.original.is_tracking ?
+                                <IconButton
+                                    color="primary"
+                                    onClick={() => {
+                                        const clickedRowToArr = []
+                                        clickedRowToArr.push(row.original)
+                                        changeBusTrackingState(clickedRowToArr, false)
+                                    }}>
+                                    <VscDebugPause color={"#A3362E"}/>
+                                </IconButton> :
+                                <IconButton
+                                    color="primary"
+                                    onClick={() => {
+                                        const clickedRowToArr = []
+                                        clickedRowToArr.push(row.original)
+                                        changeBusTrackingState(clickedRowToArr, true)
+                                    }}>
+                                    <VscDebugStart color={"#368852"}/>
+                                </IconButton>}
+                            <IconButton
+                                color="primary"
+                                onClick={() => {
+                                    handleEditRow(row.original)
+                                }}>
+                                <MdModeEditOutline color={"black"}/>
+                            </IconButton>
                             <IconButton
                                 color="primary"
                                 onClick={() => {
                                     onOpen(row.original)
-                                }}
-                            >
-                                <img src={openRow}/>
+                                }}>
+                                <MdOpenInNew color={"black"}/>
                             </IconButton>
                         </div>
                     )}
@@ -150,8 +213,7 @@ export default function AllBusesComponent({InfoSubpage}) {
                         >
                             <Button
                                 onClick={handleAdd}
-                                variant="contained"
-                            >
+                                variant="contained">
                                 Добавить
                             </Button>
                             <Button
@@ -160,14 +222,30 @@ export default function AllBusesComponent({InfoSubpage}) {
                                 }
                                 onClick={() => handleDeleteRow(table, table.getSelectedRowModel().rows)}
                                 variant="contained"
-                                color={'error'}
-                            >
+                                color={'error'}>
                                 Удалить
+                            </Button>
+                            <Button
+                                disabled={
+                                    !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                                }
+                                onClick={() => handleAddTrackingBuses(table, table.getSelectedRowModel().rows)}
+                                variant="contained"
+                                color={'success'}>
+                                Запустить отслеживание
+                            </Button>
+                            <Button
+                                disabled={
+                                    !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                                }
+                                onClick={() => handleRemoveTrackingBuses(table, table.getSelectedRowModel().rows)}
+                                variant="contained"
+                                color={'warning'}>
+                                Остановить отслеживание
                             </Button>
                             {error && (<p>Ошибка при отправке запроса</p>)}
                         </Box>
                     )}
-                    localization={MRT_Localization_RU}
                 />
             )}
         </main>

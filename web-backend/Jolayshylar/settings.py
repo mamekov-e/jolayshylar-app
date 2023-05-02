@@ -107,7 +107,7 @@ WSGI_APPLICATION = 'Jolayshylar.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Jolayshylar-1',
+        'NAME': 'Jolayshylar-2',
         'USER': 'postgres',
         'PASSWORD': 'mamekov_a1',
         'HOST': 'localhost',
