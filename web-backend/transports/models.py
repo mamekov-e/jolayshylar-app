@@ -43,14 +43,6 @@ class Routes_stops(models.Model):
         db_table = 'routes_stops'
 
 
-class Companies_routes(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, default=1)
-    route = models.ForeignKey(Route, on_delete=models.CASCADE, default=1)
-
-    class Meta:
-        db_table = 'companies_routes'
-
-
 class Stop_record(models.Model):
     transport = models.ForeignKey(Transport, on_delete=models.CASCADE)
     stop = models.ForeignKey(Stop, on_delete=models.CASCADE)

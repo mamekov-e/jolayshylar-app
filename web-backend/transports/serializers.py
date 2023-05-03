@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Transport, Route, Stop, Routes_stops, Companies_routes, Stop_record
+from .models import Transport, Route, Stop, Routes_stops, Stop_record
+from accounts.serializers import CompanyPOSTSerializer
 
 class TransportGETSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,9 +31,23 @@ class RouteGETSerializer(serializers.ModelSerializer):
         depth = 1
 
 class RoutePOSTSerializer(serializers.ModelSerializer):
+    company = CompanyPOSTSerializer()
+
+    def update(self, instance, validated_data):
+        if validated_data.get('company'):
+            company_data = validated_data.get('company')
+            company_serializer = CompanyPOSTSerializer(data=company_data)
+
+            if company_serializer.is_valid():
+                company = company_serializer.update(instance=instance.profile)
+                validated_data['company'] = company
+
+        return super(RoutePOSTSerializer, self).update(instance, validated_data)
+
     class Meta:
         model = Route
         fields = ['id', 'route_number', 'route_name', 'company']
+
 
 class Routes_stopsGETSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,17 +59,6 @@ class Routes_stopsPOSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = Routes_stops
         fields = ['id', 'order', 'route', 'stop']
-
-class Companies_routesGETSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Companies_routes
-        fields = ['id', 'company', 'route']
-        depth = 1
-
-class Companies_routesPOSTSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Companies_routes
-        fields = ['id', 'company', 'route']
 
 class Stop_recordGETSerializer(serializers.ModelSerializer):
     class Meta:

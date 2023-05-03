@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # cors
+    "corsheaders",
     # My Apps
     'accounts',
     'transports',
@@ -58,6 +60,8 @@ INSTALLED_APPS = [
     'drf_yasg',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 AUTHENTICATION_BACKENDS = (
     # ... your other backends
     'accounts.auth_backend.MyAuth',
@@ -65,6 +69,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
