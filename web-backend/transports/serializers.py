@@ -26,13 +26,13 @@ class StopPOSTSerializer(serializers.ModelSerializer):
 class RouteGETSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
-        fields = ['id', 'route_number', 'route_name']
+        fields = ['id', 'route_number', 'route_name', 'company']
         depth = 1
 
 class RoutePOSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
-        fields = ['id', 'route_number', 'route_name']
+        fields = ['id', 'route_number', 'route_name', 'company']
 
 class Routes_stopsGETSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,6 +41,7 @@ class Routes_stopsGETSerializer(serializers.ModelSerializer):
         depth = 1
 
 class Routes_stopsPOSTSerializer(serializers.ModelSerializer):
+    class Meta:
         model = Routes_stops
         fields = ['id', 'order', 'route', 'stop']
 

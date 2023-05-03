@@ -78,7 +78,9 @@ class LoginView(APIView):
             login = request.data['login']
             password = request.data['password']
 
+
             user = User.objects.filter(login=login).filter(password__exact=password).first()
+
 
             refresh = RefreshToken.for_user(user)
             serializer = UserPOSTSerializer(user)
@@ -89,7 +91,7 @@ class LoginView(APIView):
                           'access': str(refresh.access_token)}
             })
         except AttributeError:
-            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+            return Response('Неверный логин или пароль', status=status.HTTP_400_BAD_REQUEST)
         except TypeError:
             return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 

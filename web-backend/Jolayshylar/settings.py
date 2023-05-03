@@ -40,8 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # cors
-    "corsheaders",
     # My Apps
     'accounts',
     'transports',
@@ -67,7 +65,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -76,8 +73,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'Jolayshylar.urls'
 
@@ -107,11 +102,11 @@ WSGI_APPLICATION = 'Jolayshylar.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Jolayshylar-2',
+        'NAME': 'Jolayshylar-1',
         'USER': 'postgres',
-        'PASSWORD': 'mamekov_a1',
+        'PASSWORD': '333btybfRA',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5433',
     }
 }
 

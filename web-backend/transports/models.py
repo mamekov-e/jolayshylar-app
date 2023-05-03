@@ -16,6 +16,7 @@ class Stop(models.Model):
 class Route(models.Model):
     route_number = models.CharField(max_length=255)
     route_name = models.CharField(max_length=255)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'route'
