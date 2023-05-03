@@ -10,7 +10,7 @@ import {BusInfoSubpageCrumb, EditBusSubpageCrumb} from "../../../../constants/Br
 
 export default function AllBusesComponent() {
     const {goToSubpage, context} = useContext(BreadcrumbContext);
-    const {items, changeBusTrackingState, remove, edit, AddComponent} = context;
+    const {items, changeBusTrackingState, checkIsTrackingAtLeastOne, remove, edit, AddComponent} = context;
     const [error, setError] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -24,22 +24,32 @@ export default function AllBusesComponent() {
             {
                 header: '#',
                 accessorKey: 'id',
+                size: 5
             },
             {
                 header: 'Гос. номер',
                 accessorKey: 'transport_number',
+                size: 75
             },
             {
                 header: 'Вместимость',
                 accessorKey: 'total_seats',
+                size: 70
             },
             {
                 header: 'Сидячих мест',
                 accessorKey: 'normal_seats',
+                size: 75
             },
             {
                 header: 'Спец. мест',
                 accessorKey: 'disabled_seats',
+                size: 70
+            },
+            {
+                header: 'Маршрут',
+                accessorKey: 'route_number',
+                size: 50
             },
         ],
         [],
@@ -104,6 +114,10 @@ export default function AllBusesComponent() {
                 return;
             }
             const selected = rows.map((row) => row.original)
+            if (checkIsTrackingAtLeastOne(selected)) {
+                alert("В списке есть отслеживаемые автобусы. Остановите отслеживание, чтобы удалить.")
+                return;
+            }
             remove(selected)
             table.resetRowSelection(true)
         },
@@ -116,6 +130,11 @@ export default function AllBusesComponent() {
                 return;
             }
             const selected = rows.map((row) => row.original)
+            if (checkIsTrackingAtLeastOne(selected) && selected.length > 1) {
+                if (!confirm("В списке есть также неотслеживаемые автобусы. " +
+                    "Вы уверены что хотите запустить отслеживание этих автобусов?"))
+                    return;
+            }
             changeBusTrackingState(selected, true)
             table.resetRowSelection(true)
         },
@@ -128,6 +147,11 @@ export default function AllBusesComponent() {
                 return;
             }
             const selected = rows.map((row) => row.original)
+            if (checkIsTrackingAtLeastOne(selected) && selected.length > 1) {
+                if (!confirm("В списке есть также отслеживаемые автобусы. " +
+                    "Вы уверены что хотите остановить отслеживание этих автобусов?"))
+                    return;
+            }
             changeBusTrackingState(selected, false)
             table.resetRowSelection(true)
         },
@@ -208,15 +232,15 @@ export default function AllBusesComponent() {
                         </div>
                     )}
                     renderTopToolbarCustomActions={({table}) => (
-                        <Box
-                            sx={{display: 'flex', gap: '1rem', p: '0.2rem', flexWrap: 'wrap'}}
-                        >
+                        <Box sx={{display: 'flex', gap: '0.5rem', p: '0.2rem', flexWrap: 'wrap'}}>
                             <Button
+                                size={"small"}
                                 onClick={handleAdd}
                                 variant="contained">
                                 Добавить
                             </Button>
                             <Button
+                                size={"small"}
                                 disabled={
                                     !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
                                 }
@@ -226,6 +250,7 @@ export default function AllBusesComponent() {
                                 Удалить
                             </Button>
                             <Button
+                                size={"small"}
                                 disabled={
                                     !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
                                 }
@@ -235,6 +260,7 @@ export default function AllBusesComponent() {
                                 Запустить отслеживание
                             </Button>
                             <Button
+                                size={"small"}
                                 disabled={
                                     !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
                                 }

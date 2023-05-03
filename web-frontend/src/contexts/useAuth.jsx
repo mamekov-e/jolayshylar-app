@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import jwt_decode from "jwt-decode";
 import {useNavigate} from "react-router-dom";
+import {BASE_URL} from "../constants/Data.jsx";
 
 const AuthContext = React.createContext();
 
@@ -20,7 +21,7 @@ function AuthContextProvider({children}) {
     const navigate = useNavigate();
 
     const loginUser = async (values) => {
-        const response = await fetch("http://127.0.0.1:8000/accounts/login/", {
+        const response = await fetch(`${BASE_URL}/accounts/login/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -43,7 +44,7 @@ function AuthContextProvider({children}) {
     };
 
     const registerUser = async (values) => {
-        const response = await fetch("http://127.0.0.1:8000/accounts/register-email/", {
+        const response = await fetch(`${BASE_URL}/accounts/register-email/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

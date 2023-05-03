@@ -145,6 +145,7 @@ export default function AllReportsComponent({InfoSubpage}) {
                             sx={{display: 'flex', gap: '1rem', p: '0.2rem', flexWrap: 'wrap'}}
                         >
                             <Button
+                                size={"small"}
                                 disabled={table.getPrePaginationRowModel().rows.length === 0}
                                 onClick={() =>
                                     handleExportRows(table.getPrePaginationRowModel().rows)
@@ -155,6 +156,7 @@ export default function AllReportsComponent({InfoSubpage}) {
                                 Экспорт всех данных
                             </Button>
                             <Button
+                                size={"small"}
                                 disabled={
                                     !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
                                 }

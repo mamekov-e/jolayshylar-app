@@ -18,6 +18,10 @@ function BusContextProvider({children}) {
         })
     }
 
+    function checkIsTrackingAtLeastOne(buses) {
+        return buses.some(bus=> bus.is_tracking)
+    }
+
     function addBus(values) {
         const id = busItems.length > 0 ? busItems[busItems.length - 1].id + 1 : 0;
         const newBus = {id, ...values, is_tracking: false};
@@ -49,6 +53,7 @@ function BusContextProvider({children}) {
         <BusContext.Provider
             value={{
                 changeBusTrackingState,
+                checkIsTrackingAtLeastOne,
                 items: busItems,
                 remove: removeBuses,
                 AddComponent,

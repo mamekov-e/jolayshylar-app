@@ -147,12 +147,14 @@ export default function AllRoutesComponent() {
                             sx={{display: 'flex', gap: '1rem', p: '0.2rem', flexWrap: 'wrap'}}
                         >
                             <Button
+                                size={"small"}
                                 onClick={handleAdd}
                                 variant="contained"
                             >
                                 Добавить
                             </Button>
                             <Button
+                                size={"small"}
                                 disabled={
                                     !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
                                 }
