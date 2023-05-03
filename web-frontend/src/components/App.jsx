@@ -1,34 +1,41 @@
-import { Routes, Route } from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import HomePage from "../pages/HomePage/HomePage";
-import PartnersPage from "../pages/Partners/PartnersPage/PartnersPage";
-import RoutesPage from "../pages/Partners/RoutesPage/RoutesPage";
-import BusesPage from "../pages/Partners/BusesPage/BusesPage";
-import ReportsPage from "../pages/Partners/ReportsPage/ReportsPage";
-import PassengersPage from "../pages/PassengersPage";
-import ContactsPage from "../pages/ContactsPage";
-import AboutPage from "../pages/AboutPage";
+import CardPage from "../pages/Partners/CardPage/CardPage.jsx";
+import PassengersPage from "../pages/PassengersPage/PassengersPage.jsx";
 import Header from "./Header/Header";
 import LoginPage from "../pages/AuthPages/LoginPage";
 import RegistrationPage from "../pages/AuthPages/RegistrationPage";
+import {FeaturesContext} from "../contexts/useFeatures.jsx";
+import {useContext} from "react";
+import PrivateRoute from "../utils/PrivateRoute.jsx";
+import PartnersMainPage from "../pages/Partners/PartnersPage/PartnersMainPage.jsx";
 
 function App() {
-  return (
-    <>
-      <Header />
-      <Routes>
-        <Route index path="/" element={<HomePage />} />
-        <Route path="/passengers" element={<PassengersPage />} />
-        <Route exact="true" path="/partners" element={<PartnersPage />} />
-        <Route path="/partners/routes" element={<RoutesPage />} />
-        <Route path="/partners/buses" element={<BusesPage />} />
-        <Route path="/partners/reports" element={<ReportsPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegistrationPage />} />
-        <Route path="/contacts" element={<ContactsPage />} />
-        <Route path="/about" element={<AboutPage />} />
-      </Routes>
-    </>
-  );
+    const commonContext = useContext(FeaturesContext);
+
+    return (
+        <>
+            <Header/>
+            <Routes>
+                <Route index path="/" element={<HomePage/>}/>
+                <Route path="/passengers" element={<PassengersPage/>}/>
+                <Route exact path='/partners' element={<PrivateRoute/>}>
+                    <Route exact path="/partners" element={<PartnersMainPage/>}/>
+                </Route>
+                <Route  path='/partners/routes' element={<PrivateRoute/>}>
+                    <Route  path="/partners/routes" element={<CardPage pageName={"Маршруты"} context={commonContext.routeContext}/>}/>
+                </Route>
+                <Route  path='/partners/buses' element={<PrivateRoute/>}>
+                    <Route  path="/partners/buses" element={<CardPage pageName={"Автобусы"} context={commonContext.busContext}/>}/>
+                </Route>
+                <Route  path='/partners/reports' element={<PrivateRoute/>}>
+                    <Route  path="/partners/reports" element={<CardPage pageName={"Отчеты"} context={commonContext.reportContext}/>}/>
+                </Route>
+                <Route  path="/partners/login" element={<LoginPage/>}/>
+                <Route  path="/partners/register" element={<RegistrationPage/>}/>
+            </Routes>
+        </>
+    );
 }
 
 export default App;

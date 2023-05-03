@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х129КLG",
+    "route_number":1
+  },
+  {
+    "id": 2,
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х139КLG",
+    "route_number": 1
+  },
+  {
+    "id": 3,
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х149КLG",
+    "route_number": 1
+  },
+  {
+    "id": 4,
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х159КLG",
+    "route_number": 1
+  },
+  {
+    "id": 5,
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х169КLG",
+    "route_number": 1
+  },
+  {
+    "id": 6,
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х179КLG",
+    "route_number": 1
+  },
+  {
+    "id": 7,
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х189КLG",
+    "route_number": 1
+  },
+  {
+    "id": 8,
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х199КLG",
+    "route_number": 1
+  },
+  {
+    "id": 9,
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х999КLG",
+    "route_number": 1
+  },
+  {
+    "id": 10,
+    "normal_seats": 50,
+    "disabled_seats": 50,
+    "total_seats": 60,
+    "transport_number": "Х109КLG",
+    "route_number": 1
+  }
+]

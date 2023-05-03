@@ -1,19 +1,31 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./components/App";
-import { BrowserRouter } from "react-router-dom";
+import {BrowserRouter} from "react-router-dom";
 import "./index.css";
-import { BusContextProvider } from "./contexts/useBus";
-import { BreadcrumbContextProvider } from "./contexts/useBreadcrumb";
+import {BusContextProvider} from "./contexts/useBus";
+import {BreadcrumbContextProvider} from "./contexts/useBreadcrumb";
+import {FeaturesContextProvider} from "./contexts/useFeatures.jsx";
+import {ReportContextProvider} from "./contexts/useReport.jsx";
+import {RouteContextProvider} from "./contexts/useRoute.jsx";
+import {AuthContextProvider} from "./contexts/useAuth.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <BreadcrumbContextProvider>
-        <BusContextProvider>
-          <App />
-        </BusContextProvider>
-      </BreadcrumbContextProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+    <React.StrictMode>
+        <BrowserRouter>
+            <ReportContextProvider>
+                <RouteContextProvider>
+                    <BusContextProvider>
+                        <FeaturesContextProvider>
+                            <BreadcrumbContextProvider>
+                                <AuthContextProvider>
+                                    <App/>
+                                </AuthContextProvider>
+                            </BreadcrumbContextProvider>
+                        </FeaturesContextProvider>
+                    </BusContextProvider>
+                </RouteContextProvider>
+            </ReportContextProvider>
+        </BrowserRouter>
+    </React.StrictMode>
 );

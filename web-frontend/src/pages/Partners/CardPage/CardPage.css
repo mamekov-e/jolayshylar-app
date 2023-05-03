@@ -1,0 +1,37 @@
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2px;
+    margin-inline: 10%;
+    padding-inline-start: 20px;
+}
+
+.subpageTitle {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 29px;
+}
+
+.section {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    margin-inline: 10%;
+    margin-top: 15px;
+    padding: 25px;
+    gap: 15px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.subheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.subpagesStyle {
+    margin-bottom: 30px;
+}

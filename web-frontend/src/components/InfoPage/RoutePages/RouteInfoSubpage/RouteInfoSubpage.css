@@ -1,0 +1,33 @@
+.routeInfoPage {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.firstInfo {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-inline-start: 15px;
+}
+
+.routeInfoDetails {
+    display: flex;
+    align-items: center;
+    color: #014E6D;
+}
+
+.routeInfoDetails > p{
+    font-weight: 700;
+    font-size: 14px;
+    padding-right: 5px;
+}
+
+.routeInfoDetails > h3{
+    margin: 0;
+    font-size: 15px;
+}

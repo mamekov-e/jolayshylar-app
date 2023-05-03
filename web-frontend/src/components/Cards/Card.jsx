@@ -5,23 +5,28 @@ import busesImg from "../../assets/partners/homePage/buses-icon.svg";
 import reportsImg from "../../assets/partners/homePage/reports-icon.png";
 import "./Card.css";
 import { BreadcrumbContext } from "../../contexts/useBreadcrumb";
-import { AllBusesSubpageCrumb } from "../../constants/BreadcrumbItems";
-import { BusContext } from "../../contexts/useBus";
+import {
+  AllBusesSubpageCrumb,
+  AllReportsSubpageCrumb,
+  AllRoutesSubpageCrumb
+} from "../../constants/BreadcrumbItems";
 
 export default function Card({ data }) {
-  const { goToSubpage } = useContext(BusContext);
+  const { goToSubpage } = useContext(BreadcrumbContext);
 
   const { imgSrc, linkToValue, description, btnName } = data;
-  var img = "";
-  var subpageToOpen;
+  let img = "";
+  let subpageToOpen;
 
   if (imgSrc === "routes-icon.svg") {
     img = routesImg;
+    subpageToOpen = AllRoutesSubpageCrumb;
   } else if (imgSrc === "buses-icon.svg") {
     img = busesImg;
     subpageToOpen = AllBusesSubpageCrumb;
   } else if (imgSrc === "reports-icon.png") {
     img = reportsImg;
+    subpageToOpen = AllReportsSubpageCrumb;
   }
 
   return (

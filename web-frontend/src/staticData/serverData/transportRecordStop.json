@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "transport_number": "X123KLG",
+    "stop_id": 1,
+    "stop_name": "Теплотранзит",
+    "passenger_in": 6,
+    "passenger_out": 5,
+    "timestamp": "9:20",
+    "cycle_amount": 1
+  },
+  {
+    "id": 2,
+    "transport_number": "X123KLG",
+    "stop_id": 2,
+    "stop_name": "Ж/д вокзал Астана 1",
+    "passenger_in": 6,
+    "passenger_out": 5,
+    "timestamp": "9:30",
+    "cycle_amount": 1
+  },
+  {
+    "id": 3,
+    "transport_number": "X123KLG",
+    "stop_id": 3,
+    "stop_name": "Больница Медицинского центра УДП РК",
+    "passenger_in": 2,
+    "passenger_out": 5,
+    "timestamp": "9:50",
+    "cycle_amount": 1
+  },
+  {
+    "id": 4,
+    "transport_number": "X123KLG",
+    "stop_id": 4,
+    "stop_name": "Гипермаркет Строймарт",
+    "passenger_in": 2,
+    "passenger_out": 5,
+    "timestamp": "10:10",
+    "cycle_amount": 1
+  },
+  {
+    "id": 5,
+    "transport_number": "X123KLG",
+    "stop_id": 5,
+    "stop_name": "Театр танца Наз",
+    "passenger_in": 4,
+    "passenger_out": 5,
+    "timestamp": "10:50",
+    "cycle_amount": 1
+  },
+  {
+    "id": 6,
+    "transport_number": "X123KLG",
+    "stop_id": 6,
+    "stop_name": "Парк Коктал",
+    "passenger_in": 7,
+    "passenger_out": 5,
+    "timestamp": "12:00",
+    "cycle_amount": 1
+  },
+  {
+    "id": 7,
+    "transport_number": "X123KLG",
+    "stop_id": 1,
+    "stop_name": "Теплотранзит",
+    "passenger_in": 6,
+    "passenger_out": 5,
+    "timestamp": "12:20",
+    "cycle_amount": 2
+  },
+  {
+    "id": 8,
+    "transport_number": "X123KLG",
+    "stop_id": 2,
+    "stop_name": "Ж/д вокзал Астана 1",
+    "passenger_in": 10,
+    "passenger_out": 3,
+    "timestamp": "12:40",
+    "cycle_amount": 2
+  },
+  {
+    "id": 9,
+    "transport_number": "X123KLG",
+    "stop_id": 3,
+    "stop_name": "Больница Медицинского центра УДП РК",
+    "passenger_in": 2,
+    "passenger_out": 5,
+    "timestamp": "12:50",
+    "cycle_amount": 2
+  },
+  {
+    "id": 10,
+    "transport_number": "X123KLG",
+    "stop_id": 4,
+    "stop_name": "Гипермаркет Строймарт",
+    "passenger_in": 2,
+    "passenger_out": 5,
+    "timestamp": "13:10",
+    "cycle_amount": 2
+  },
+  {
+    "id": 11,
+    "transport_number": "X123KLG",
+    "stop_id": 5,
+    "stop_name": "Театр танца Наз",
+    "passenger_in": 2,
+    "passenger_out": 5,
+    "timestamp": "13:50",
+    "cycle_amount": 2
+  },
+  {
+    "id": 12,
+    "transport_number": "X123KLG",
+    "stop_id": 6,
+    "stop_name": "Парк Коктал",
+    "passenger_in": 2,
+    "passenger_out": 5,
+    "timestamp": "14:00",
+    "cycle_amount": 2
+  },
+  {
+    "id": 13,
+    "transport_number": "X123KLG",
+    "stop_id": 1,
+    "stop_name": "Теплотранзит",
+    "passenger_in": 6,
+    "passenger_out": 5,
+    "timestamp": "14:20",
+    "cycle_amount": 3
+  },
+  {
+    "id": 14,
+    "transport_number": "X123KLG",
+    "stop_id": 2,
+    "stop_name": "Ж/д вокзал Астана 1",
+    "passenger_in": 10,
+    "passenger_out": 3,
+    "timestamp": "14:40",
+    "cycle_amount": 3
+  },
+  {
+    "id": 15,
+    "transport_number": "X123KLG",
+    "stop_id": 3,
+    "stop_name": "Больница Медицинского центра УДП РК",
+    "passenger_in": 2,
+    "passenger_out": 5,
+    "timestamp": "14:50",
+    "cycle_amount": 3
+  },
+  {
+    "id": 16,
+    "transport_number": "X123KLG",
+    "stop_id": 4,
+    "stop_name": "Гипермаркет Строймарт",
+    "passenger_in": 2,
+    "passenger_out": 5,
+    "timestamp": "15:10",
+    "cycle_amount": 3
+  },
+  {
+    "id": 17,
+    "transport_number": "X123KLG",
+    "stop_id": 5,
+    "stop_name": "Театр танца Наз",
+    "passenger_in": 2,
+    "passenger_out": 5,
+    "timestamp": "15:50",
+    "cycle_amount": 3
+  },
+  {
+    "id": 18,
+    "transport_number": "X123KLG",
+    "stop_id": 6,
+    "stop_name": "Парк Коктал",
+    "passenger_in": 2,
+    "passenger_out": 5,
+    "timestamp": "16:00",
+    "cycle_amount": 3
+  }
+]

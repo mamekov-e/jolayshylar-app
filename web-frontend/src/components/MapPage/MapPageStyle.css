@@ -1,0 +1,99 @@
+.routeInputPanel {
+    width: 350px;
+    height: 100%;
+}
+
+.mapPageWrapper {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.mapWrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.featureBtns {
+    position: absolute;
+    z-index: 1;
+    right: 30px;
+    bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.locationBtn {
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
+    background-color: #ffffff;
+    color: #014E6D;
+    cursor: pointer;
+}
+
+.featuresPanel {
+    min-width: 45vw;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin: 4px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: #707374;
+    z-index: 1;
+}
+
+.calculateButton {
+    height: 39px;
+    /*border: 1px solid #007cad;*/
+    border: none;
+    border-radius: 5px;
+    background-color: #007cad;
+    color: white;
+}
+
+.requestPanel {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+}
+
+.inputBox {
+    height: auto;
+}
+
+.requestButton {
+    height: 35px;
+    min-width: 200px;
+    padding-inline-start: 5px;
+    flex-grow: 1;
+    border: 1px solid #007cad;
+    border-radius: 5px;
+    outline: none;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 5px;
+}
+
+.clearBtn {
+    text-align: center;
+    width: 35px;
+    border: none;
+    border-radius: 5px;
+}
+
+.responsePanel {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
