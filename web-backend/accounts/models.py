@@ -33,10 +33,20 @@ class Role(models.Model):
         db_table = 'role'
 
 
+class Company(models.Model):
+    name = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    contacts = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'company'
+
+
 class User(AbstractBaseUser):
     login = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -55,6 +65,7 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+
 class City(models.Model):
     city_name = models.CharField(max_length=255)
 
@@ -62,19 +73,9 @@ class City(models.Model):
         db_table = 'city'
 
 
-class Company(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    contacts = models.CharField(max_length=255)
-
-    class Meta:
-        db_table = 'company'
-
-
 class companies_cities(models.Model):
-    city = models.ManyToManyField(City)
-    company = models.ManyToManyField(Company)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'companies_cities'

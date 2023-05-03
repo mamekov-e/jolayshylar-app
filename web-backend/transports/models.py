@@ -2,9 +2,12 @@ from django.db import models
 from accounts.models import City, Company
 # Create your models here.
 
+
 class Stop(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     stop_name = models.CharField(max_length=255)
+    longitude = models.IntegerField(default=0)
+    latitude = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'stop'
@@ -13,9 +16,22 @@ class Stop(models.Model):
 class Route(models.Model):
     route_number = models.CharField(max_length=255)
     route_name = models.CharField(max_length=255)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'route'
+
+
+class Transport(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    total_seats = models.IntegerField(default=0)
+    normal_seats = models.IntegerField(default=0)
+    disabled_seats = models.IntegerField(default=0)
+    transport_number = models.CharField(max_length=255)
+    route = models.ForeignKey(Route, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'transport'
 
 
 class Routes_stops(models.Model):
@@ -25,18 +41,6 @@ class Routes_stops(models.Model):
 
     class Meta:
         db_table = 'routes_stops'
-
-
-class Transport(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    route = models.ForeignKey(Route, on_delete=models.CASCADE)
-    total_seats = models.IntegerField(default=0)
-    normal_seats = models.IntegerField(default=0)
-    disabled_seats = models.IntegerField(default=0)
-    transport_number = models.CharField(max_length=255)
-
-    class Meta:
-        db_table = 'transport'
 
 
 class Companies_routes(models.Model):
