@@ -63,7 +63,8 @@ def get_transports_of_company(request):
 @permission_classes([IsAuthenticated])
 def get_routes_of_company(request):
     try:
-        company_id = request.query_params['id']
+        user = getUserByToken(request)
+        company_id = user.company_id
         route_ids = Route.objects.filter(company_id__exact=company_id).all()
         data = RouteGETSerializer(route_ids, many=True)
         return Response(data.data)
@@ -258,12 +259,14 @@ def delete_stop(request):
 class RouteView(APIView):
     def post(self, request):
         try:
+            print(request.data)
             user = getUserByToken(request)
             route_serializer = RoutePOSTSerializer(data={
                 "route_name": request.data['route_name'],
                 "route_number": request.data['route_number'],
                 "company": user.company_id
             })
+            print(route_serializer.is_valid())
 
             route = None
             if route_serializer.is_valid():
@@ -306,7 +309,7 @@ class EditRouteView(APIView):
             route_serializer = RoutePOSTSerializer(data={
                 "route_name": request.data['route_name'],
                 "route_number": request.data['route_number'],
-                "company": Company.objects.get(id__exact=user.id).__dict__
+                "company": user.company_id #Company.objects.get(id__exact=user.id).__dict__
             })
             route_serializer.is_valid(raise_exception=True)
             new_data = RoutePOSTSerializer.update(route_serializer, route, route_serializer.validated_data)

@@ -131,6 +131,10 @@ dmypy.json
 #node_modules
 web-frontend/node_modules/
 
-#node_modules
+#frontend/
 web-frontend/.idea/
+web-frontend/.vs/web-frontend/
+
+#backend/
+web-backend/.idea/
 web-frontend/.vs/web-frontend/

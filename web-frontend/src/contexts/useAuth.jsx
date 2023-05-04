@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react";
-import jwt_decode from "jwt-decode";
 import {useNavigate} from "react-router-dom";
 import {BASE_URL} from "../constants/Data.jsx";
-import axiosUtil from "../utils/axiosUtil.jsx";
 
 const AuthContext = React.createContext();
 
@@ -10,31 +8,10 @@ function AuthContextProvider({children}) {
     const [authTokens, setAuthTokens] = useState(() =>
         localStorage.getItem("authTokens")
             ? JSON.parse(localStorage.getItem("authTokens"))
-            : null
-    );
-    const [user, setUser] = useState(() =>
-        localStorage.getItem("authTokens")
-            ? jwt_decode(localStorage.getItem("authTokens"))
-            : null
-    );
-    const [userData, setUserData] = useState(null);
+            : null);
+    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-
-    async function fetchUserData() {
-        try {
-            const response = await fetch(`${BASE_URL}/accounts/get-user-by-id/?` + new URLSearchParams({id: user.user_id}), {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Token ${authTokens?.access}`
-                },
-            });
-            setUserData(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     const loginUser = async (values) => {
         const response = await fetch(`${BASE_URL}/accounts/login/`, {
@@ -49,9 +26,7 @@ function AuthContextProvider({children}) {
         })
         if (response.status === 200) {
             const data = await response.json();
-            console.log("data", data)
             setAuthTokens(data.token);
-            setUser(jwt_decode(data.token.access));
             localStorage.setItem("authTokens", JSON.stringify(data.token));
             navigate("/partners");
         }
@@ -61,17 +36,15 @@ function AuthContextProvider({children}) {
     };
 
     const registerUser = async (values) => {
+        const formData = new FormData();
+
+        formData.append("city", values.city);
+        formData.append("company", values.companyName);
+        formData.append("contacts", values.contacts);
+        formData.append("email", values.email);
         const response = await fetch(`${BASE_URL}/accounts/register-email/`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                city: values.city,
-                company: values.companyName,
-                email: values.email,
-                contacts: values.contacts,
-            })
+            body: formData
         });
         if (response.status === 200) {
             navigate("/partners/login");
@@ -82,33 +55,40 @@ function AuthContextProvider({children}) {
 
     const logoutUser = () => {
         setAuthTokens(null);
-        setUser(null);
+        setUser(null)
         localStorage.removeItem("authTokens");
         navigate("/");
     };
 
-    const contextData = {
-        user,
-        userData,
-        setUser,
-        authTokens,
-        setAuthTokens,
-        registerUser,
-        loginUser,
-        logoutUser
-    };
-
     useEffect(() => {
-        if (authTokens) {
-            setUser(jwt_decode(authTokens.access));
-            fetchUserData()
+        async function getUserData() {
+            try {
+                const response = await fetch(`${BASE_URL}/accounts/get-user-by-token/`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Token ${authTokens?.access}`
+                    },
+                }).then(res=> res.json()).then(data=> data);
+                setUser(response)
+            } catch (error) {
+                console.error(error);
+            }
         }
+        if (authTokens)
+            getUserData()
         setLoading(false);
-    }, [authTokens, loading]);
+    }, [authTokens])
 
     return (
         <AuthContext.Provider
-            value={contextData}
+            value={{
+                user,
+                authTokens,
+                setAuthTokens,
+                registerUser,
+                loginUser,
+                logoutUser
+            }}
         >
             {loading ? null : children}
         </AuthContext.Provider>

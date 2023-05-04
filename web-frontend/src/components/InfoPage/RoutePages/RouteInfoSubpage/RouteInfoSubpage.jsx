@@ -7,10 +7,11 @@ import {EditRouteSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
 
 export default function RouteInfoSubpage({route}) {
     const {goToSubpage, context} = useContext(BreadcrumbContext);
-    const {edit} = context;
+    const {edit, getRouteById} = context;
 
-    function onEdit() {
-        const subpagecrumb = EditRouteSubpageCrumb(route, edit);
+    async function onEdit() {
+        const routeStops = await getRouteById(route.id)
+        const subpagecrumb = EditRouteSubpageCrumb(route, routeStops, edit);
         goToSubpage(subpagecrumb);
     }
 

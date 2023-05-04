@@ -6,27 +6,25 @@ import SaveBtn from "../../../CustomComponents/Button/Button.jsx";
 import "./RouteForm.css";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import Dropdown from "../../../CustomComponents/Dropdown/Dropdown.jsx";
-import allStopsList from "../../../../staticData/serverData/allStopsList.json";
+import axiosUtil from "../../../../utils/axiosUtil.jsx";
 
-export default function RouteForm({submitForm, route}) {
+export default function RouteForm({submitForm, route, routeStops}) {
     const {subpage} = useContext(BreadcrumbContext);
     const [stopOptions, setStopOptions] = useState([])
     const [responseError, setResponseError] = useState(null)
+    const api = axiosUtil()
 
-    const loadStopsData = () => {
-        const dataToOptions = allStopsList.map(item => ({
+    const loadStopsData = async () => {
+        const allStops = await api.get("/transports/get-all-stops/")
+        const dataToOptions = allStops.data.map(item => ({
             value: item.id,
             label: item.stop_name
         }));
         setStopOptions(dataToOptions)
     }
 
-    const routeStopsToOptions = (list) => {
-        const listObj = list[0]
-        if ('value' in listObj && 'label' in listObj) {
-            return list;
-        }
-        return list.map(item => ({
+    const routeStopsToOptions = (routes) => {
+        return routes.map(item => ({
             value: item.id,
             label: item.stop_name
         }));
@@ -49,7 +47,7 @@ export default function RouteForm({submitForm, route}) {
         <Formik
             initialValues={{
                 route_number: route ? route.route_number : "",
-                stops: route ? routeStopsToOptions(route.stops) : "",
+                stops: route ? routeStopsToOptions(routeStops) : "",
             }}
             validationSchema={routeSchema}
             onSubmit={async (values) => {

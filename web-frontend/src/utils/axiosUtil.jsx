@@ -7,7 +7,7 @@ import {BASE_URL} from "../constants/Data.jsx";
 
 
 const axiosUtil = () => {
-    const { authTokens, setUser, setAuthTokens } = useContext(AuthContext);
+    const { authTokens, setAuthTokens } = useContext(AuthContext);
 
     const axiosInstance = axios.create({
         baseURL: BASE_URL,
@@ -27,7 +27,6 @@ const axiosUtil = () => {
         localStorage.setItem("authTokens", JSON.stringify(response.data));
 
         setAuthTokens(response.data);
-        setUser(jwt_decode(response.data.access));
 
         req.headers.Authorization = `Token ${response.data.access}`;
         return req;

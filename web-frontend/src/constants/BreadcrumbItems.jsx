@@ -75,11 +75,11 @@ export function EditBusSubpageCrumb(bus, editBus) {
     };
 }
 
-export function EditRouteSubpageCrumb(route, editRoute) {
+export function EditRouteSubpageCrumb(route, routeStops, editRoute) {
     return {
         name: "Редактировать маршрут",
         component: (
-            <ItemActionsFormSubpage page={<RouteForm submitForm={editRoute} route={route}/>}/>
+            <ItemActionsFormSubpage page={<RouteForm submitForm={editRoute} route={route} routeStops={routeStops}/>}/>
         ),
         link: "#",
         subPageName: "edit",

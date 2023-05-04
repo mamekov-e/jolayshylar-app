@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {AddRouteSubpageCrumb} from "../constants/BreadcrumbItems.jsx";
 import axiosUtil from "../utils/axiosUtil.jsx";
 
@@ -11,7 +11,6 @@ function RouteContextProvider({children}) {
     const AddComponent = AddRouteSubpageCrumb(addRoute)
 
     async function addRoute(values) {
-        const id = routeItems.length > 0 ? routeItems[routeItems.length - 1].id + 1 : 0;
         const route_name = values.stops[0].label + " → " + values.stops[values.stops.length - 1].label
         const stopsArr = values.stops.map(stop => ({
             id: stop.value,
@@ -19,25 +18,25 @@ function RouteContextProvider({children}) {
         }))
 
         const newRoute = {
-            id,
             route_number: values.route_number,
             route_name,
             stops: stopsArr
         };
-        const response = await api.post(
-            "/transports/add-route/",
-            newRoute,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            })
-        if (response.status === 200) {
-            setRouteItems((prevItems) => [...prevItems, newRoute]);
-            return true
-        }
-        if (response.status >= 400) {
-            return response.data
+        try {
+            const response = await api.post(
+                "/transports/add-route/",
+                newRoute,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+            if (response.status === 200) {
+                setRouteItems((prevItems) => [...prevItems, response.data.route]);
+                return true
+            }
+        } catch (err) {
+            return err.response.data
         }
     }
 
@@ -51,24 +50,25 @@ function RouteContextProvider({children}) {
                     stop_name: stop.label
                 }))
                 updatedRoute = {...item, ...values, route_name, stops: stopsArr};
-                return updatedRoute
+                return {...item, route_number: values.route_number, route_name}
             }
             return item;
         });
-        const response = await api.post(
-            "/transports/edit-route/",
-            updatedRoute,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            })
-        if (response.status === 200) {
-            setRouteItems(updatedRoutesItems);
-            return true
-        }
-        if (response.status >= 400) {
-            return response.data
+        try {
+            const response = await api.post(
+                "/transports/edit-route/",
+                updatedRoute,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+            if (response.status === 200) {
+                setRouteItems(updatedRoutesItems);
+                return true
+            }
+        } catch (err) {
+            return err.response.data
         }
     }
 
@@ -78,30 +78,58 @@ function RouteContextProvider({children}) {
             busIds.push(bus.id)
         })
         const params = new URLSearchParams({ids: busIds.join(',')})
-        const response = await api.delete(
-            "/transports/delete-route/?" + params.toString(),
-            {
-                headers: {"Content-Type": "application/x-www-form-urlencoded"}
-            })
-        if (response.status === 200) {
-            setRouteItems((prevItems) => {
-                const filteredItems = prevItems.filter(
-                    (item) => !routes.includes(item)
-                );
-                return filteredItems;
-            });
-            return true
-        }
-        if (response.status >= 400) {
-            return response.data
+        try {
+            const response = await api.delete(
+                "/transports/delete-route/?" + params.toString(),
+                {
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"}
+                })
+            if (response.status === 200) {
+                setRouteItems((prevItems) => {
+                    const filteredItems = prevItems.filter(
+                        (item) => !routes.includes(item)
+                    );
+                    return filteredItems;
+                });
+                return true
+            }
+        } catch (err) {
+            return err.response.data
+
         }
     }
+
+    async function getRouteById(id) {
+        try {
+            const params = new URLSearchParams({id: id})
+            const response = await api.get("/transports/get-routes-stops/?" + params.toString(),
+                {
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"}
+                })
+            return response.data
+        } catch (err) {
+            return "Cannot load stops"
+        }
+    }
+
+    useEffect(() => {
+        async function fetchRouteItems () {
+            try {
+                const response = await api.get("/transports/get-routes-of-company/")
+                setRouteItems(response.data)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        fetchRouteItems()
+    }, [])
 
     return (
         <RouteContext.Provider
             value={{
                 items: routeItems,
                 remove: removeRoutes,
+                getRouteById,
                 AddComponent,
                 edit: editRoute
             }}

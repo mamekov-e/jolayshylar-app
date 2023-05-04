@@ -45,18 +45,18 @@ class RouteGETSerializer(serializers.ModelSerializer):
         depth = 1
 
 class RoutePOSTSerializer(serializers.ModelSerializer):
-    company = CompanyPOSTSerializer()
-
-    def update(self, instance, validated_data):
-        if validated_data.get('company'):
-            company_data = validated_data.get('company')
-            company_serializer = CompanyPOSTSerializer(data=company_data)
-
-            if company_serializer.is_valid():
-                company = company_serializer.update(instance=instance.company, validated_data=company_serializer.validated_data)
-                validated_data['company'] = company
-
-        return super(RoutePOSTSerializer, self).update(instance, validated_data)
+    # company = CompanyPOSTSerializer()
+    #
+    # def update(self, instance, validated_data):
+    #     if validated_data.get('company'):
+    #         company_data = validated_data.get('company')
+    #         company_serializer = CompanyPOSTSerializer(data=company_data)
+    #
+    #         if company_serializer.is_valid():
+    #             company = company_serializer.update(instance=instance.company, validated_data=company_serializer.validated_data)
+    #             validated_data['company'] = company
+    #
+    #     return super(RoutePOSTSerializer, self).update(instance, validated_data)
 
     class Meta:
         model = Route

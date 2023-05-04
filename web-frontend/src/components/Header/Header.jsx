@@ -7,7 +7,7 @@ import navLinks from "../../staticData/frontData/navLinks.json"
 import {AuthContext} from "../../contexts/useAuth.jsx";
 
 export default function Header() {
-    const {user, logoutUser} = useContext(AuthContext);
+    const {authTokens, logoutUser} = useContext(AuthContext);
 
     return (
         <HeaderStyled>
@@ -17,7 +17,7 @@ export default function Header() {
             </Link>
             <Nav links={navLinks}/>
             <div className="navLogin">
-                {user ? (
+                {authTokens ? (
                     <Link onClick={logoutUser}>Выйти</Link>
                 ) : (
                     <Link to="/partners/login">Войти</Link>
