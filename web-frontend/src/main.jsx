@@ -13,19 +13,19 @@ import {AuthContextProvider} from "./contexts/useAuth.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <BrowserRouter>
-            <ReportContextProvider>
-                <RouteContextProvider>
-                    <BusContextProvider>
-                        <FeaturesContextProvider>
-                            <BreadcrumbContextProvider>
-                                <AuthContextProvider>
+            <AuthContextProvider>
+                <ReportContextProvider>
+                    <RouteContextProvider>
+                        <BusContextProvider>
+                            <FeaturesContextProvider>
+                                <BreadcrumbContextProvider>
                                     <App/>
-                                </AuthContextProvider>
-                            </BreadcrumbContextProvider>
-                        </FeaturesContextProvider>
-                    </BusContextProvider>
-                </RouteContextProvider>
-            </ReportContextProvider>
+                                </BreadcrumbContextProvider>
+                            </FeaturesContextProvider>
+                        </BusContextProvider>
+                    </RouteContextProvider>
+                </ReportContextProvider>
+            </AuthContextProvider>
         </BrowserRouter>
     </React.StrictMode>
 );

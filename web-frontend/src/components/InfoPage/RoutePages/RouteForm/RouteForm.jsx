@@ -11,6 +11,7 @@ import allStopsList from "../../../../staticData/serverData/allStopsList.json";
 export default function RouteForm({submitForm, route}) {
     const {subpage} = useContext(BreadcrumbContext);
     const [stopOptions, setStopOptions] = useState([])
+    const [responseError, setResponseError] = useState(null)
 
     const loadStopsData = () => {
         const dataToOptions = allStopsList.map(item => ({
@@ -51,14 +52,24 @@ export default function RouteForm({submitForm, route}) {
                 stops: route ? routeStopsToOptions(route.stops) : "",
             }}
             validationSchema={routeSchema}
-            onSubmit={(values) => submitForm(values, route)}
+            onSubmit={async (values) => {
+                const resp = await submitForm(values, route)
+                if (resp !== true)
+                    setResponseError(resp)
+                else
+                    setResponseError(null)
+            }}
         >
             {({
-                  isValid, errors, touched, handleChange, values,
+                  errors, touched, handleChange, values,
                   setFieldValue, setFieldTouched
               }) => {
                 return <Form className="form">
                     <div className="formGroup">
+                        {responseError && (<span className="dangerText" style={{
+                            display: "flex",
+                            justifyContent: "center"
+                        }}>{responseError}</span>)}
                         <span className="dangerText">
                           {touched.route_number && errors.route_number ? errors.route_number : "*"}
                         </span>
