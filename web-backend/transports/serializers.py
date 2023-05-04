@@ -9,9 +9,23 @@ class TransportGETSerializer(serializers.ModelSerializer):
         depth = 1
 
 class TransportPOSTSerializer(serializers.ModelSerializer):
+    # company = CompanyPOSTSerializer()
+
+    # def update(self, instance, validated_data):
+    #     if validated_data.get('company'):
+    #         company_data = validated_data.get('company')
+    #         company_serializer = CompanyPOSTSerializer(data=company_data)
+    #
+    #         if company_serializer.is_valid():
+    #             company = company_serializer.update(instance=instance.company, validated_data=company_serializer.validated_data)
+    #             validated_data['company'] = company
+    #     return super(TransportPOSTSerializer, self).update(instance, validated_data)
+
     class Meta:
         model = Transport
         fields = ['id', 'company', 'total_seats', 'normal_seats', 'disabled_seats', 'transport_number', 'route']
+
+
 
 class StopGETSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,7 +53,7 @@ class RoutePOSTSerializer(serializers.ModelSerializer):
             company_serializer = CompanyPOSTSerializer(data=company_data)
 
             if company_serializer.is_valid():
-                company = company_serializer.update(instance=instance.profile)
+                company = company_serializer.update(instance=instance.company, validated_data=company_serializer.validated_data)
                 validated_data['company'] = company
 
         return super(RoutePOSTSerializer, self).update(instance, validated_data)
@@ -53,7 +67,7 @@ class Routes_stopsGETSerializer(serializers.ModelSerializer):
     class Meta:
         model = Routes_stops
         fields = ['id', 'order', 'route', 'stop']
-        depth = 1
+        depth = 2
 
 class Routes_stopsPOSTSerializer(serializers.ModelSerializer):
     class Meta:

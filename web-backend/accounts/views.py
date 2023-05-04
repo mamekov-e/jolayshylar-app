@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.views import TokenRefreshView
 from .models import User, Company, City, companies_cities
 from rest_framework.response import Response
@@ -18,6 +18,7 @@ from Jolayshylar.static import HTTPMethod
 
 
 # Create your views here.
+from .utils import getUserByToken
 
 
 class RegisterView(APIView):
@@ -228,13 +229,8 @@ def get_companies_cities_by_city(request):
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
-# def getUserByToken(request):
-#     token = request.headers['Authorization'].split(' ')[1]
-#     access_token_obj = AccessToken(token)
-#
-#     user_id = access_token_obj['user_id']
-#     if User.objects.filter(id__exact=user_id).count() > 0:
-#         user = User.objects.filter(id__exact=user_id).first()
-#     else:
-#         user = "Unknown User"
-#     return user
+@permission_classes([IsAuthenticated])
+class GetUserByTokenView(APIView):
+    def get(self, request):
+        user = getUserByToken(request)
+        return Response(UserGETSerializer(user).data)
