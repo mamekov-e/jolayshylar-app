@@ -135,6 +135,9 @@ web-frontend/node_modules/
 web-frontend/.idea/
 web-frontend/.vs/web-frontend/
 
-#backend/
+#backend pycache
 web-backend/.idea/
-web-frontend/.vs/web-frontend/
+**/__pycache__/
+#web-backend/transports/__pycache__/
+#web-backend/accounts/__pycache__/
+#web-backend/Jolayshylar/__pycache__/
