@@ -22,6 +22,10 @@ function BusContextProvider({children}) {
         return buses.some(bus=> bus.is_tracking)
     }
 
+    function createBusesReport(buses) {
+
+    }
+
     function addBus(values) {
         const id = busItems.length > 0 ? busItems[busItems.length - 1].id + 1 : 0;
         const newBus = {id, ...values, is_tracking: false};
@@ -56,6 +60,7 @@ function BusContextProvider({children}) {
                 checkIsTrackingAtLeastOne,
                 items: busItems,
                 remove: removeBuses,
+                createBusesReport,
                 AddComponent,
                 edit: editBus
             }}

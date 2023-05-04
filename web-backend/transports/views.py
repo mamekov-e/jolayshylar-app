@@ -64,10 +64,9 @@ def get_transports_of_company(request):
 def get_routes_of_company(request):
     try:
         company_id = request.query_params['id']
-        # route_ids = Companies_routes.objects.filter(company_id__exact=company_id).select_related('route_id')
-        # data = Routes_stopsGETSerializer(route_ids, many=True)
-        # return Response(data.data)
-        return Response(company_id)
+        route_ids = Route.objects.filter(company_id__exact=company_id).all()
+        data = RouteGETSerializer(route_ids, many=True)
+        return Response(data.data)
     # except AttributeError:
     #     return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
     except TypeError:
@@ -76,14 +75,11 @@ def get_routes_of_company(request):
 
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
-def get_stops_of_company(request):
+def get_all_stops(request):
     try:
-        company_id = request.query_params['id']
-        # route_ids = Companies_routes.objects.filter(company_id__exact=company_id).select_related('route_id')
-        # stops = Stop.objects.filter(routes_stops__route_id__companies_routes__in=route_ids)
-        # data = StopGETSerializer(stops, many=True)
-        # return Response(data.data)
-        return Response(company_id)
+        stops = Stop.objects.all()
+        data = StopGETSerializer(stops, many=True)
+        return Response(data.data)
     # except AttributeError:
     #     return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
     except TypeError:
@@ -106,14 +102,17 @@ def get_transport(request):
 
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
-def get_route(request):
+def get_routes_stops(request):
     try:
         route_id = request.query_params['id']
-        route = Route.objects.filter(id__exact=route_id).first()
-        data = RouteGETSerializer(route)
-        return Response(data.data)
-    except AttributeError:
-        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+        route = Routes_stops.objects.filter(route_id__exact=route_id).all()
+        data = Routes_stopsGETSerializer(route, many=True)
+        stops = []
+        for stop in data.data:
+            stops.append(stop['stop'])
+        return Response(stops)
+    # except AttributeError:
+    #     return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
     except TypeError:
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
@@ -125,20 +124,6 @@ def get_stop(request):
         stop_id = request.query_params['id']
         stop = Stop.objects.filter(id__exact=stop_id).first()
         data = StopGETSerializer(stop)
-        return Response(data.data)
-    except AttributeError:
-        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
-    except TypeError:
-        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view([static.HTTPMethod.get])
-@permission_classes([IsAuthenticated])
-def get_routes_stops(request):
-    try:
-        routes_stops_id = request.query_params['id']
-        routes_stops = Routes_stops.objects.filter(id__exact=routes_stops_id)
-        data = Routes_stopsGETSerializer(routes_stops, many=True)
         return Response(data.data)
     except AttributeError:
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -185,38 +170,38 @@ class TransportView(APIView):
 @api_view([static.HTTPMethod.put])
 @permission_classes([IsAuthenticated])
 def edit_transport(request):
-    try:
+    # try:
         transport_id = request.data['id']
         transport = Transport.objects.get(id__exact=transport_id)
         edit_data = request.data
         edited_transport_serializer = TransportPOSTSerializer(data=edit_data)
         edited_transport_serializer.is_valid(raise_exception=True)
-        new_data = TransportPOSTSerializer.update(transport, edited_transport_serializer.validated_data)
-        return Response(new_data.data)
-    except AttributeError:
-        return Response(new_data.errors, status=status.HTTP_400_BAD_REQUEST)
-    except TypeError:
-        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+        new_data = TransportPOSTSerializer.update(edited_transport_serializer, transport, edited_transport_serializer.validated_data)
+        return Response(edited_transport_serializer.data)
+    # except AttributeError:
+    #     return Response(new_data.errors, status=status.HTTP_400_BAD_REQUEST)
+    # except TypeError:
+    #     return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 @permission_classes([IsAuthenticated])
 class DeleteTransportView(APIView):
-    def get(self, request, *args, **kwargs):
-        ids = request.query_params.get('ids').split(',')
-        queryset = Transport.objects.filter(id__in=ids)
-        serializer = TransportGETSerializer(queryset, many=True)
-        return Response(serializer.data)
+    # def get(self, request, *args, **kwargs):
+    #     ids = request.query_params.get('ids').split(',')
+    #     queryset = Transport.objects.filter(id__in=ids)
+    #     serializer = TransportGETSerializer(queryset, many=True)
+    #     return Response(serializer.data)
 
     def delete(self, request, *args, **kwargs):
-        try:
+        # try:
             transport_id = request.query_params.get('ids').split(',')
             transport = Transport.objects.filter(id__in=transport_id)
             transport.delete()
             return Response({'success': True})
-        except AttributeError:
-            return Response('Транспортов с такими идентификаторами не существует', status=status.HTTP_400_BAD_REQUEST)
-        except TypeError:
-            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+        # except AttributeError:
+        #     return Response('Транспортов с такими идентификаторами не существует', status=status.HTTP_400_BAD_REQUEST)
+        # except TypeError:
+        #     return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 # Stops
@@ -323,12 +308,10 @@ class EditRouteView(APIView):
                 "route_number": request.data['route_number'],
                 "company": Company.objects.get(id__exact=user.id).__dict__
             })
-            print(route_serializer)
             route_serializer.is_valid(raise_exception=True)
-            print(route_serializer.validated_data)
-            new_data = RoutePOSTSerializer.update(route, route_serializer.validated_data)
+            new_data = RoutePOSTSerializer.update(route_serializer, route, route_serializer.validated_data)
 
-            Routes_stops.objects.filter(route_id__exact=route['id']).all().delete()
+            Routes_stops.objects.filter(route_id__exact=route.id).all().delete()
             stops = request.data['stops']
             i = 1
             try:
@@ -344,8 +327,7 @@ class EditRouteView(APIView):
                         i = i + 1
             except AttributeError:
                 return Response('Запрос содержит недействительные данные', status=status.HTTP_400_BAD_REQUEST)
-
-            return Response(new_data.data)
+            return Response(route_serializer.data)
 
         # except AttributeError:
         #     return Response(new_data.errors, status=status.HTTP_400_BAD_REQUEST)

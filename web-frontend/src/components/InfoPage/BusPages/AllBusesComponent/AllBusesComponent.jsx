@@ -10,7 +10,7 @@ import {BusInfoSubpageCrumb, EditBusSubpageCrumb} from "../../../../constants/Br
 
 export default function AllBusesComponent() {
     const {goToSubpage, context} = useContext(BreadcrumbContext);
-    const {items, changeBusTrackingState, checkIsTrackingAtLeastOne, remove, edit, AddComponent} = context;
+    const {items, changeBusTrackingState, checkIsTrackingAtLeastOne, remove, edit, createBusesReport, AddComponent} = context;
     const [error, setError] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -158,6 +158,19 @@ export default function AllBusesComponent() {
         [items],
     );
 
+    const handleCreateBusesReport = useCallback(
+        (table, rows) => {
+            const selected = rows.map((row) => row.original)
+            if (checkIsTrackingAtLeastOne(selected)) {
+                alert("В списке есть отслеживаемые автобусы. Остановите отслеживание, чтобы создать отчет.")
+                return;
+            }
+            createBusesReport(selected)
+            table.resetRowSelection(true)
+        },
+        [items],
+    );
+
     function handleAdd() {
         goToSubpage(AddComponent);
     }
@@ -268,6 +281,16 @@ export default function AllBusesComponent() {
                                 variant="contained"
                                 color={'warning'}>
                                 Остановить отслеживание
+                            </Button>
+                            <Button
+                                size={"small"}
+                                disabled={
+                                    !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                                }
+                                onClick={() => handleCreateBusesReport(table, table.getSelectedRowModel().rows)}
+                                variant="contained"
+                                color={'secondary'}>
+                                Создать отчет
                             </Button>
                             {error && (<p>Ошибка при отправке запроса</p>)}
                         </Box>
