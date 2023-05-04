@@ -69,7 +69,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -107,11 +107,11 @@ WSGI_APPLICATION = 'Jolayshylar.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Jolayshylar-2',
+        'NAME': 'Jolayshylar-1',
         'USER': 'postgres',
-        'PASSWORD': 'mamekov_a1',
+        'PASSWORD': '333btybfRA',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5433',
     }
 }
 
