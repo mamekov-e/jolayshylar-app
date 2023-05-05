@@ -1,18 +1,18 @@
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useContext, useMemo, useState} from "react";
 import "./AllRoutesComponent.css"
 import MaterialReactTable from "material-react-table";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {Box, Button, IconButton} from "@mui/material";
 import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
 import {MdOpenInNew} from "react-icons/all.js";
-import {RouteInfoSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
+import {AddRouteSubpageCrumb, RouteInfoSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
+import {BusContext} from "../../../../contexts/useBus.jsx";
+import {RouteContext} from "../../../../contexts/useRoute.jsx";
 
 export default function AllRoutesComponent() {
-    const {goToSubpage, context} = useContext(BreadcrumbContext);
-    const {items, remove, AddComponent} = context;
-    const [error, setError] = useState(false);
-
-    const [isLoading, setIsLoading] = useState(false);
+    const {goToSubpage} = useContext(BreadcrumbContext);
+    const {setChangedState} = useContext(BusContext);
+    const {routeItems, error, addRoute, removeRoutes, isLoading} = useContext(RouteContext);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
@@ -36,73 +36,34 @@ export default function AllRoutesComponent() {
         [],
     );
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!items.length) {
-                setIsLoading(true);
-            }
+    const handleOpenRoutePage = useCallback(
+        (route) => {
+            const subpagecrumb = RouteInfoSubpageCrumb(route);
+            goToSubpage(subpagecrumb);
+        }, [])
 
-            if (typeof window !== 'undefined') {
-                // setData(busItemsData);
-                setIsLoading(false);
-            }
-            // const url = new URL(
-            //     '/api/items',
-            //     process.env.NODE_ENV === 'production'
-            //         ? 'https://www.material-react-table.com'
-            //         : 'http://localhost:3000',
-            // );
-            // url.searchParams.set(
-            //     'start',
-            //     `${pagination.pageIndex * pagination.pageSize}`,
-            // );
-            // url.searchParams.set('size', `${pagination.pageSize}`);
-            // url.searchParams.set('filters', JSON.stringify(columnFilters ?? []));
-            // url.searchParams.set('globalFilter', globalFilter ?? '');
-            // url.searchParams.set('sorting', JSON.stringify(sorting ?? []));
-            // try {
-            //     const response = await fetch(url.href);
-            //     const json = await response.json();
-            //     setData(json.items);
-            //     setRowCount(json.meta.totalRowCount);
-            // } catch (error) {
-            //     setIsError(true);
-            //     console.error(error);
-            //     return;
-            // }
-            // setIsError(false);
-            // setIsLoading(false);
-            // setIsRefetching(false);
-        };
-        fetchData();
-    }, []);
-
-    function onOpen(item) {
-        const subpagecrumb = RouteInfoSubpageCrumb(item);
-        goToSubpage(subpagecrumb);
-    }
+    const handleAddRoute = useCallback(
+        () => {
+            const subpagecrumb = AddRouteSubpageCrumb(addRoute);
+            goToSubpage(subpagecrumb);
+        }, [])
 
     const handleDeleteRow = useCallback(
         (table, rows) => {
-            if (!confirm(`Вы уверены что хотите удалить?`)) {
+            if (!confirm(`Вы уверены что хотите удалить? Все связанные с маршрутом транспорты будут также удалены!`)) {
                 return;
             }
             const selected = rows.map((row) => row.original)
-            remove(selected)
+            removeRoutes(selected)
+            setChangedState(true)
             table.resetRowSelection(true)
-        },
-        [items],
-    );
-
-    function handleAdd() {
-        goToSubpage(AddComponent);
-    }
+        }, [routeItems]);
 
     return (
         <main>
-            {items && (
+            {routeItems && (
                 <MaterialReactTable
-                    data={items}
+                    data={routeItems}
                     columns={columns}
                     enableHiding={false}
                     enableDensityToggle={false}
@@ -126,7 +87,7 @@ export default function AllRoutesComponent() {
                     state={{pagination, isLoading}}
                     enableRowActions
                     enableRowSelection
-                    rowCount={items.length}
+                    rowCount={routeItems.length}
                     selectAllMode="all"
                     memoMode="cells"
                     positionActionsColumn={"last"}
@@ -135,7 +96,7 @@ export default function AllRoutesComponent() {
                             <IconButton
                                 color="primary"
                                 onClick={() => {
-                                    onOpen(row.original)
+                                    handleOpenRoutePage(row.original)
                                 }}
                             >
                                 <MdOpenInNew color={"black"}/>
@@ -148,7 +109,7 @@ export default function AllRoutesComponent() {
                         >
                             <Button
                                 size={"small"}
-                                onClick={handleAdd}
+                                onClick={handleAddRoute}
                                 variant="contained"
                             >
                                 Добавить

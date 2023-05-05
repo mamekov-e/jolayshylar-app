@@ -6,18 +6,14 @@ const BreadcrumbContext = React.createContext();
 
 function BreadcrumbContextProvider({children}) {
     const [allItemsPage, setAllItemsPage] = useState({})
-    const [context, setContext] = useState({
-        items: []
-    })
 
     const [breadcrumb, setBreadcrumb] = useState([MainPageCrumb]);
     const [subpage, setSubpage] = useState({});
 
     const navigate = useNavigate();
 
-    function setSubpageData(newContext, subpageCrumb) {
+    function setSubpageData(subpageCrumb) {
         setAllItemsPage(subpageCrumb)
-        setContext(newContext)
     }
 
     const goToSubpage = useCallback((subpageToOpen) => {
@@ -55,7 +51,6 @@ function BreadcrumbContextProvider({children}) {
                 goToSubpage,
                 setSubpageData,
                 setAllItemsPage,
-                context,
                 allItemsPage
             }}
         >

@@ -7,9 +7,11 @@ import "./RouteForm.css";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import Dropdown from "../../../CustomComponents/Dropdown/Dropdown.jsx";
 import axiosUtil from "../../../../utils/axiosUtil.jsx";
+import {BusContext} from "../../../../contexts/useBus.jsx";
 
 export default function RouteForm({submitForm, route, routeStops}) {
-    const {subpage} = useContext(BreadcrumbContext);
+    const {subpage, goToSubpage, allItemsPage} = useContext(BreadcrumbContext);
+    const {setChangedState} = useContext(BusContext);
     const [stopOptions, setStopOptions] = useState([])
     const [responseError, setResponseError] = useState(null)
     const api = axiosUtil()
@@ -54,8 +56,11 @@ export default function RouteForm({submitForm, route, routeStops}) {
                 const resp = await submitForm(values, route)
                 if (resp !== true)
                     setResponseError(resp)
-                else
+                else {
+                    goToSubpage(allItemsPage)
+                    setChangedState(true)
                     setResponseError(null)
+                }
             }}
         >
             {({

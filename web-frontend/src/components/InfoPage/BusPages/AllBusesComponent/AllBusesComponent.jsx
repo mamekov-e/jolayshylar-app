@@ -1,19 +1,26 @@
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useContext, useMemo, useState} from "react";
 import "./AllBusesComponent.css"
 import MaterialReactTable from "material-react-table";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {Box, Button, IconButton} from "@mui/material";
-import openRow from "../../../../assets/partners/pages/openRow.svg"
 import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
 import {MdModeEditOutline, MdOpenInNew, VscDebugPause, VscDebugStart} from "react-icons/all";
-import {BusInfoSubpageCrumb, EditBusSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
+import {AddBusSubpageCrumb, BusInfoSubpageCrumb, EditBusSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
+import {BusContext} from "../../../../contexts/useBus.jsx";
 
 export default function AllBusesComponent() {
-    const {goToSubpage, context} = useContext(BreadcrumbContext);
-    const {items, changeBusTrackingState, checkIsTrackingAtLeastOne, remove, edit, createBusesReport, AddComponent} = context;
-    const [error, setError] = useState(false);
-
-    const [isLoading, setIsLoading] = useState(false);
+    const {goToSubpage} = useContext(BreadcrumbContext);
+    const {
+        busItems,
+        error,
+        isLoading,
+        changeBusTrackingState,
+        checkIsTrackingAtLeastOne,
+        addBus,
+        removeBuses,
+        editBus,
+        createBusesReport
+    } = useContext(BusContext);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
@@ -48,64 +55,31 @@ export default function AllBusesComponent() {
             },
             {
                 header: 'Маршрут',
-                accessorKey: 'route_number',
+                accessorKey: 'route.route_number',
                 size: 50
             },
         ],
         [],
     );
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!items.length) {
-                setIsLoading(true);
-            }
-            if (typeof window !== 'undefined') {
-                // setData(busItemsData);
-                setIsLoading(false);
-            }
-            // const url = new URL(
-            //     '/api/items',
-            //     process.env.NODE_ENV === 'production'
-            //         ? 'https://www.material-react-table.com'
-            //         : 'http://localhost:3000',
-            // );
-            // url.searchParams.set(
-            //     'start',
-            //     `${pagination.pageIndex * pagination.pageSize}`,
-            // );
-            // url.searchParams.set('size', `${pagination.pageSize}`);
-            // url.searchParams.set('filters', JSON.stringify(columnFilters ?? []));
-            // url.searchParams.set('globalFilter', globalFilter ?? '');
-            // url.searchParams.set('sorting', JSON.stringify(sorting ?? []));
-            // try {
-            //     const response = await fetch(url.href);
-            //     const json = await response.json();
-            //     setData(json.items);
-            //     setRowCount(json.meta.totalRowCount);
-            // } catch (error) {
-            //     setIsError(true);
-            //     console.error(error);
-            //     return;
-            // }
-            // setIsError(false);
-            // setIsLoading(false);
-            // setIsRefetching(false);
-        };
-        fetchData();
-    }, [items]);
+    const handleOpenBusPage = useCallback(
+        (bus) => {
+            const subpagecrumb = BusInfoSubpageCrumb(bus);
+            goToSubpage(subpagecrumb);
+        }, [])
 
-    function onOpen(bus) {
-        const subpagecrumb = BusInfoSubpageCrumb(bus);
-        goToSubpage(subpagecrumb);
-    }
+    const handleAddBus = useCallback(
+        () => {
+            const subpagecrumb = AddBusSubpageCrumb(addBus)
+            goToSubpage(subpagecrumb);
+        }, [])
 
     const handleEditRow = useCallback(
         (bus) => {
-            const subpagecrumb = EditBusSubpageCrumb(bus, edit);
+            const subpagecrumb = EditBusSubpageCrumb(bus, editBus);
             goToSubpage(subpagecrumb);
         },
-        [items],
+        [busItems],
     );
 
     const handleDeleteRow = useCallback(
@@ -118,10 +92,10 @@ export default function AllBusesComponent() {
                 alert("В списке есть отслеживаемые автобусы. Остановите отслеживание, чтобы удалить.")
                 return;
             }
-            remove(selected)
+            removeBuses(selected)
             table.resetRowSelection(true)
         },
-        [items],
+        [busItems],
     );
 
     const handleAddTrackingBuses = useCallback(
@@ -138,7 +112,7 @@ export default function AllBusesComponent() {
             changeBusTrackingState(selected, true)
             table.resetRowSelection(true)
         },
-        [items],
+        [busItems],
     );
 
     const handleRemoveTrackingBuses = useCallback(
@@ -155,7 +129,7 @@ export default function AllBusesComponent() {
             changeBusTrackingState(selected, false)
             table.resetRowSelection(true)
         },
-        [items],
+        [busItems],
     );
 
     const handleCreateBusesReport = useCallback(
@@ -168,18 +142,14 @@ export default function AllBusesComponent() {
             createBusesReport(selected)
             table.resetRowSelection(true)
         },
-        [items],
+        [busItems],
     );
-
-    function handleAdd() {
-        goToSubpage(AddComponent);
-    }
 
     return (
         <main>
-            {items && (
+            {busItems && (
                 <MaterialReactTable
-                    data={items}
+                    data={busItems}
                     columns={columns}
                     enableHiding={false}
                     enableDensityToggle={false}
@@ -203,7 +173,7 @@ export default function AllBusesComponent() {
                     localization={MRT_Localization_RU}
                     enableRowActions
                     enableRowSelection
-                    rowCount={items.length}
+                    rowCount={busItems.length}
                     selectAllMode="all"
                     memoMode="cells"
                     positionActionsColumn={"last"}
@@ -238,7 +208,7 @@ export default function AllBusesComponent() {
                             <IconButton
                                 color="primary"
                                 onClick={() => {
-                                    onOpen(row.original)
+                                    handleOpenBusPage(row.original)
                                 }}>
                                 <MdOpenInNew color={"black"}/>
                             </IconButton>
@@ -248,7 +218,7 @@ export default function AllBusesComponent() {
                         <Box sx={{display: 'flex', gap: '0.5rem', p: '0.2rem', flexWrap: 'wrap'}}>
                             <Button
                                 size={"small"}
-                                onClick={handleAdd}
+                                onClick={handleAddBus}
                                 variant="contained">
                                 Добавить
                             </Button>

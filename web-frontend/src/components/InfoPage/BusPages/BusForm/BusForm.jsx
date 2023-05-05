@@ -6,18 +6,29 @@ import SaveBtn from "../../../CustomComponents/Button/Button.jsx";
 import "./BusForm.css";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import Dropdown from "../../../CustomComponents/Dropdown/Dropdown.jsx";
-import routeItemsData from "../../../../staticData/serverData/routeItemsData.json";
+import axiosUtil from "../../../../utils/axiosUtil.jsx";
 
 export default function BusForm({submitForm, bus}) {
     const {subpage, goToSubpage, allItemsPage} = useContext(BreadcrumbContext);
     const [routeOptions, setRouteOptions] = useState([])
+    const [error, setError] = useState([])
+    const api = axiosUtil()
 
-    const loadRoutesData = () => {
-        const dataToOptions = routeItemsData.map(item => ({
-            value: item.route_number,
+    const loadRoutesData = async () => {
+        const allRoutes = await api.get("/transports/get-routes-of-company/")
+        if (allRoutes.data.length === 0) {
+            return "Добавьте маршруты - нет записей";
+        }
+        const dataToOptions = allRoutes.data.map(item => ({
+            value: item.id,
             label: item.route_number
-        }));
+        }))
         setRouteOptions(dataToOptions)
+        return true
+    }
+
+    const busRouteToOptions = () => {
+        return {value: bus.route.id, label: bus.route.route_number}
     }
 
     const busSchema = Yup.object().shape({
@@ -32,8 +43,10 @@ export default function BusForm({submitForm, bus}) {
         disabled_seats: Yup.number()
             .required("Обязательное поле")
             .positive("Введите положительное число"),
-        route_number: Yup.string()
-            .required("Обязательное поле")
+        route_number: Yup.object().shape({
+            value: Yup.string(),
+            label: Yup.string()
+        }).default(undefined).required("Обязательное поле")
     });
 
     return (
@@ -43,17 +56,17 @@ export default function BusForm({submitForm, bus}) {
                 total_seats: bus ? bus.total_seats : "",
                 normal_seats: bus ? bus.normal_seats : "",
                 disabled_seats: bus ? bus.disabled_seats : "",
-                route_number: bus ? bus.route_number : ""
+                route_number: bus ? busRouteToOptions() : ""
             }}
             validationSchema={busSchema}
-            onSubmit={(values) => {
-                const result = submitForm(values, bus)
+            onSubmit={async (values) => {
+                const result = await submitForm(values, bus)
                 if (result)
                     goToSubpage(allItemsPage)
             }}
         >
             {({
-                  isValid, errors, touched, handleChange,
+                  errors, touched, handleChange,
                   values, setFieldValue, setFieldTouched
               }) => (
                 <Form className="form">
@@ -123,22 +136,25 @@ export default function BusForm({submitForm, bus}) {
                     </div>
                     <div className="formGroup">
                         <span className="dangerText">
-                          {touched.route_number && errors.route_number ? errors.route_number : "*"}
+                            {error && error + " "}
+                            {touched.route_number && errors.route_number ? errors.route_number : "*"}
                         </span>
                         <Dropdown
                             isSearchable
                             placeHolder="Выберите номер маршрута"
                             options={routeOptions}
-                            value={values.route_number ? {
-                                value: values.route_number,
-                                label: values.route_number
-                            } : values.route_number}
+                            value={values.route_number}
                             onChange={(value) => {
-                                setFieldValue("route_number", value.label)
+                                setFieldValue("route_number", value)
                             }}
-                            onBlur={() => setFieldTouched("route_number", true)}
-                            onFocus={() => {
-                                loadRoutesData()
+                            onBlur={() => {
+                                setFieldTouched("route_number", true)
+                                setError(null)
+                            }}
+                            onFocus={async () => {
+                                const loaded = await loadRoutesData()
+                                if (loaded !== true)
+                                    setError(loaded)
                                 setFieldTouched("route_number", false)
                             }}
                             name={"route_number"}

@@ -5,10 +5,11 @@ import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import transportRecordStop from "../../../../staticData/serverData/transportRecordStop.json"
 import MaterialReactTable from 'material-react-table';
 import {getCurrentDate} from "../../../../utils/dateUtil.jsx";
+import {BusContext} from "../../../../contexts/useBus.jsx";
 
 export default function BusMapInfoSubpage({bus}) {
-    const {context, goToSubpage} = useContext(BreadcrumbContext);
-    const {edit} = context
+    const {goToSubpage} = useContext(BreadcrumbContext);
+    const {editBus} = useContext(BusContext)
     const [currentDate, setCurrentDate] = useState(null);
 
     const [pagination, setPagination] = useState({
@@ -64,7 +65,7 @@ export default function BusMapInfoSubpage({bus}) {
     }, [])
 
     function onEdit() {
-        const subpagecrumb = EditBusSubpageCrumb(bus, edit);
+        const subpagecrumb = EditBusSubpageCrumb(bus, editBus);
         goToSubpage(subpagecrumb);
     }
 

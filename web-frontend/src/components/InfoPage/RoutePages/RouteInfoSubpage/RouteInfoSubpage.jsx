@@ -4,14 +4,15 @@ import busInfoImg from "../../../../assets/partners/pages/busInfoImg.svg";
 import "./RouteInfoSubpage.css";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {EditRouteSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
+import {RouteContext} from "../../../../contexts/useRoute.jsx";
 
 export default function RouteInfoSubpage({route}) {
-    const {goToSubpage, context} = useContext(BreadcrumbContext);
-    const {edit, getRouteById} = context;
+    const {goToSubpage} = useContext(BreadcrumbContext);
+    const {editRoute, getRouteById} = useContext(RouteContext);
 
     async function onEdit() {
         const routeStops = await getRouteById(route.id)
-        const subpagecrumb = EditRouteSubpageCrumb(route, routeStops, edit);
+        const subpagecrumb = EditRouteSubpageCrumb(route, routeStops, editRoute);
         goToSubpage(subpagecrumb);
     }
 

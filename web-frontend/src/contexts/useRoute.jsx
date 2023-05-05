@@ -6,9 +6,9 @@ const RouteContext = React.createContext();
 
 function RouteContextProvider({children}) {
     const [routeItems, setRouteItems] = useState([]);
+    const [error, setError] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const api = axiosUtil()
-
-    const AddComponent = AddRouteSubpageCrumb(addRoute)
 
     async function addRoute(values) {
         const route_name = values.stops[0].label + " → " + values.stops[values.stops.length - 1].label
@@ -73,11 +73,11 @@ function RouteContextProvider({children}) {
     }
 
     async function removeRoutes(routes) {
-        const busIds = []
-        routes.forEach((bus) => {
-            busIds.push(bus.id)
+        const routeIds = []
+        routes.forEach((route) => {
+            routeIds.push(route.id)
         })
-        const params = new URLSearchParams({ids: busIds.join(',')})
+        const params = new URLSearchParams({ids: routeIds.join(',')})
         try {
             const response = await api.delete(
                 "/transports/delete-route/?" + params.toString(),
@@ -117,7 +117,9 @@ function RouteContextProvider({children}) {
             try {
                 const response = await api.get("/transports/get-routes-of-company/")
                 setRouteItems(response.data)
+                setIsLoading(false)
             } catch (err) {
+                setError(err)
                 console.error(err)
             }
         }
@@ -127,11 +129,13 @@ function RouteContextProvider({children}) {
     return (
         <RouteContext.Provider
             value={{
-                items: routeItems,
-                remove: removeRoutes,
+                routeItems,
+                error,
+                isLoading,
                 getRouteById,
-                AddComponent,
-                edit: editRoute
+                addRoute,
+                removeRoutes,
+                editRoute
             }}
         >
             {children}

@@ -12,7 +12,7 @@ import {
 } from "../../constants/BreadcrumbItems";
 
 export default function Card({ data }) {
-  const { goToSubpage } = useContext(BreadcrumbContext);
+  const { setSubpageData, goToSubpage } = useContext(BreadcrumbContext);
 
   const { imgSrc, linkToValue, description, btnName } = data;
   let img = "";
@@ -34,7 +34,10 @@ export default function Card({ data }) {
       <img src={img} />
       <h4 className="cardDescription">{description}</h4>
       <Link to={linkToValue}>
-        <button className="thirdBtn" onClick={() => goToSubpage(subpageToOpen)}>
+        <button className="thirdBtn" onClick={() => {
+          setSubpageData(subpageToOpen)
+          goToSubpage(subpageToOpen)
+        }}>
           {btnName}
         </button>
       </Link>

@@ -4,13 +4,14 @@ import busInfoImg from "../../../../assets/partners/pages/busInfoImg.svg";
 import "./BusInfoSubpage.css";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {EditBusSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
+import {BusContext} from "../../../../contexts/useBus.jsx";
 
 export default function BusInfoSubpage({bus}) {
-    const {goToSubpage, context} = useContext(BreadcrumbContext);
-    const {edit} = context;
+    const {goToSubpage} = useContext(BreadcrumbContext);
+    const {editBus} = useContext(BusContext);
 
     function onEdit() {
-        const subpagecrumb = EditBusSubpageCrumb(bus, edit);
+        const subpagecrumb = EditBusSubpageCrumb(bus, editBus);
         goToSubpage(subpagecrumb);
     }
 

@@ -9,21 +9,21 @@ import {
 } from "../../../constants/BreadcrumbItems.jsx";
 import OpenedPage from "../../../components/InfoPage/MainComponents/OpenedPage/OpenedPage.jsx";
 
-export default function CardPage({pageName, context}) {
+export default function CardPage({pageName}) {
     const {subpage, setSubpageData, goToSubpage} = useContext(BreadcrumbContext);
 
     useEffect(() => {
         if (location.pathname.includes("/buses")) {
-            setSubpageData(context, AllBusesSubpageCrumb)
+            setSubpageData(AllBusesSubpageCrumb)
             goToSubpage(AllBusesSubpageCrumb);
         } else if (location.pathname.includes("/routes")) {
-            setSubpageData(context, AllRoutesSubpageCrumb)
+            setSubpageData(AllRoutesSubpageCrumb)
             goToSubpage(AllRoutesSubpageCrumb);
         } else if (location.pathname.includes("/reports")) {
-            setSubpageData(context, AllReportsSubpageCrumb)
+            setSubpageData(AllReportsSubpageCrumb)
             goToSubpage(AllReportsSubpageCrumb);
         }
-    }, [context])
+    }, [])
 
     return (
         <main>

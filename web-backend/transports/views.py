@@ -49,7 +49,8 @@ def get_record_for_transport(request):
 @permission_classes([IsAuthenticated])
 def get_transports_of_company(request):
     try:
-        company_id = request.query_params['id']
+        user = getUserByToken(request)
+        company_id = user.company_id
         transport = Transport.objects.filter(company__exact=company_id)
         data = TransportGETSerializer(transport, many=True)
         return Response(data.data)
@@ -154,12 +155,20 @@ class RecordView(APIView):
 class TransportView(APIView):
     def post(self, request):
         try:
-            serializer = TransportPOSTSerializer(data=request.data)
+            user = getUserByToken(request)
+            serializer = TransportPOSTSerializer(data={
+                "total_seats": request.data['total_seats'],
+                "normal_seats": request.data['normal_seats'],
+                "disabled_seats": request.data['disabled_seats'],
+                "transport_number": request.data['transport_number'],
+                "route": request.data['route'],
+                "company": user.company_id
+            })
             if serializer.is_valid():
                 transport = serializer.save()
-                serializer = TransportPOSTSerializer(transport)
+                serializer_get = TransportGETSerializer(transport)
                 data = {
-                    "transport": serializer.data
+                    "transport": serializer_get.data
                 }
                 return Response(data)
         except AttributeError:
@@ -173,9 +182,16 @@ class TransportView(APIView):
 def edit_transport(request):
     # try:
         transport_id = request.data['id']
+        user = getUserByToken(request)
         transport = Transport.objects.get(id__exact=transport_id)
-        edit_data = request.data
-        edited_transport_serializer = TransportPOSTSerializer(data=edit_data)
+        edited_transport_serializer = TransportPOSTSerializer(data={
+                "total_seats": request.data['total_seats'],
+                "normal_seats": request.data['normal_seats'],
+                "disabled_seats": request.data['disabled_seats'],
+                "transport_number": request.data['transport_number'],
+                "route": request.data['route'],
+                "company": user.company_id
+            })
         edited_transport_serializer.is_valid(raise_exception=True)
         new_data = TransportPOSTSerializer.update(edited_transport_serializer, transport, edited_transport_serializer.validated_data)
         return Response(edited_transport_serializer.data)
