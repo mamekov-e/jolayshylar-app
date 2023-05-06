@@ -26,24 +26,58 @@ from .serializers import (
     StopGETSerializer, StopPOSTSerializer,
     Stop_recordGETSerializer, Stop_recordPOSTSerializer,
     RoutePOSTSerializer, RouteGETSerializer,
-    Routes_stopsGETSerializer, Routes_stopsPOSTSerializer
+    Routes_stopsGETSerializer, Routes_stopsPOSTSerializer,
+    Stop_recordReportSwitchSerializer, TransportIsTrackingSwitchSerializer
 )
 # Create your views here.
 
 
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
-def get_record_for_transport(request):
+def export_all_records(request):
     try:
-        transport_id = request.query_params['id']
-        stop_record = Stop_record.objects.filter(transport__exact=transport_id)
-        data = Stop_recordGETSerializer(stop_record, many=True)
+        stop_records = Stop_record.objects.filter(has_report=True).all()
+        data = Stop_recordGETSerializer(stop_records, many=True)
         return Response(data.data)
     except AttributeError:
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
     except TypeError:
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_records_for_transports_true(request):
+    try:
+        data = []
+        transport_ids = request.query_params.get('ids').split(',')
+        transports = Transport.objects.filter(
+            id__in=transport_ids).all()
+        for transport in transports:
+            stop_records = Stop_record.objects.filter(has_report=True).filter(
+                transport__exact=transport.id).all()
+            if Stop_recordGETSerializer(stop_records, many=True).data:
+                data.append(Stop_recordGETSerializer(stop_records, many=True).data)
+        return Response(data)
+    except AttributeError:
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_record_for_transport(request):
+    try:
+        transport_id = request.query_params.get('id')
+        stop_records = Stop_record.objects.filter(has_report=False).filter(
+            transport__exact=transport_id).all()
+        data = Stop_recordGETSerializer(stop_records, many=True)
+        return Response(data.data)
+    except AttributeError:
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
@@ -150,6 +184,25 @@ class RecordView(APIView):
             return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view([static.HTTPMethod.put])
+@permission_classes([IsAuthenticated])
+def add_report(request):
+    # try:
+        transport_ids = request.query_params.get('ids').split(',')
+        user = getUserByToken(request)
+        for transport_id in transport_ids:
+            records = Stop_record.objects.filter(transport_id__in=transport_id).all()
+            for record in records:
+                serializer = Stop_recordReportSwitchSerializer(data={
+                    "has_report": True
+                })
+                serializer.is_valid(raise_exception=True)
+                Stop_recordReportSwitchSerializer.update(serializer, record,
+                                               serializer.validated_data)
+
+        return Response('Ok.')
+
+
 # Transports
 @permission_classes([IsAuthenticated])
 class TransportView(APIView):
@@ -184,14 +237,7 @@ def edit_transport(request):
         transport_id = request.data['id']
         user = getUserByToken(request)
         transport = Transport.objects.get(id__exact=transport_id)
-        edited_transport_serializer = TransportPOSTSerializer(data={
-                "total_seats": request.data['total_seats'],
-                "normal_seats": request.data['normal_seats'],
-                "disabled_seats": request.data['disabled_seats'],
-                "transport_number": request.data['transport_number'],
-                "route": request.data['route'],
-                "company": user.company_id
-            })
+        edited_transport_serializer = TransportPOSTSerializer(data=request.data)
         edited_transport_serializer.is_valid(raise_exception=True)
         new_data = TransportPOSTSerializer.update(edited_transport_serializer, transport, edited_transport_serializer.validated_data)
         return Response(edited_transport_serializer.data)
@@ -200,6 +246,23 @@ def edit_transport(request):
     # except TypeError:
     #     return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
+@api_view([static.HTTPMethod.put])
+@permission_classes([IsAuthenticated])
+def change_is_tracking(request):
+    # try:
+        transport_ids = request.query_params.get('ids').split(',')
+        user = getUserByToken(request)
+        for transport_id in transport_ids:
+            transports = Transport.objects.filter(id__in=transport_id).all()
+            for transport in transports:
+                serializer = TransportIsTrackingSwitchSerializer(data={
+                    "is_tracking": request.query_params.get('is_tracking')
+                })
+                serializer.is_valid(raise_exception=True)
+                TransportIsTrackingSwitchSerializer.update(serializer, transport,
+                                               serializer.validated_data)
+
+        return Response('Ok.')
 
 @permission_classes([IsAuthenticated])
 class DeleteTransportView(APIView):
