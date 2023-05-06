@@ -70,18 +70,25 @@ export default function AllReportsComponent({InfoSubpage}) {
             {
                 accessorKey: 'date',
                 header: 'Дата',
+                size: 80
             },
             {
                 accessorKey: 'route_number',
                 header: 'Номер маршрута',
+                size: 140,
+                Cell: ({ cell }) => {
+                    return <div style={{textAlign: "center"}}>{cell.getValue()}</div>;
+                },
             },
             {
                 accessorKey: 'route_name',
                 header: 'Название маршрута',
+                maxSize: 80,
             },
             {
                 accessorKey: 'transport_number',
                 header: 'Номер автобуса',
+                size: 140
             }
         ],
         [],

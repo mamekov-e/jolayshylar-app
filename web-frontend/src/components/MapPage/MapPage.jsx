@@ -41,6 +41,9 @@ function MapPage() {
 
     return (
         <div className={"mapPageWrapper"}>
+            {isToggled && (<div className={"featuresPanel"}>
+                <PanelWithTabs isPanelOpen={isToggled} routes={[]} saveDirection={saveDirection}/>
+            </div>)}
             <div className={"mapWrapper"}>
                 <GoogleMap
                     center={currentPosition}
@@ -74,9 +77,6 @@ function MapPage() {
                     </div>
                 </GoogleMap>
             </div>
-            {isToggled && (<div className={"featuresPanel"}>
-                <PanelWithTabs isPanelOpen={isToggled} routes={[]} saveDirection={saveDirection}/>
-            </div>)}
         </div>
     )
 }

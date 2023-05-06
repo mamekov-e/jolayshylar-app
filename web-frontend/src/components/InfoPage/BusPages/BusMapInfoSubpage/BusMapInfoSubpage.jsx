@@ -7,14 +7,14 @@ import MaterialReactTable from 'material-react-table';
 import {getCurrentDate} from "../../../../utils/dateUtil.jsx";
 import {BusContext} from "../../../../contexts/useBus.jsx";
 
-export default function BusMapInfoSubpage({bus}) {
+export default function BusMapInfoSubpage({bus, routeStops}) {
     const {goToSubpage} = useContext(BreadcrumbContext);
     const {editBus} = useContext(BusContext)
     const [currentDate, setCurrentDate] = useState(null);
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 6//bus.stops.length,
+        pageSize: routeStops.length,
     });
     const [isLoading, setIsLoading] = useState(false);
     const [busRouteInfo, setBusRouteInfo] = useState([])

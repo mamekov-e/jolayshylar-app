@@ -37,10 +37,10 @@ export const AllReportsSubpageCrumb = {
     subPageName: "all",
 };
 
-export function BusInfoSubpageCrumb(bus) {
+export function BusInfoSubpageCrumb(bus, routeStops) {
     return {
         name: bus.transport_number,
-        component: <ItemActionsFormSubpage page={<BusMapInfoSubpage bus={bus}/>}/>,
+        component: <ItemActionsFormSubpage page={<BusMapInfoSubpage bus={bus} routeStops={routeStops}/>}/>,
         link: "#",
         subPageName: "busInfo",
     };

@@ -68,21 +68,23 @@ function SearchPanel({ saveDirection }) {
     return (
         <>
             <div className={"requestPanel"}>
-                <div className={"inputBox"}>
-                    <Autocomplete>
-                        <input className={"requestButton"} type='text' placeholder='Пункт отправления'
-                               ref={originRef}/>
-                    </Autocomplete>
-                </div>
-                <div className={"inputBox"}>
-                    <Autocomplete>
-                        <input
-                            className={"requestButton"}
-                            type='text'
-                            placeholder='Пункт назначения'
-                            ref={destinationRef}
-                        />
-                    </Autocomplete>
+                <div className={"mapInputs"}>
+                    <div className={"inputBox"}>
+                        <Autocomplete>
+                            <input className={"requestButton"} type='text' placeholder='Пункт отправления'
+                                   ref={originRef}/>
+                        </Autocomplete>
+                    </div>
+                    <div className={"inputBox"}>
+                        <Autocomplete>
+                            <input
+                                className={"requestButton"}
+                                type='text'
+                                placeholder='Пункт назначения'
+                                ref={destinationRef}
+                            />
+                        </Autocomplete>
+                    </div>
                 </div>
                 <div className={"buttonGroup"}>
                     <button className={"calculateButton"} color='pink' type='submit' onClick={calculateRoute}>

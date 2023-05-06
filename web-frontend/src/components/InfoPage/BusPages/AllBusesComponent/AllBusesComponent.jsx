@@ -7,6 +7,7 @@ import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
 import {MdModeEditOutline, MdOpenInNew, VscDebugPause, VscDebugStart} from "react-icons/all";
 import {AddBusSubpageCrumb, BusInfoSubpageCrumb, EditBusSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
 import {BusContext} from "../../../../contexts/useBus.jsx";
+import {RouteContext} from "../../../../contexts/useRoute.jsx";
 
 export default function AllBusesComponent() {
     const {goToSubpage} = useContext(BreadcrumbContext);
@@ -21,6 +22,7 @@ export default function AllBusesComponent() {
         editBus,
         createBusesReport
     } = useContext(BusContext);
+    const {getRouteById} = useContext(RouteContext);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
@@ -63,8 +65,9 @@ export default function AllBusesComponent() {
     );
 
     const handleOpenBusPage = useCallback(
-        (bus) => {
-            const subpagecrumb = BusInfoSubpageCrumb(bus);
+        async (bus) => {
+            const routeStops = await getRouteById(bus.route.id)
+            const subpagecrumb = BusInfoSubpageCrumb(bus,routeStops);
             goToSubpage(subpagecrumb);
         }, [])
 

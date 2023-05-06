@@ -6,15 +6,15 @@
 .mapPageWrapper {
     display: flex;
     position: relative;
-    flex-direction: column;
-    align-items: center;
+    /*flex-direction: column;*/
+    /*align-items: center;*/
     width: 100%;
 }
 
 .mapWrapper {
-    position: absolute;
-    left: 0;
-    right: 0;
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*right: 0;*/
     height: 100%;
     width: 100%;
 }
@@ -39,15 +39,15 @@
 }
 
 .featuresPanel {
-    min-width: 45vw;
+    min-width: 30vw;
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    margin: 4px;
-    border-radius: 10px;
-    background-color: white;
-    box-shadow: #707374;
-    z-index: 1;
+    padding: 15px;
+    margin-top: 2px;
+    /*border-radius: 10px;*/
+    background-color: #ffffff;
+    /*box-shadow: #707374;*/
+    /*z-index: 1;*/
 }
 
 .calculateButton {
@@ -61,19 +61,26 @@
 
 .requestPanel {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     gap: 4px;
 }
 
+.mapInputs {
+    display: flex;
+    width: 100%;
+}
+
 .inputBox {
-    height: auto;
+    width: 100%;
 }
 
 .requestButton {
     height: 35px;
-    min-width: 200px;
-    padding-inline-start: 5px;
-    flex-grow: 1;
+    /*width: 90%;*/
+    /*min-width: 200px;*/
+    padding-inline-start: 10px;
+    /*flex-grow: 1;*/
     border: 1px solid #007cad;
     border-radius: 5px;
     outline: none;
