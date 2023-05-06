@@ -5,7 +5,7 @@ from accounts.serializers import CompanyPOSTSerializer
 class TransportGETSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transport
-        fields = ['id', 'company', 'total_seats', 'normal_seats', 'disabled_seats', 'transport_number', 'route']
+        fields = '__all__'
         depth = 1
 
 class TransportPOSTSerializer(serializers.ModelSerializer):
@@ -23,7 +23,7 @@ class TransportPOSTSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transport
-        fields = ['id', 'company', 'total_seats', 'normal_seats', 'disabled_seats', 'transport_number', 'route']
+        fields = '__all__'
 
 
 
@@ -77,10 +77,20 @@ class Routes_stopsPOSTSerializer(serializers.ModelSerializer):
 class Stop_recordGETSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stop_record
-        fields = ['id', 'transport', 'stop', 'passenger_in', 'passenger_out', 'timestamp', 'cycle_amount']
+        fields = '__all__'
         depth = 1
 
 class Stop_recordPOSTSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stop_record
-        fields = ['id', 'transport', 'stop', 'passenger_in', 'passenger_out', 'timestamp', 'cycle_amount']
+        fields = '__all__'
+
+class Stop_recordReportSwitchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stop_record
+        fields = ['has_report']
+
+class TransportIsTrackingSwitchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transport
+        fields = ['is_tracking']
