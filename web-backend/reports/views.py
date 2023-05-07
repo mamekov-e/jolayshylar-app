@@ -42,3 +42,36 @@ def get_reports_of_transport(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except TypeError:
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def export_all_records(request):
+    try:
+        stop_records = Stop_record.objects.filter(has_report=True).all()
+        data = Stop_recordGETSerializer(stop_records, many=True)
+        return Response(data.data)
+    except AttributeError:
+        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_records_for_transports_true(request):
+    try:
+        data = []
+        transport_ids = request.query_params.get('ids').split(',')
+        transports = Transport.objects.filter(
+            id__in=transport_ids).all()
+        for transport in transports:
+            stop_records = Stop_record.objects.filter(has_report=True).filter(
+                transport__exact=transport.id).all()
+            if Stop_recordGETSerializer(stop_records, many=True).data:
+                data.append(Stop_recordGETSerializer(stop_records, many=True).data)
+        return Response(data)
+    except AttributeError:
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)

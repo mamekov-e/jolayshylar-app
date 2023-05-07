@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
 from .models import User, Company, City, companies_cities
 from rest_framework.response import Response
@@ -15,6 +15,7 @@ from .serializers import MyTokenRefreshSerializer, CompanyPOSTSerializer, Compan
 from django.core.mail import EmailMessage, get_connection
 from django.conf import settings
 from Jolayshylar.static import HTTPMethod
+from django.contrib.auth.hashers import make_password, check_password
 
 
 # Create your views here.
@@ -24,7 +25,13 @@ from .utils import getUserByToken
 class RegisterView(APIView):
     def post(self, request):
         try:
-            serializer = UserPOSTSerializer(data=request.data)
+            serializer = UserPOSTSerializer(data={
+                "login": request.data['login'],
+                "password": make_password(request.data['password']),
+                "role": request.data['role'],
+                "company": request.data['company'],
+                "is_active": True
+            })
             if serializer.is_valid(raise_exception=True):
                 user = serializer.save()
                 refresh = RefreshToken.for_user(user)
@@ -40,6 +47,7 @@ class RegisterView(APIView):
             return Response('Пользователь с таким логином уже существует', status=status.HTTP_400_BAD_REQUEST)
         except TypeError:
             return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+
 
 class RegisterEmail(APIView):
     def post(self, request):
@@ -79,20 +87,18 @@ class LoginView(APIView):
             login = request.data['login']
             password = request.data['password']
 
-
-            user = User.objects.filter(login=login).filter(password__exact=password).first()
-
-
-            refresh = RefreshToken.for_user(user)
-            serializer = UserPOSTSerializer(user)
-            user = authenticate(request, login=login, password=password)
-            return Response({
-                'user': serializer.data,
-                'token': {'refresh': str(refresh),
-                          'access': str(refresh.access_token)}
-            })
-        except AttributeError:
-            return Response('Неверный логин или пароль', status=status.HTTP_400_BAD_REQUEST)
+            if check_password(password, User.objects.get(login__exact=login).password):
+                user = User.objects.filter(login=login).first()
+                refresh = RefreshToken.for_user(user)
+                serializer = UserPOSTSerializer(user)
+                user = authenticate(request, login=login, password=password)
+                return Response({
+                    'user': serializer.data,
+                    'token': {'refresh': str(refresh),
+                              'access': str(refresh.access_token)}
+                })
+        # except AttributeError:
+        #     return Response('Неверный логин или пароль', status=status.HTTP_400_BAD_REQUEST)
         except TypeError:
             return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
@@ -140,6 +146,7 @@ class CompanyView(APIView):
         except TypeError:
             return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_company(request):
@@ -169,6 +176,7 @@ class CityView(APIView):
             return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
         except IntegrityError:
             return Response('Пользователь с таким логином уже существует', status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view([HTTPMethod.get])
 @permission_classes([IsAuthenticated])
