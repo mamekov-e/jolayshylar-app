@@ -7,3 +7,8 @@
     margin-top: 15px;
     align-content: flex-start;
 }
+
+.actionsGroup {
+    display: flex;
+    gap: 5px;
+}

@@ -8,10 +8,10 @@ import {RouteContext} from "../../../../contexts/useRoute.jsx";
 
 export default function RouteInfoSubpage({route}) {
     const {goToSubpage} = useContext(BreadcrumbContext);
-    const {editRoute, getRouteById} = useContext(RouteContext);
+    const {editRoute, getRouteStopsById} = useContext(RouteContext);
 
     async function onEdit() {
-        const routeStops = await getRouteById(route.id)
+        const routeStops = await getRouteStopsById(route.id)
         const subpagecrumb = EditRouteSubpageCrumb(route, routeStops, editRoute);
         goToSubpage(subpagecrumb);
     }

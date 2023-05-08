@@ -22,17 +22,17 @@ function App() {
                 <Route exact path='/partners' element={<PrivateRoute/>}>
                     <Route exact path="/partners" element={<PartnersMainPage/>}/>
                 </Route>
-                <Route  path='/partners/routes' element={<PrivateRoute/>}>
+                <Route path='/partners/routes' element={<PrivateRoute/>}>
                     <Route  path="/partners/routes" element={<CardPage pageName={"Маршруты"} context={commonContext.routeContext}/>}/>
                 </Route>
-                <Route  path='/partners/buses' element={<PrivateRoute/>}>
+                <Route path='/partners/buses' element={<PrivateRoute/>}>
                     <Route  path="/partners/buses" element={<CardPage pageName={"Автобусы"} context={commonContext.busContext}/>}/>
                 </Route>
-                <Route  path='/partners/reports' element={<PrivateRoute/>}>
+                <Route path='/partners/reports' element={<PrivateRoute/>}>
                     <Route  path="/partners/reports" element={<CardPage pageName={"Отчеты"} context={commonContext.reportContext}/>}/>
                 </Route>
-                <Route  path="/partners/login" element={<LoginPage/>}/>
-                <Route  path="/partners/register" element={<RegistrationPage/>}/>
+                <Route path="/partners/login" element={<LoginPage/>}/>
+                <Route path="/partners/register" element={<RegistrationPage/>}/>
             </Routes>
         </>
     );

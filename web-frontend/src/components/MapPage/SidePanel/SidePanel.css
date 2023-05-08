@@ -1,0 +1,16 @@
+.routesListSB {
+    list-style-type: none;
+    padding-left: 0;
+}
+.routesListSB li {
+    padding: 10px;
+    border-bottom: 1px solid #dddddd;
+}
+
+.routesListSB li:last-child {
+    border: 0;
+}
+
+.routesListSB li:hover {
+    background-color: rgba(52, 102, 161, 0.68);
+}

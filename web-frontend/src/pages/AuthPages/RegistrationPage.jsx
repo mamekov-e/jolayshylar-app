@@ -42,7 +42,7 @@ export default function RegistrationPage() {
                   <Form className="formContainer">
                     <div className="formGroup">
                       <span className="dangerText">
-                        {touched.city && errors.city ? errors.city : "*"}
+                        {touched.city && errors.city ? errors.city : !values.city ? "*" : "Город *"}
                       </span>
                       <Field
                           type="text"
@@ -53,7 +53,7 @@ export default function RegistrationPage() {
                     </div>
                     <div className="formGroup">
                       <span className="dangerText">
-                        {touched.companyName && errors.companyName ? errors.companyName : "*"}</span>
+                        {touched.companyName && errors.companyName ? errors.companyName : !values.companyName ? "*" : "Название компании *"}</span>
                       <Field
                           type="text"
                           name="companyName"
@@ -63,7 +63,7 @@ export default function RegistrationPage() {
                     </div>
                     <div className="formGroup">
                       <span className="dangerText">
-                        {touched.email && errors.email ? errors.email : "*"}</span>
+                        {touched.email && errors.email ? errors.email : !values.email ? "*" : "Почта *"}</span>
                       <Field
                           type="text"
                           name="email"
@@ -73,7 +73,7 @@ export default function RegistrationPage() {
                     </div>
                     <div className="formGroup">
                       <span className="dangerText">
-                        {touched.contacts && errors.contacts ? errors.contacts : "*"}
+                        {touched.contacts && errors.contacts ? errors.contacts : !values.contacts ? "*" : "Контакты *"}
                       </span>
                       <Field
                           type="text"

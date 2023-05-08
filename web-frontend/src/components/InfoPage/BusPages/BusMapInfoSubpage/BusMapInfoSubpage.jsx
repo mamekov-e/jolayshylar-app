@@ -2,60 +2,33 @@ import React, {useContext, useEffect, useMemo, useState} from "react";
 import "./BusMapInfoSubpage.css";
 import {EditBusSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
-import transportRecordStop from "../../../../staticData/serverData/transportRecordStop.json"
 import MaterialReactTable from 'material-react-table';
 import {getCurrentDate} from "../../../../utils/dateUtil.jsx";
 import {BusContext} from "../../../../contexts/useBus.jsx";
+import axiosUtil from "../../../../utils/axiosUtil.jsx";
+import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
 
 export default function BusMapInfoSubpage({bus, routeStops}) {
-    const {goToSubpage} = useContext(BreadcrumbContext);
-    const {editBus} = useContext(BusContext)
     const [currentDate, setCurrentDate] = useState(null);
-
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: routeStops.length,
     });
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [busRouteInfo, setBusRouteInfo] = useState([])
+    const api = axiosUtil()
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!busRouteInfo.length) {
-                setIsLoading(true);
-            }
-
-            if (typeof window !== 'undefined') {
-                setBusRouteInfo(transportRecordStop)
+            const params = new URLSearchParams({id: bus.id})
+            const response = await api.get("/transports/get-record-for-transport/?" + params.toString(),
+                {
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"}
+                })
+            if (response.status === 200) {
+                setBusRouteInfo(response.data)
                 setIsLoading(false);
             }
-            // const url = new URL(
-            //     '/api/items',
-            //     process.env.NODE_ENV === 'production'
-            //         ? 'https://www.material-react-table.com'
-            //         : 'http://localhost:3000',
-            // );
-            // url.searchParams.set(
-            //     'start',
-            //     `${pagination.pageIndex * pagination.pageSize}`,
-            // );
-            // url.searchParams.set('size', `${pagination.pageSize}`);
-            // url.searchParams.set('filters', JSON.stringify(columnFilters ?? []));
-            // url.searchParams.set('globalFilter', globalFilter ?? '');
-            // url.searchParams.set('sorting', JSON.stringify(sorting ?? []));
-            // try {
-            //     const response = await fetch(url.href);
-            //     const json = await response.json();
-            //     setData(json.items);
-            //     setRowCount(json.meta.totalRowCount);
-            // } catch (error) {
-            //     setIsError(true);
-            //     console.error(error);
-            //     return;
-            // }
-            // setIsError(false);
-            // setIsLoading(false);
-            // setIsRefetching(false);
         };
         fetchData();
     }, []);
@@ -64,15 +37,10 @@ export default function BusMapInfoSubpage({bus, routeStops}) {
         setCurrentDate(getCurrentDate())
     }, [])
 
-    function onEdit() {
-        const subpagecrumb = EditBusSubpageCrumb(bus, editBus);
-        goToSubpage(subpagecrumb);
-    }
-
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'stop_name',
+                accessorKey: 'stop.stop_name',
                 header: 'Остановки',
             },
             {
@@ -102,8 +70,10 @@ export default function BusMapInfoSubpage({bus, routeStops}) {
                     data={busRouteInfo}
                     columns={columns}
                     enableHiding={false}
+                    enableDensityToggle={false}
                     initialState={{
                         pagination,
+                        density: 'compact',
                         sorting: [
                             {
                                 id: 'cycle_amount',
@@ -120,10 +90,11 @@ export default function BusMapInfoSubpage({bus, routeStops}) {
                     onPaginationChange={setPagination}
                     positionPagination={"top"}
                     state={{pagination, isLoading}}
+                    localization={MRT_Localization_RU}
                     renderTopToolbarCustomActions={() => (
                         <div className="firstInfo">
                             <div className="busRouteInfoDetails">
-                                <p>Номер маршрута:</p><h3>{bus.route_number}</h3>
+                                <p>Номер маршрута:</p><h3>{bus.route.route_number}</h3>
                             </div>
                             <div className="busRouteInfoDetails">
                                 <p>Гос. номер:</p><h3>{bus.transport_number}</h3>
@@ -131,15 +102,6 @@ export default function BusMapInfoSubpage({bus, routeStops}) {
                             <div className="busRouteInfoDetails">
                                 <p>Дата:</p><h3>{currentDate}</h3>
                             </div>
-                            {/*<EditBtn*/}
-                            {/*    name="Редактировать"*/}
-                            {/*    // disabled={busRouteInfo.length}*/}
-                            {/*    // style={!busRouteInfo.length ? editBtnStyle : {*/}
-                            {/*    //     ...editBtnStyle,*/}
-                            {/*    //     ...opacityStyle,*/}
-                            {/*    // }}*/}
-                            {/*    style={editBtnStyle}*/}
-                            {/*    onClick={onEdit}/>*/}
                         </div>
                     )}/>
             </div>

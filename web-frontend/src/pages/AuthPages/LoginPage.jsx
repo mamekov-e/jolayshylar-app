@@ -38,7 +38,7 @@ export default function LoginPage() {
                             <Form className="formContainer">
                                 <div className="formGroup">
                                   <span className="dangerText">
-                                    {touched.email && errors.email ? errors.email : "*"}
+                                    {touched.email && errors.email ? errors.email : !values.email ? "*" : "Почта *"}
                                   </span>
                                     <Field
                                         type="text"
@@ -49,7 +49,7 @@ export default function LoginPage() {
                                 </div>
                                 <div className="formGroup">
                                   <span className="dangerText">
-                                    {touched.password && errors.password ? errors.password : "*"}
+                                    {touched.password && errors.password ? errors.password : !values.password ? "*" : "Пароль *"}
                                   </span>
                                     <Field
                                         type="password"

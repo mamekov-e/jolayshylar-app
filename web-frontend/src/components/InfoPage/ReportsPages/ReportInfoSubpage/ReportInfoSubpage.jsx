@@ -1,18 +1,40 @@
-import React, {useMemo, useState} from "react";
+import React, {useContext, useEffect, useMemo, useState} from "react";
 import "./ReportInfoSubpage.css";
-import transportRecordStop from "../../../../staticData/serverData/transportRecordStop.json"
 import MaterialReactTable from 'material-react-table';
+import axiosUtil from "../../../../utils/axiosUtil.jsx";
+import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
 
-export default function ReportInfoSubpage({route}) {
+export default function ReportInfoSubpage({report, routeStops}) {
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: route.stops.length,
+        pageSize: routeStops.length,
     });
+    const [isLoading, setIsLoading] = useState(true);
+    const [reportInfo, setBusRouteInfo] = useState([])
+    const api = axiosUtil()
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const params = new URLSearchParams({
+                transport_id: report.transport.id,
+                date: report.date,
+            })
+            const response = await api.get("/reports/get-report-of-transport-by-date/?" + params.toString(),
+                {
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"}
+                })
+            if (response.status === 200) {
+                setBusRouteInfo(response.data)
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'stop_name',
+                accessorKey: 'stop.stop_name',
                 header: 'Остановки',
             },
             {
@@ -37,13 +59,15 @@ export default function ReportInfoSubpage({route}) {
 
     return (
         <>
-            <div className="routeInfoPage">
+            <div className="reportInfoPage">
                 <MaterialReactTable
-                    data={transportRecordStop}
+                    data={reportInfo}
                     columns={columns}
                     enableHiding={false}
+                    enableDensityToggle={false}
                     initialState={{
                         pagination,
+                        density: 'compact',
                         sorting: [
                             {
                                 id: 'cycle_amount',
@@ -59,14 +83,18 @@ export default function ReportInfoSubpage({route}) {
                     }}
                     onPaginationChange={setPagination}
                     positionPagination={"top"}
-                    state={{pagination}}
+                    state={{pagination, isLoading}}
+                    localization={MRT_Localization_RU}
                     renderTopToolbarCustomActions={() => (
                         <div className="firstInfo">
-                            <div className="routeInfoDetails">
-                                <p>Номер маршрута:</p><h3>{route.route_number}</h3>
+                            <div className="reportInfoDetails">
+                                <p>Номер маршрута:</p><h3>{report.transport.route.route_number}</h3>
                             </div>
-                            <div className="routeInfoDetails">
-                                <p>Номер автобуса:</p><h3>{route.transport_number}</h3>
+                            <div className="reportInfoDetails">
+                                <p>Гос. номер:</p><h3>{report.transport.transport_number}</h3>
+                            </div>
+                            <div className="reportInfoDetails">
+                                <p>Дата:</p><h3>{report.date}</h3>
                             </div>
                         </div>
                     )}/>

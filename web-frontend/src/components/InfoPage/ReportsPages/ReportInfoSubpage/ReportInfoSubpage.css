@@ -1,4 +1,4 @@
-.routeInfoPage {
+.reportInfoPage {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -15,19 +15,19 @@
     margin-inline-start: 15px;
 }
 
-.routeInfoDetails {
+.reportInfoDetails {
     display: flex;
     align-items: center;
     color: #014E6D;
 }
 
-.routeInfoDetails > p{
+.reportInfoDetails > p{
     font-weight: 700;
     font-size: 14px;
     padding-right: 5px;
 }
 
-.routeInfoDetails > h3{
+.reportInfoDetails > h3{
     margin: 0;
     font-size: 15px;
 }

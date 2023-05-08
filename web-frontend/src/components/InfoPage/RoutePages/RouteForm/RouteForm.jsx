@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Form, Formik} from "formik";
 import * as Yup from "yup";
 import InputText from "../../../CustomComponents/InputText/InputText.jsx";
@@ -8,29 +8,106 @@ import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import Dropdown from "../../../CustomComponents/Dropdown/Dropdown.jsx";
 import axiosUtil from "../../../../utils/axiosUtil.jsx";
 import {BusContext} from "../../../../contexts/useBus.jsx";
+import {DirectionsRenderer, GoogleMap, InfoWindow, Marker, useJsApiLoader} from "@react-google-maps/api";
+import {API_KEY, DEFAULT_LOCATION_LAT_AND_LONG_OBJECT} from "../../../../constants/Data.jsx";
+import { faStreetView} from "@fortawesome/free-solid-svg-icons";
 
 export default function RouteForm({submitForm, route, routeStops}) {
     const {subpage, goToSubpage, allItemsPage} = useContext(BreadcrumbContext);
     const {setChangedState} = useContext(BusContext);
-    const [stopOptions, setStopOptions] = useState([])
     const [responseError, setResponseError] = useState(null)
+    const [stopOptions, setStopOptions] = useState([{value: "Загружаем...", label: "Загружаем..."}])
+
+    const [libraries] = useState(['places']);
+    const {isLoaded} = useJsApiLoader({
+        googleMapsApiKey: API_KEY,
+        libraries: libraries
+    })
+    const [map, setMap] = useState(null)
+    const [stopDirections, setStopDirections] = useState(null)
+    const [windowOpen, setWindowOpen] = useState(false)
+    const [currentPosition, setCurrentPosition] = useState(DEFAULT_LOCATION_LAT_AND_LONG_OBJECT);
+
     const api = axiosUtil()
 
-    const loadStopsData = async () => {
-        const allStops = await api.get("/transports/get-all-stops/")
-        const dataToOptions = allStops.data.map(item => ({
+    const routeStopsToOptions = () => {
+        return routeStops.map(item => ({
             value: item.id,
-            label: item.stop_name
+            label: item.id + " : " + item.stop_name,
+            stop_name: item.stop_name,
+            longitude: parseFloat(item.latitude),
+            latitude: parseFloat(item.longitude)
         }));
-        setStopOptions(dataToOptions)
     }
 
-    const routeStopsToOptions = (routes) => {
-        return routes.map(item => ({
-            value: item.id,
-            label: item.stop_name
-        }));
+    const drawDirections = async (points) => {
+        if (points.length <= 1) {
+            setStopDirections(null)
+            return;
+        }
+        const directionsService = new window.google.maps.DirectionsService();
+
+        const origin = new window.google.maps.LatLng(points[0].latitude, points[0].longitude);
+        const destination = new window.google.maps.LatLng(points[points.length - 1].latitude, points[points.length - 1].longitude);
+        const waypoints = points.slice(1, points.length - 1).map(point => ({location: new window.google.maps.LatLng(point.latitude, point.longitude)}));
+
+        const response = await directionsService.route(
+            {
+                origin,
+                destination,
+                waypoints,
+                travelMode: window.google.maps.TravelMode.DRIVING,
+            }
+        );
+        if (response !== null) {
+            setStopDirections(response);
+        }
     }
+
+    const handleInfoWindow = () => {
+        setWindowOpen(!windowOpen);
+    };
+
+    const handleOnItemChosenClicked = (clickedItem) => {
+        const position = {
+            lat: clickedItem.latitude,
+            lng: clickedItem.longitude,
+            stop_name: clickedItem.stop_name,
+        }
+        setCurrentPosition(position)
+    }
+
+    useEffect(() => {
+        async function loadStopsData() {
+            const allStops = await api.get("/transports/get-all-stops/")
+            const dataToOptions = allStops.data.map(item => ({
+                value: item.id,
+                label: item.id + " : " + item.stop_name,
+                stop_name: item.stop_name,
+                longitude: parseFloat(item.latitude),
+                latitude: parseFloat(item.longitude)
+            }));
+            setStopOptions(dataToOptions)
+        }
+
+        loadStopsData()
+    }, [])
+
+    const success = position => {
+        const currentPosition = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            stop_name: "Ваша геопозиция"
+        }
+        setCurrentPosition(currentPosition);
+    };
+
+    useEffect(() => {
+        if (routeStops){
+            handleOnItemChosenClicked(routeStopsToOptions()[0])
+        } else
+            navigator.geolocation.getCurrentPosition(success);
+    }, [])
 
     const routeSchema = Yup.object().shape({
         route_number: Yup.number()
@@ -49,7 +126,7 @@ export default function RouteForm({submitForm, route, routeStops}) {
         <Formik
             initialValues={{
                 route_number: route ? route.route_number : "",
-                stops: route ? routeStopsToOptions(routeStops) : "",
+                stops: route ? routeStopsToOptions() : "",
             }}
             validationSchema={routeSchema}
             onSubmit={async (values) => {
@@ -57,66 +134,121 @@ export default function RouteForm({submitForm, route, routeStops}) {
                 if (resp !== true)
                     setResponseError(resp)
                 else {
-                    goToSubpage(allItemsPage)
                     setChangedState(true)
+                    goToSubpage(allItemsPage)
                     setResponseError(null)
                 }
-            }}
-        >
+            }}>
             {({
                   errors, touched, handleChange, values,
                   setFieldValue, setFieldTouched
               }) => {
-                return <Form className="form">
-                    <div className="formGroup">
-                        {responseError && (<span className="dangerText" style={{
-                            display: "flex",
-                            justifyContent: "center"
-                        }}>{responseError}</span>)}
-                        <span className="dangerText">
-                          {touched.route_number && errors.route_number ? errors.route_number : "*"}
-                        </span>
-                        <InputText
-                            placeholder="Введите номер маршрута"
-                            onChange={(e) => {
-                                const {value} = e.target
-                                setFieldValue("route_number", value)
-                            }}
-                            onBlur={() => setFieldTouched("route_number", true)}
-                            value={values.route_number}
-                            name="number"
-                            type="number"
-                            style={inputStyle}
+                return <div className={"routeFormWrapper"}>
+                    <Form className="form">
+                        <div className="formGroup">
+                            {responseError && (<span className="dangerText" style={{
+                                display: "flex",
+                                justifyContent: "center"
+                            }}>{responseError}</span>)}
+                            <span className="dangerText">
+                              {touched.route_number && errors.route_number ? errors.route_number : "Номер маршрута *"}
+                            </span>
+                            <InputText
+                                placeholder="Введите номер маршрута"
+                                onChange={(e) => {
+                                    const {value} = e.target
+                                    setFieldValue("route_number", value)
+                                }}
+                                onBlur={() => setFieldTouched("route_number", true)}
+                                value={values.route_number}
+                                name="number"
+                                type="number"
+                                style={inputStyle}
+                            />
+                        </div>
+                        <div className="formGroup">
+                            <span className="dangerText">
+                              {touched.stops && errors.stops ? errors.stops : "Остановка *"}
+                            </span>
+                            <Dropdown
+                                isSearchable
+                                isMulti
+                                placeHolder="Выберите остановку"
+                                options={stopOptions}
+                                onChange={(value) => {
+                                    setFieldValue("stops", value)
+                                    drawDirections(value)
+                                    if (value.length) {
+                                        handleOnItemChosenClicked(value[value.length - 1])
+                                    }
+                                }}
+                                onChosenItemClick={handleOnItemChosenClicked}
+                                onBlur={() => setFieldTouched("stops", true)}
+                                onFocus={() => {
+                                    setFieldTouched("stops", false)
+                                }}
+                                value={values.stops}
+                                name="stops"
+                                style={{...inputStyle, ...dropdownStyle}}
+                            />
+                        </div>
+                        <SaveBtn
+                            type="submit"
+                            name={subpage.name}
+                            style={btnStyle}
                         />
-                    </div>
-                    <div className="formGroup">
-                        <span className="dangerText">
-                          {touched.stops && errors.stops ? errors.stops : "*"}
-                        </span>
-                        <Dropdown
-                            isSearchable
-                            isMulti
-                            placeHolder="Выберите остановку"
-                            options={stopOptions}
-                            onChange={(value) => {
-                                setFieldValue("stops", value)
+                    </Form>
+                    {!isLoaded ? "...Загрузка карты" : (
+                        <GoogleMap
+                            center={currentPosition}
+                            zoom={17}
+                            mapContainerStyle={{width: '100%', height: '100%'}}
+                            options={{
+                                zoomControl: true,
+                                zoomControlOptions: {
+                                    position: google.maps.ControlPosition.LEFT_CENTER
+                                },
+                                streetViewControl: false,
+                                mapTypeControl: false,
+                                fullscreenControl: false,
                             }}
-                            onBlur={() => setFieldTouched("stops", true)}
-                            onFocus={() => {
-                                loadStopsData()
-                                setFieldTouched("stops", false)
-                            }}
-                            value={values.stops}
-                            name="stops"
-                            style={{...inputStyle, ...dropdownStyle}}
-                        />
-                    </div>
-                    <SaveBtn
-                        type="submit"
-                        name={subpage.name}
-                        style={btnStyle}
-                    />
-                </Form>
+                            onLoad={map => {
+                                setMap(map)
+                                if (routeStops) {
+                                    drawDirections(routeStopsToOptions())
+                                }
+                            }}>
+                            {stopDirections !== null && <DirectionsRenderer directions={stopDirections}/>}
+                            <Marker
+                                position={currentPosition}
+                                onClick={() => handleInfoWindow()}
+                                icon={{
+                                    path: faStreetView.icon[4],
+                                    fillColor: "rgba(161,52,56,0.9)",
+                                    fillOpacity: 1,
+                                    anchor: new google.maps.Point(
+                                        faStreetView.icon[0] / 2, // width
+                                        faStreetView.icon[1] // height
+                                    ),
+                                    strokeWeight: 1,
+                                    strokeColor: "#ffffff",
+                                    scale: 0.1,
+                                }
+                            }/>
+                            {windowOpen && (
+                                <InfoWindow
+                                    position={currentPosition}
+                                    onCloseClick={() => handleInfoWindow()}>
+                                    <div>
+                                        <h3>{currentPosition.stop_name}</h3>
+                                        <p>Широта: {currentPosition.lat}</p>
+                                        <p>Долгота: {currentPosition.lng}</p>
+                                    </div>
+                                </InfoWindow>
+                            )}
+                        </GoogleMap>
+                    )}
+                </div>
             }
             }
         </Formik>

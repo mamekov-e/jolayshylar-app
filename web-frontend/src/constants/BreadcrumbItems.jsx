@@ -32,7 +32,7 @@ export const AllRoutesSubpageCrumb = {
 
 export const AllReportsSubpageCrumb = {
     name: "Все отчеты",
-    component: <AllReportsComponent InfoSubpage={ReportInfoSubpageCrumb}/>,
+    component: <AllReportsComponent />,
     link: "#",
     subPageName: "all",
 };
@@ -55,10 +55,10 @@ export function RouteInfoSubpageCrumb(route) {
     };
 }
 
-export function ReportInfoSubpageCrumb(report) {
+export function ReportInfoSubpageCrumb(report, routeStops) {
     return {
-        name: report.route_name + " - " +report.transport_number,
-        component: <ItemActionsFormSubpage page={<ReportInfoSubpage route={report}/>}/>,
+        name: report.transport.route.route_name + " - " +report.transport.transport_number,
+        component: <ItemActionsFormSubpage page={<ReportInfoSubpage report={report} routeStops={routeStops}/>}/>,
         link: "#",
         subPageName: "routeInfo",
     };

@@ -1,23 +1,50 @@
-import React, { useState, useRef } from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import React, {useEffect, useRef, useState} from 'react';
+import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import {Autocomplete} from "@react-google-maps/api";
 import {FaTimes} from "react-icons/all.js";
+import axiosUtil from "../../../utils/axiosUtil.jsx";
+import {compareArrays} from "../../../utils/objectUtil.jsx";
+import "./SidePanel.css"
 
-function RouteListPanel({ routes }) {
+function RouteListPanel() {
+    const [routesData, setRoutesData] = useState([])
+    const api = axiosUtil()
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+        async function fetchRouteData() {
+            try {
+                const response = await api.get("/transports/get-routes-of-company/")
+
+                if (!compareArrays(setRoutesData, response.data))
+                    setRoutesData(response.data)
+                setIsLoading(false)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+
+        fetchRouteData()
+    }, [])
+
     return (
         <div>
-            <h2>Route List</h2>
-            <ul>
-                {routes.map((route) => (
-                    <li key={route.id}>{route.name}</li>
-                ))}
-            </ul>
+            <h2>Список маршрутов</h2>
+            {isLoading ? "...Загружаем" : (
+                routesData.length === 0 ? "Нет маршрутов" : (
+                    <ul className={"routesListSB"}>
+                        {routesData.map((route) => (
+                            <li key={route.route_number}>{route.route_name}</li>
+                        ))}
+                    </ul>
+                )
+            )}
         </div>
     );
 }
 
-function SearchPanel({ saveDirection }) {
+function SearchPanel({saveDirection}) {
     const [distance, setDistance] = useState('')
     const [duration, setDuration] = useState('')
     const originRef = useRef()
@@ -39,17 +66,8 @@ function SearchPanel({ saveDirection }) {
             // unitSystem: window.google.maps.UnitSystem.METRIC,
             // waypoints: [
             //     {
-            //         location: new google.maps.LatLng(51.00012,  71.37633)
+            //         location: new google.maps.LatLng(51.11457,  71.4113)
             //     },
-            //     {
-            //         location: new google.maps.LatLng(51.00071,71.37854)
-            //     },
-            //     {
-            //         location: new google.maps.LatLng(51.00389,71.38206)
-            //     },
-            //     {
-            //         location: new google.maps.LatLng(50.96494,  71.38079)
-            //     }
             // ]
         })
         saveDirection(results)
@@ -106,7 +124,7 @@ function SearchPanel({ saveDirection }) {
     );
 }
 
-function PanelWithTabs({ isPanelOpen, routes,saveDirection }) {
+function PanelWithTabs({isPanelOpen, saveDirection}) {
 
     return (
         <div>
@@ -118,10 +136,10 @@ function PanelWithTabs({ isPanelOpen, routes,saveDirection }) {
                     </TabList>
 
                     <TabPanel>
-                        <RouteListPanel routes={routes} />
+                        <RouteListPanel/>
                     </TabPanel>
                     <TabPanel>
-                        <SearchPanel saveDirection={saveDirection} />
+                        <SearchPanel saveDirection={saveDirection}/>
                     </TabPanel>
                 </Tabs>
             )}

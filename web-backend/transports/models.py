@@ -8,8 +8,8 @@ from accounts.models import City, Company
 class Stop(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     stop_name = models.CharField(max_length=255)
-    longitude = models.IntegerField(default=0)
-    latitude = models.IntegerField(default=0)
+    longitude = models.DecimalField(decimal_places=12, max_digits=15, default=0)
+    latitude = models.DecimalField(decimal_places=12, max_digits=15, default=0)
 
     class Meta:
         db_table = 'stop'

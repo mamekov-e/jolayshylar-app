@@ -34,8 +34,21 @@ def get_reports_of_transport(request):
     try:
         stop_records = Stop_record.objects.filter(has_report=True).filter(
             transport_id__exact=request.query_params.get('transport_id')).filter(
-            date__exact=request.query_params.get('date')).all()
+            date__range=(request.query_params.get('start_date'), request.query_params.get('end_date'))).all().order_by("date").distinct("date")
+        serializer = Stop_recordGETSerializer(stop_records, many=True)
+        return Response(serializer.data)
+    except AttributeError:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
+@api_view([static.HTTPMethod.get])
+@permission_classes([IsAuthenticated])
+def get_report_of_transport_by_date(request):
+    try:
+        stop_records = Stop_record.objects.filter(has_report=True).filter(
+            transport_id__exact=request.query_params.get('transport_id')).filter(
+            date__exact=request.query_params.get('date')).all()
         serializer = Stop_recordGETSerializer(stop_records, many=True)
         return Response(serializer.data)
     except AttributeError:

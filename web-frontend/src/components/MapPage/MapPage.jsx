@@ -1,18 +1,17 @@
 import {DirectionsRenderer, GoogleMap, Marker, useJsApiLoader,} from '@react-google-maps/api'
 import {useEffect, useState} from 'react'
-import {API_KEY, DEFAULT_LAT, DEFAULT_LONG} from "../../constants/Data.jsx";
+import {API_KEY, DEFAULT_LOCATION_LAT_AND_LONG_OBJECT} from "../../constants/Data.jsx";
 import {FaLocationArrow, MdClose, RxHamburgerMenu} from "react-icons/all.js";
 import PanelWithTabs from "./SidePanel/PanelWithTabs.jsx";
 
 function MapPage() {
+    const [ libraries ] = useState(['places']);
+
     const {isLoaded} = useJsApiLoader({
         googleMapsApiKey: API_KEY,
-        libraries: ['places'],
+        libraries,
     })
-    const [currentPosition, setCurrentPosition] = useState({
-        lat: DEFAULT_LAT,
-        lng: DEFAULT_LONG,
-    });
+    const [currentPosition, setCurrentPosition] = useState(DEFAULT_LOCATION_LAT_AND_LONG_OBJECT);
 
     const [map, setMap] = useState(null)
     const [directionsResponse, setDirectionsResponse] = useState(null)
@@ -42,7 +41,7 @@ function MapPage() {
     return (
         <div className={"mapPageWrapper"}>
             {isToggled && (<div className={"featuresPanel"}>
-                <PanelWithTabs isPanelOpen={isToggled} routes={[]} saveDirection={saveDirection}/>
+                <PanelWithTabs isPanelOpen={isToggled} saveDirection={saveDirection}/>
             </div>)}
             <div className={"mapWrapper"}>
                 <GoogleMap
@@ -75,7 +74,7 @@ function MapPage() {
                             className={"locationBtn"}
                         />
                     </div>
-                </GoogleMap>
+                </GoogleMap>;
             </div>
         </div>
     )

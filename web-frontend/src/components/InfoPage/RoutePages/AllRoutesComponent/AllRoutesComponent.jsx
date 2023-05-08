@@ -12,7 +12,7 @@ import {RouteContext} from "../../../../contexts/useRoute.jsx";
 export default function AllRoutesComponent() {
     const {goToSubpage} = useContext(BreadcrumbContext);
     const {setChangedState} = useContext(BusContext);
-    const {routeItems, error, addRoute, removeRoutes, isLoading} = useContext(RouteContext);
+    const {routeItems, message, addRoute, removeRoutes, isLoading} = useContext(RouteContext);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
@@ -125,7 +125,7 @@ export default function AllRoutesComponent() {
                             >
                                 Удалить
                             </Button>
-                            {error && (<p>Ошибка при отправке запроса</p>)}
+                            {message && (<p>{message}</p>)}
                         </Box>
                     )}
                 />

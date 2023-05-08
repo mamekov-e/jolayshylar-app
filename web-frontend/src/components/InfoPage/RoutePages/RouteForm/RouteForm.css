@@ -3,3 +3,11 @@
     flex-direction: column;
     gap: 15px;
 }
+
+.routeFormWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    width: 90%;
+    min-height: 400px;
+}

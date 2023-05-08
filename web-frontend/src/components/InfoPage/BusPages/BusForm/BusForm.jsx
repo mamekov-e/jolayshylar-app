@@ -7,11 +7,12 @@ import "./BusForm.css";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import Dropdown from "../../../CustomComponents/Dropdown/Dropdown.jsx";
 import axiosUtil from "../../../../utils/axiosUtil.jsx";
+import {BusContext} from "../../../../contexts/useBus.jsx";
 
 export default function BusForm({submitForm, bus}) {
     const {subpage, goToSubpage, allItemsPage} = useContext(BreadcrumbContext);
+    const {showMessage} = useContext(BusContext);
     const [routeOptions, setRouteOptions] = useState([])
-    const [error, setError] = useState([])
     const api = axiosUtil()
 
     const loadRoutesData = async () => {
@@ -72,7 +73,7 @@ export default function BusForm({submitForm, bus}) {
                 <Form className="form">
                     <div className="formGroup">
                         <span className="dangerText">
-                          {touched.transport_number && errors.transport_number ? errors.transport_number : "*"}
+                          {touched.transport_number && errors.transport_number ? errors.transport_number : !values.transport_number ? "*" : "Номер автобуса *"}
                         </span>
                         <InputText
                             placeholder="Введите номер автобуса"
@@ -87,7 +88,7 @@ export default function BusForm({submitForm, bus}) {
                     </div>
                     <div className="formGroup">
                         <span className="dangerText">
-                          {touched.total_seats && errors.total_seats ? errors.total_seats : "*"}
+                          {touched.total_seats && errors.total_seats ? errors.total_seats : !values.total_seats ? "*" : "Вместимость *"}
                         </span>
                         <InputText
                             placeholder="Введите вместимость автобуса"
@@ -102,9 +103,7 @@ export default function BusForm({submitForm, bus}) {
                     </div>
                     <div className="formGroup">
                         <span className="dangerText">
-                          {touched.normal_seats && errors.normal_seats
-                              ? errors.normal_seats
-                              : "*"}
+                          {touched.normal_seats && errors.normal_seats ? errors.normal_seats : !values.normal_seats ? "*" : "Сидячих мест *"}
                         </span>
                         <InputText
                             placeholder="Введите количество сидячих мест"
@@ -119,9 +118,7 @@ export default function BusForm({submitForm, bus}) {
                     </div>
                     <div className="formGroup">
                         <span className="dangerText">
-                          {touched.disabled_seats && errors.disabled_seats
-                              ? errors.disabled_seats
-                              : "*"}
+                          {touched.disabled_seats && errors.disabled_seats ? errors.disabled_seats : !values.disabled_seats ? "*" : "Спец. мест *"}
                         </span>
                         <InputText
                             placeholder="Введите количество спец. мест"
@@ -136,8 +133,7 @@ export default function BusForm({submitForm, bus}) {
                     </div>
                     <div className="formGroup">
                         <span className="dangerText">
-                            {error && error + " "}
-                            {touched.route_number && errors.route_number ? errors.route_number : "*"}
+                            {touched.route_number && errors.route_number ? errors.route_number : !values.route_number ? "*" : "Номер маршрута *"}
                         </span>
                         <Dropdown
                             isSearchable
@@ -149,12 +145,11 @@ export default function BusForm({submitForm, bus}) {
                             }}
                             onBlur={() => {
                                 setFieldTouched("route_number", true)
-                                setError(null)
                             }}
                             onFocus={async () => {
                                 const loaded = await loadRoutesData()
                                 if (loaded !== true)
-                                    setError(loaded)
+                                    showMessage(loaded)
                                 setFieldTouched("route_number", false)
                             }}
                             name={"route_number"}

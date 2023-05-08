@@ -13,7 +13,7 @@ export default function AllBusesComponent() {
     const {goToSubpage} = useContext(BreadcrumbContext);
     const {
         busItems,
-        error,
+        message,
         isLoading,
         changeBusTrackingState,
         checkIsTrackingAtLeastOne,
@@ -22,7 +22,7 @@ export default function AllBusesComponent() {
         editBus,
         createBusesReport
     } = useContext(BusContext);
-    const {getRouteById} = useContext(RouteContext);
+    const {getRouteStopsById} = useContext(RouteContext);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
@@ -66,8 +66,8 @@ export default function AllBusesComponent() {
 
     const handleOpenBusPage = useCallback(
         async (bus) => {
-            const routeStops = await getRouteById(bus.route.id)
-            const subpagecrumb = BusInfoSubpageCrumb(bus,routeStops);
+            const routeStops = await getRouteStopsById(bus.route.id)
+            const subpagecrumb = BusInfoSubpageCrumb(bus, routeStops);
             goToSubpage(subpagecrumb);
         }, [])
 
@@ -194,10 +194,10 @@ export default function AllBusesComponent() {
                                 </IconButton> :
                                 <IconButton
                                     color="primary"
-                                    onClick={() => {
+                                    onClick={async () => {
                                         const clickedRowToArr = []
                                         clickedRowToArr.push(row.original)
-                                        changeBusTrackingState(clickedRowToArr, true)
+                                        await changeBusTrackingState(clickedRowToArr, true)
                                     }}>
                                     <VscDebugStart color={"#368852"}/>
                                 </IconButton>}
@@ -265,7 +265,14 @@ export default function AllBusesComponent() {
                                 color={'secondary'}>
                                 Создать отчет
                             </Button>
-                            {error && (<p>Ошибка при отправке запроса</p>)}
+                            {message && (
+                                <p style={{
+                                    color: "mediumseagreen",
+                                    margin: '3px',
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                }}>{message}</p>
+                            )}
                         </Box>
                     )}
                 />

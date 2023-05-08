@@ -11,7 +11,7 @@ import {RouteContextProvider} from "./contexts/useRoute.jsx";
 import {AuthContextProvider} from "./contexts/useAuth.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <React.StrictMode>
+    // <React.StrictMode>
         <BrowserRouter>
             <AuthContextProvider>
                 <ReportContextProvider>
@@ -27,5 +27,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 </ReportContextProvider>
             </AuthContextProvider>
         </BrowserRouter>
-    </React.StrictMode>
+    // </React.StrictMode>
 );

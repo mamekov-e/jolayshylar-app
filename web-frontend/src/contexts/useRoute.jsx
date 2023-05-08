@@ -1,20 +1,21 @@
-import React, {useEffect, useState} from "react";
-import {AddRouteSubpageCrumb} from "../constants/BreadcrumbItems.jsx";
+import React, {useEffect, useState, useContext} from "react";
 import axiosUtil from "../utils/axiosUtil.jsx";
+import {AuthContext} from "./useAuth.jsx";
 
 const RouteContext = React.createContext();
 
 function RouteContextProvider({children}) {
+    const {authTokens} = useContext(AuthContext);
     const [routeItems, setRouteItems] = useState([]);
-    const [error, setError] = useState(false);
+    const [message, setMessage] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const api = axiosUtil()
 
     async function addRoute(values) {
-        const route_name = values.stops[0].label + " → " + values.stops[values.stops.length - 1].label
+        const route_name = values.stops[0].stop_name + " → " + values.stops[values.stops.length - 1].stop_name
         const stopsArr = values.stops.map(stop => ({
             id: stop.value,
-            stop_name: stop.label
+            stop_name: stop.stop_name
         }))
 
         const newRoute = {
@@ -33,6 +34,7 @@ function RouteContextProvider({children}) {
                 })
             if (response.status === 200) {
                 setRouteItems((prevItems) => [...prevItems, response.data.route]);
+                showMessage("Запись успешно добавлена")
                 return true
             }
         } catch (err) {
@@ -44,10 +46,10 @@ function RouteContextProvider({children}) {
         let updatedRoute = null
         const updatedRoutesItems = routeItems.map((item) => {
             if (item.id === route.id) {
-                const route_name = values.stops[0].label + " → " + values.stops[values.stops.length - 1].label
+                const route_name = values.stops[0].stop_name + " → " + values.stops[values.stops.length - 1].stop_name
                 const stopsArr = values.stops.map(stop => ({
                     id: stop.value,
-                    stop_name: stop.label
+                    stop_name: stop.stop_name
                 }))
                 updatedRoute = {...item, ...values, route_name, stops: stopsArr};
                 return {...item, route_number: values.route_number, route_name}
@@ -65,6 +67,7 @@ function RouteContextProvider({children}) {
                 })
             if (response.status === 200) {
                 setRouteItems(updatedRoutesItems);
+                showMessage("Записи успешно изменены")
                 return true
             }
         } catch (err) {
@@ -91,15 +94,15 @@ function RouteContextProvider({children}) {
                     );
                     return filteredItems;
                 });
+                showMessage("Записи успешно удалены")
                 return true
             }
         } catch (err) {
             return err.response.data
-
         }
     }
 
-    async function getRouteById(id) {
+    async function getRouteStopsById(id) {
         try {
             const params = new URLSearchParams({id: id})
             const response = await api.get("/transports/get-routes-stops/?" + params.toString(),
@@ -112,6 +115,14 @@ function RouteContextProvider({children}) {
         }
     }
 
+    const showMessage = (message) => {
+        setMessage(message);
+
+        setTimeout(() => {
+            setMessage(null);
+        }, 1500);
+    };
+
     useEffect(() => {
         async function fetchRouteItems () {
             try {
@@ -119,20 +130,21 @@ function RouteContextProvider({children}) {
                 setRouteItems(response.data)
                 setIsLoading(false)
             } catch (err) {
-                setError(err)
+                setMessage(err)
                 console.error(err)
             }
         }
-        fetchRouteItems()
+        if (authTokens)
+            fetchRouteItems()
     }, [])
 
     return (
         <RouteContext.Provider
             value={{
                 routeItems,
-                error,
+                message,
                 isLoading,
-                getRouteById,
+                getRouteStopsById,
                 addRoute,
                 removeRoutes,
                 editRoute

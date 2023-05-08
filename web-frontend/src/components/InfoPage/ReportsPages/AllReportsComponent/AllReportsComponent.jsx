@@ -1,64 +1,28 @@
-import React, {useContext, useEffect, useMemo, useState} from "react";
+import React, {useContext, useMemo, useState} from "react";
 import "./AllReportsComponent.css"
 import MaterialReactTable from "material-react-table";
-import reports from "../../../../staticData/serverData/reports.json";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {Box, Button, IconButton} from "@mui/material";
 import importIcon from "../../../../assets/partners/pages/importIcon.svg"
 import {exportToCSV} from "../../../../utils/fileUtil.jsx";
 import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
 import {MdOpenInNew} from "react-icons/all.js";
+import axiosUtil from "../../../../utils/axiosUtil.jsx";
+import SearchReportForm from "../SearchReportForm/SearchReportForm.jsx";
+import {ReportContext} from "../../../../contexts/useReport.jsx";
+import {lightTheme, Provider} from "@adobe/react-spectrum";
+import {ReportInfoSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
+import {RouteContext} from "../../../../contexts/useRoute.jsx";
 
-export default function AllReportsComponent({InfoSubpage}) {
+export default function AllReportsComponent() {
     const {goToSubpage} = useContext(BreadcrumbContext);
-
-    const [data, setData] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const {message, reportItems, isLoading} = useContext(ReportContext);
+    const {getRouteStopsById} = useContext(RouteContext);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
     });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!data.length) {
-                setIsLoading(true);
-            }
-
-            if (typeof window !== 'undefined') {
-                setData(reports);
-                setIsLoading(false);
-            }
-            // const url = new URL(
-            //     '/api/data',
-            //     process.env.NODE_ENV === 'production'
-            //         ? 'https://www.material-react-table.com'
-            //         : 'http://localhost:3000',
-            // );
-            // url.searchParams.set(
-            //     'start',
-            //     `${pagination.pageIndex * pagination.pageSize}`,
-            // );
-            // url.searchParams.set('size', `${pagination.pageSize}`);
-            // url.searchParams.set('filters', JSON.stringify(columnFilters ?? []));
-            // url.searchParams.set('globalFilter', globalFilter ?? '');
-            // url.searchParams.set('sorting', JSON.stringify(sorting ?? []));
-            // try {
-            //     const response = await fetch(url.href);
-            //     const json = await response.json();
-            //     setData(json.data);
-            //     setRowCount(json.meta.totalRowCount);
-            // } catch (error) {
-            //     setIsError(true);
-            //     console.error(error);
-            //     return;
-            // }
-            // setIsError(false);
-            // setIsLoading(false);
-            // setIsRefetching(false);
-        };
-        fetchData();
-    }, []);
+    const api = axiosUtil()
 
     const handleExportRows = (rows) => {
         const selected = rows.map((row) => row.original)
@@ -73,110 +37,122 @@ export default function AllReportsComponent({InfoSubpage}) {
                 size: 80
             },
             {
-                accessorKey: 'route_number',
+                accessorKey: 'transport.transport_number',
+                header: 'Номер автобуса',
+                size: 140
+            },
+            {
+                accessorKey: 'transport.route.route_number',
                 header: 'Номер маршрута',
                 size: 140,
-                Cell: ({ cell }) => {
+                Cell: ({cell}) => {
                     return <div style={{textAlign: "center"}}>{cell.getValue()}</div>;
                 },
             },
             {
-                accessorKey: 'route_name',
+                accessorKey: 'transport.route.route_name',
                 header: 'Название маршрута',
                 maxSize: 80,
             },
-            {
-                accessorKey: 'transport_number',
-                header: 'Номер автобуса',
-                size: 140
-            }
         ],
         [],
     );
 
     const exportIcon = <img src={importIcon}/>;
 
-    function onOpen(item) {
-        const subpagecrumb = InfoSubpage(item);
+    async function onOpen(report) {
+        const routeStops = await getRouteStopsById(report.transport.route.id)
+        const subpagecrumb = ReportInfoSubpageCrumb(report, routeStops);
         goToSubpage(subpagecrumb);
     }
 
     return (
         <main>
-            {data && (
-                <MaterialReactTable
-                    data={data}
-                    columns={columns}
-                    enableHiding={false}
-                    enableDensityToggle={false}
-                    enableMultiSort={true}
-                    initialState={{
-                        pagination,
-                        density: 'compact',
-                        sorting: [
-                            {
-                                id: 'date',
-                                desc: true,
+            <div>
+                <Provider theme={lightTheme} colorScheme={"light"}>
+                    <SearchReportForm/>
+                    <MaterialReactTable
+                        data={reportItems}
+                        columns={columns}
+                        enableHiding={false}
+                        enableDensityToggle={false}
+                        enableMultiSort={true}
+                        initialState={{
+                            pagination,
+                            density: 'compact',
+                            sorting: [
+                                {
+                                    id: 'date',
+                                    desc: true,
+                                },
+                            ],
+                        }}
+                        localization={MRT_Localization_RU}
+                        muiTablePaginationProps={{
+                            sx: {
+                                margin: '0',
                             },
-                        ],
-                    }}
-                    localization={MRT_Localization_RU}
-                    muiTablePaginationProps={{
-                        sx: {
-                            margin: '0',
-                        },
-                    }}
-                    onPaginationChange={setPagination}
-                    positionPagination={"top"}
-                    state={{pagination, isLoading}}
-                    enableRowActions
-                    enableRowSelection
-                    rowCount={data.length}
-                    selectAllMode="all"
-                    memoMode="cells"
-                    positionActionsColumn={"last"}
-                    renderRowActions={({row, table}) => (
-                        <div sx={{display: 'flex', flexWrap: 'nowrap', gap: '8px'}}>
-                            <IconButton
-                                color="primary"
-                                onClick={() => {
-                                    onOpen(row.original)
-                                }}
+                        }}
+                        onPaginationChange={setPagination}
+                        positionPagination={"top"}
+                        state={{pagination, isLoading}}
+                        enableRowActions
+                        enableRowSelection
+                        rowCount={reportItems.length}
+                        selectAllMode="all"
+                        memoMode="cells"
+                        positionActionsColumn={"last"}
+                        renderRowActions={({row, table}) => (
+                            <div sx={{display: 'flex', flexWrap: 'nowrap', gap: '8px'}}>
+                                <IconButton
+                                    color="primary"
+                                    onClick={() => {
+                                        onOpen(row.original)
+                                    }}
+                                >
+                                    <MdOpenInNew color={"black"}/>
+                                </IconButton>
+                            </div>
+                        )}
+                        renderTopToolbarCustomActions={({table}) => (
+                            <Box
+                                sx={{display: 'flex', gap: '1rem', p: '0.2rem', flexWrap: 'wrap'}}
                             >
-                                <MdOpenInNew color={"black"}/>
-                            </IconButton>
-                        </div>
-                    )}
-                    renderTopToolbarCustomActions={({table}) => (
-                        <Box
-                            sx={{display: 'flex', gap: '1rem', p: '0.2rem', flexWrap: 'wrap'}}
-                        >
-                            <Button
-                                size={"small"}
-                                disabled={table.getPrePaginationRowModel().rows.length === 0}
-                                onClick={() =>
-                                    handleExportRows(table.getPrePaginationRowModel().rows)
-                                }
-                                startIcon={exportIcon}
-                                variant="contained"
-                            >
-                                Экспорт всех данных
-                            </Button>
-                            <Button
-                                size={"small"}
-                                disabled={
-                                    !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-                                }
-                                onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
-                                startIcon={exportIcon}
-                                variant="contained"
-                            >
-                                Экспорт выбранных строк
-                            </Button>
-                        </Box>
-                    )}
-                />
-            )}
+                                {/*<Button*/}
+                                {/*    size={"small"}*/}
+                                {/*    disabled={table.getPrePaginationRowModel().rows.length === 0}*/}
+                                {/*    onClick={() =>*/}
+                                {/*        handleExportRows(table.getPrePaginationRowModel().rows)*/}
+                                {/*    }*/}
+                                {/*    startIcon={exportIcon}*/}
+                                {/*    variant="contained"*/}
+                                {/*>*/}
+                                {/*    Экспорт всех данных*/}
+                                {/*</Button>*/}
+                                {/*<Button*/}
+                                {/*    size={"small"}*/}
+                                {/*    disabled={*/}
+                                {/*        !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()*/}
+                                {/*    }*/}
+                                {/*    onClick={() => handleExportRows(table.getSelectedRowModel().rows)}*/}
+                                {/*    startIcon={exportIcon}*/}
+                                {/*    variant="contained"*/}
+                                {/*>*/}
+                                {/*    Экспорт выбранных строк*/}
+                                {/*</Button>*/}
+                                {message && (
+                                    <p style={{
+                                        color: "mediumseagreen",
+                                        margin: '3px',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}>{message}</p>
+                                )}
+                            </Box>
+                        )}
+                    />
+                </Provider>
+            </div>
         </main>
     );
 }

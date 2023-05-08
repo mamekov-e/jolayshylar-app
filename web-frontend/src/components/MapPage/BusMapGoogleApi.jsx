@@ -1,16 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { GoogleMap, LoadScript, Polyline, Marker, InfoWindow } from '@react-google-maps/api';
 import { routesData, busesData } from '../../staticData/serverData/mapData.jsx';
-import {API_KEY, DEFAULT_LAT, DEFAULT_LONG} from "../../constants/Data.jsx";
+import {API_KEY, DEFAULT_LOCATION_LAT_AND_LONG_OBJECT} from "../../constants/Data.jsx";
 
 const containerStyle = {
     width: '100%',
     height: '100%',
-};
-
-const defaultCenter = {
-    lat: DEFAULT_LAT,
-    lng: DEFAULT_LONG,
 };
 
 const BusMap = ({ route }) => {
@@ -49,7 +44,7 @@ const BusMap = ({ route }) => {
         <>
             <button onClick={locateUser}>Перейти к текущему местоположению</button>
             <LoadScript googleMapsApiKey={API_KEY}>
-                <GoogleMap mapContainerStyle={containerStyle} center={defaultCenter} zoom={12}>
+                <GoogleMap mapContainerStyle={containerStyle} center={DEFAULT_LOCATION_LAT_AND_LONG_OBJECT} zoom={12}>
                     {routeData && (
                         <>
                             <Polyline

@@ -51,8 +51,7 @@ def get_records_for_transports_true(request):
     try:
         data = []
         transport_ids = request.query_params.get('ids').split(',')
-        transports = Transport.objects.filter(
-            id__in=transport_ids).all()
+        transports = Transport.objects.filter(id__in=transport_ids).all()
         for transport in transports:
             stop_records = Stop_record.objects.filter(has_report=True).filter(
                 transport__exact=transport.id).all()
@@ -190,17 +189,23 @@ def add_report(request):
     # try:
         transport_ids = request.query_params.get('ids').split(',')
         user = getUserByToken(request)
+        report_changed_count = 0
         for transport_id in transport_ids:
-            records = Stop_record.objects.filter(transport_id__in=transport_id).all()
+            records = Stop_record.objects.filter(transport_id__exact=transport_id).all()
             for record in records:
+                if record.has_report == True:
+                    continue
                 serializer = Stop_recordReportSwitchSerializer(data={
                     "has_report": True
                 })
                 serializer.is_valid(raise_exception=True)
-                Stop_recordReportSwitchSerializer.update(serializer, record,
-                                               serializer.validated_data)
+                Stop_recordReportSwitchSerializer.update(serializer, record,serializer.validated_data)
+                report_changed_count+=1
 
-        return Response('Ok.')
+        if report_changed_count == 0:
+            return Response("Отчеты этих транспортов уже созданы")
+
+        return Response('Отчеты успешно созданы')
 
 
 # Transports
@@ -252,15 +257,13 @@ def change_is_tracking(request):
     # try:
         transport_ids = request.query_params.get('ids').split(',')
         user = getUserByToken(request)
-        for transport_id in transport_ids:
-            transports = Transport.objects.filter(id__in=transport_id).all()
-            for transport in transports:
-                serializer = TransportIsTrackingSwitchSerializer(data={
-                    "is_tracking": request.query_params.get('is_tracking')
-                })
-                serializer.is_valid(raise_exception=True)
-                TransportIsTrackingSwitchSerializer.update(serializer, transport,
-                                               serializer.validated_data)
+        transports = Transport.objects.filter(id__in=transport_ids)
+        for transport in transports:
+            serializer = TransportIsTrackingSwitchSerializer(data={
+                "is_tracking": request.query_params.get('is_tracking')
+            })
+            serializer.is_valid(raise_exception=True)
+            TransportIsTrackingSwitchSerializer.update(serializer, transport,serializer.validated_data)
 
         return Response('Ok.')
 

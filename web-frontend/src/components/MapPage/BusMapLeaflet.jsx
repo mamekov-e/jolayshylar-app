@@ -3,7 +3,7 @@ import {MapContainer, TileLayer, Polyline, Marker, Popup, useMap} from 'react-le
 import axios from 'axios';
 import {busesData, routesData} from '../../staticData/serverData/mapData.jsx'
 import { Icon } from 'leaflet';
-import {DEFAULT_LAT, DEFAULT_LONG} from "../../constants/Data.jsx";
+import {DEFAULT_LOCATION_LAT_AND_LONG_OBJECT} from "../../constants/Data.jsx";
 
 const LocateUser = () => {
     const map = useMap();

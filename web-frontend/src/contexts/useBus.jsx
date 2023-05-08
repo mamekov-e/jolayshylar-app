@@ -1,33 +1,61 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import axiosUtil from "../utils/axiosUtil.jsx";
 import {compareArrays} from "../utils/objectUtil.jsx";
+import {getBusIds} from "../utils/busUtils.jsx";
+import {AuthContext} from "./useAuth.jsx";
 
 const BusContext = React.createContext();
 
 function BusContextProvider({children}) {
+    const {authTokens} = useContext(AuthContext);
     const [busItems, setBusItems] = useState([]);
     const [changedState, setChangedState] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(false);
+    const [message, setMessage] = useState(null);
     const api = axiosUtil()
 
-    function changeBusTrackingState(buses, state) {
-        setBusItems(prevItems => {
-            return prevItems.map((bus) => {
-                if (!buses.includes(bus))
-                    return bus
-                bus.is_tracking = state;
-                return bus;
-            });
-        })
+    async function changeBusTrackingState(buses, state) {
+        const params = new URLSearchParams({ids: getBusIds(buses), is_tracking: state})
+        try {
+            const response = await api.put("/transports/change-is-tracking/?" + params.toString(),
+                {
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"}
+                })
+            if (response.status === 200) {
+                setBusItems(prevItems => {
+                    return prevItems.map((bus) => {
+                        if (!buses.includes(bus))
+                            return bus
+                        bus.is_tracking = state;
+                        return bus;
+                    });
+                })
+                showMessage("Изменения успешно внесены")
+            }
+        } catch (err) {
+            showMessage(err.response.data)
+        }
     }
 
     function checkIsTrackingAtLeastOne(buses) {
         return buses.some(bus => bus.is_tracking)
     }
 
-    function createBusesReport(buses) {
-
+    async function createBusesReport(buses) {
+        const params = new URLSearchParams({ids: getBusIds(buses)})
+        try {
+            const response = await api.put("/transports/add-report/?" + params.toString(),
+                {
+                    headers: {"Content-Type": "application/x-www-form-urlencoded"}
+                })
+            if (response.status === 200) {
+                showMessage(response.data)
+                return true
+            }
+        } catch (err) {
+            showMessage(err.response.data)
+            return false
+        }
     }
 
     async function addBus(values) {
@@ -44,15 +72,16 @@ function BusContextProvider({children}) {
                 })
             if (response.status === 200) {
                 setBusItems((prevItems) => [...prevItems, response.data.transport]);
+                showMessage("Запись успешно добавлена")
                 return true
             }
         } catch (err) {
-            return err.response.data
+            showMessage(err.response.data)
         }
     }
 
     async function editBus(values, bus) {
-        let editedBus = {...values, route: values.route_number.value, id: bus.id};
+        let editedBus = {...values, route: values.route_number.value, id: bus.id, company: bus.company.id};
         delete editedBus['route_number']
 
         try {
@@ -78,20 +107,16 @@ function BusContextProvider({children}) {
                         return item;
                     });
                 });
+                showMessage("Записи успешно изменены")
                 return true
             }
         } catch (err) {
-            console.error(err)
-            return err.response.data
+            showMessage(err)
         }
     }
 
     async function removeBuses(buses) {
-        const busIds = []
-        buses.forEach((bus) => {
-            busIds.push(bus.id)
-        })
-        const params = new URLSearchParams({ids: busIds.join(',')})
+        const params = new URLSearchParams({ids: getBusIds(buses)})
         try {
             const response = await api.delete(
                 "/transports/delete-transport/?" + params.toString(),
@@ -100,17 +125,24 @@ function BusContextProvider({children}) {
                 })
             if (response.status === 200) {
                 setBusItems((prevItems) => {
-                    const filteredItems = prevItems.filter(
+                    return prevItems.filter(
                         (item) => !buses.includes(item)
                     );
-                    return filteredItems;
                 });
-                return true
+                showMessage("Записи успешно удалены")
             }
         } catch (err) {
-            return err.response.data
+            showMessage(err.response.data)
         }
     }
+
+    const showMessage = (message) => {
+        setMessage(message);
+
+        setTimeout(() => {
+            setMessage(null);
+        }, 1500);
+    };
 
     useEffect(() => {
         async function fetchBusItems() {
@@ -123,11 +155,12 @@ function BusContextProvider({children}) {
                 setIsLoading(false)
             } catch (err) {
                 console.error(err)
-                setError(err)
+                showMessage(err)
             }
         }
 
-        fetchBusItems()
+        if (authTokens)
+            fetchBusItems()
     }, [changedState])
 
     return (
@@ -138,7 +171,7 @@ function BusContextProvider({children}) {
                 setChangedState,
                 busItems,
                 isLoading,
-                error,
+                message,
                 createBusesReport,
                 addBus,
                 removeBuses,

@@ -31,7 +31,7 @@ function AuthContextProvider({children}) {
             navigate("/partners");
         }
         if (response.status >= 400) {
-            return "Ошибка с сервера"
+            return "Неправильный логин или пароль"
         }
     };
 
