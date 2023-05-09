@@ -30,7 +30,7 @@ class TransportPOSTSerializer(serializers.ModelSerializer):
 class StopGETSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stop
-        fields = "__all__"
+        fields = '__all__'
         depth = 1
 
 class StopPOSTSerializer(serializers.ModelSerializer):

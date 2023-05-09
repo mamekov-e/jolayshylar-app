@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     get_transports_of_company, get_record_for_transport, get_transport,
     get_routes_stops, get_stop, get_routes_of_company,
-    get_all_stops, export_all_records, get_records_for_transports_true,
+    get_all_stops,
 
     TransportView, edit_transport, change_is_tracking, add_report, DeleteTransportView,
     StopView, edit_stop, delete_stop,
@@ -12,8 +12,6 @@ from .views import (
 urlpatterns = [
     path('get-transports-of-company/', get_transports_of_company, name='get-transports-of-company'),
     path('get-record-for-transport/', get_record_for_transport, name='get-record-for-transport'),
-    path('export-all-records/', export_all_records, name='export-all-records'),
-    path('export-records/', get_records_for_transports_true, name='export-records'),
     path('add-record/', RecordView.as_view(), name='add-record'),
 
     # Transports

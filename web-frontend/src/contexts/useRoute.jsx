@@ -136,7 +136,7 @@ function RouteContextProvider({children}) {
         }
         if (authTokens)
             fetchRouteItems()
-    }, [])
+    }, [authTokens])
 
     return (
         <RouteContext.Provider

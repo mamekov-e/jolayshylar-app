@@ -161,7 +161,7 @@ function BusContextProvider({children}) {
 
         if (authTokens)
             fetchBusItems()
-    }, [changedState])
+    }, [changedState, authTokens])
 
     return (
         <BusContext.Provider
