@@ -83,24 +83,27 @@ class RegisterEmail(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        try:
+        # try:
             login = request.data['login']
             password = request.data['password']
 
-            if check_password(password, User.objects.get(login__exact=login).password):
-                user = User.objects.filter(login=login).first()
-                refresh = RefreshToken.for_user(user)
-                serializer = UserPOSTSerializer(user)
-                user = authenticate(request, login=login, password=password)
-                return Response({
-                    'user': serializer.data,
-                    'token': {'refresh': str(refresh),
-                              'access': str(refresh.access_token)}
-                })
+            if User.objects.filter(login__exact=login).exists():
+                if check_password(password, User.objects.get(login__exact=login).password):
+                    user = User.objects.filter(login=login).first()
+                    refresh = RefreshToken.for_user(user)
+                    serializer = UserPOSTSerializer(user)
+                    user = authenticate(request, login=login, password=password)
+                    return Response({
+                        'user': serializer.data,
+                        'token': {'refresh': str(refresh),
+                                  'access': str(refresh.access_token)}
+                    })
+                else:
+                    return Response('Неверный пароль', status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response('Неверный пароль', status=status.HTTP_400_BAD_REQUEST)
-        except TypeError:
-            return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+                return Response('Пользователь не существует', status=status.HTTP_400_BAD_REQUEST)
+        # except TypeError:
+        #     return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(APIView):
