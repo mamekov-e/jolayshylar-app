@@ -1,5 +1,3 @@
-from sqlite3 import IntegrityError
-
 from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.views import APIView
@@ -10,7 +8,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from .models import User, Company, City, companies_cities
 from rest_framework.response import Response
 from .serializers import MyTokenRefreshSerializer, CompanyPOSTSerializer, CompanyGETSerializer, CitySerializer, \
-    RoleSerializer, UserPOSTSerializer, UserGETSerializer, Companies_citiesGETSerializer, \
+    UserPOSTSerializer, UserGETSerializer, Companies_citiesGETSerializer, \
     Companies_citiesPOSTSerializer
 from django.core.mail import EmailMessage, get_connection
 from django.conf import settings
@@ -32,6 +30,10 @@ class RegisterView(APIView):
                 "company": request.data['company'],
                 "is_active": True
             })
+
+            if User.objects.get(login__exact=request.data['login']):
+                return Response('Пользователь с таким логином уже существует', status=status.HTTP_400_BAD_REQUEST)
+
             if serializer.is_valid(raise_exception=True):
                 user = serializer.save()
                 refresh = RefreshToken.for_user(user)
@@ -43,8 +45,6 @@ class RegisterView(APIView):
                         "token": {'refresh': str(refresh), 'access': str(refresh.access_token)}
                     }
                 )
-        except IntegrityError:
-            return Response('Пользователь с таким логином уже существует', status=status.HTTP_400_BAD_REQUEST)
         except TypeError:
             return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
@@ -97,8 +97,8 @@ class LoginView(APIView):
                     'token': {'refresh': str(refresh),
                               'access': str(refresh.access_token)}
                 })
-        # except AttributeError:
-        #     return Response('Неверный логин или пароль', status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response('Неверный пароль', status=status.HTTP_400_BAD_REQUEST)
         except TypeError:
             return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
@@ -174,8 +174,6 @@ class CityView(APIView):
                 )
         except TypeError:
             return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
-        except IntegrityError:
-            return Response('Пользователь с таким логином уже существует', status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view([HTTPMethod.get])
@@ -231,8 +229,6 @@ def get_companies_cities_by_city(request):
         companies = companies_cities.objects.filter(city__city_name__exact=city_name)
         data = Companies_citiesGETSerializer(companies, many=True)
         return Response(data.data)
-    except AttributeError:
-        return Response('Ошибка в названии города', status=status.HTTP_400_BAD_REQUEST)
     except TypeError:
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
