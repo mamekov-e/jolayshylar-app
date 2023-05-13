@@ -31,7 +31,7 @@ class RegisterView(APIView):
                 "is_active": True
             })
 
-            if User.objects.get(login__exact=request.data['login']):
+            if User.objects.filter(login__exact=request.data['login']).exists():
                 return Response('Пользователь с таким логином уже существует', status=status.HTTP_400_BAD_REQUEST)
 
             if serializer.is_valid(raise_exception=True):
