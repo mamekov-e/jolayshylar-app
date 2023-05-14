@@ -28,12 +28,29 @@ from .serializers import (
 def get_record_for_transport(request):
     try:
         transport_id = request.query_params.get('id')
-        stop_records = Stop_record.objects.filter(has_report=False).filter(
-            transport__exact=transport_id).all()
-        data = Stop_recordGETSerializer(stop_records, many=True)
+        if Stop_record.objects.filter(has_report=False).filter(
+            transport__exact=transport_id).exists():
+                stop_records = Stop_record.objects.filter(has_report=False).filter(
+                    transport__exact=transport_id).all()
+                data = Stop_recordGETSerializer(stop_records, many=True)
+        else:
+            return Response("Нет записей для этого транспорта")
         return Response(data.data)
     except TypeError:
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view([static.HTTPMethod.get])
+def get_last_record_for_transport(request):
+        transport_id = request.query_params.get('id')
+        if Stop_record.objects.filter(
+            transport__exact=transport_id).exists():
+                stop_record = Stop_record.objects.filter(
+                    transport__exact=transport_id).last()
+                data = Stop_recordGETSerializer(stop_record)
+        else:
+            return Response("Нет записей для этого транспорта")
+        return Response(data.data)
 
 
 @api_view([static.HTTPMethod.get])
@@ -50,12 +67,32 @@ def get_transports_of_company(request):
 
 
 @api_view([static.HTTPMethod.get])
+def get_tracked_transports_of_route(request):
+    try:
+        transport = Transport.objects.filter(route__exact=request.query_params.get('route')).filter(is_tracking=True).all()
+        data = TransportGETSerializer(transport, many=True)
+        return Response(data.data)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
 def get_routes_of_company(request):
     try:
         user = getUserByToken(request)
         company_id = user.company_id
         route_ids = Route.objects.filter(company_id__exact=company_id).all()
+        data = RouteGETSerializer(route_ids, many=True)
+        return Response(data.data)
+    except TypeError:
+        return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view([static.HTTPMethod.get])
+def get_all_routes(request):
+    try:
+        route_ids = Route.objects.all()
         data = RouteGETSerializer(route_ids, many=True)
         return Response(data.data)
     except TypeError:
@@ -86,7 +123,6 @@ def get_transport(request):
 
 
 @api_view([static.HTTPMethod.get])
-@permission_classes([IsAuthenticated])
 def get_routes_stops(request):
     try:
         route_id = request.query_params['id']
@@ -152,28 +188,30 @@ def add_report(request):
         return Response('Отчеты успешно созданы')
 
 
-
 # Transports
 @permission_classes([IsAuthenticated])
 class TransportView(APIView):
     def post(self, request):
         try:
             user = getUserByToken(request)
-            serializer = TransportPOSTSerializer(data={
-                "total_seats": request.data['total_seats'],
-                "normal_seats": request.data['normal_seats'],
-                "disabled_seats": request.data['disabled_seats'],
-                "transport_number": request.data['transport_number'],
-                "route": request.data['route'],
-                "company": user.company_id
-            })
-            if serializer.is_valid():
-                transport = serializer.save()
-                serializer_get = TransportGETSerializer(transport)
-                data = {
-                    "transport": serializer_get.data
-                }
-                return Response(data)
+            if Transport.objects.filter(transport_number__exact=request.data['transport_number']).exists():
+                return Response('Трансопрт с таким номером уже существует')
+            else:
+                serializer = TransportPOSTSerializer(data={
+                    "total_seats": request.data['total_seats'],
+                    "normal_seats": request.data['normal_seats'],
+                    "disabled_seats": request.data['disabled_seats'],
+                    "transport_number": request.data['transport_number'],
+                    "route": request.data['route'],
+                    "company": user.company_id
+                })
+                if serializer.is_valid():
+                    transport = serializer.save()
+                    serializer_get = TransportGETSerializer(transport)
+                    data = {
+                        "transport": serializer_get.data
+                    }
+                    return Response(data)
         except TypeError:
             return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
@@ -184,11 +222,14 @@ def edit_transport(request):
     try:
         transport_id = request.data['id']
         user = getUserByToken(request)
-        transport = Transport.objects.get(id__exact=transport_id)
-        edited_transport_serializer = TransportPOSTSerializer(data=request.data)
-        edited_transport_serializer.is_valid(raise_exception=True)
-        new_data = TransportPOSTSerializer.update(edited_transport_serializer, transport, edited_transport_serializer.validated_data)
-        return Response(edited_transport_serializer.data)
+        if Transport.objects.filter(transport_number__exact=request.data['transport_number']).exists():
+            return Response('Трансопрт с таким номером уже существует')
+        else:
+            transport = Transport.objects.get(id__exact=transport_id)
+            edited_transport_serializer = TransportPOSTSerializer(data=request.data)
+            edited_transport_serializer.is_valid(raise_exception=True)
+            new_data = TransportPOSTSerializer.update(edited_transport_serializer, transport, edited_transport_serializer.validated_data)
+            return Response(edited_transport_serializer.data)
     except TypeError:
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 

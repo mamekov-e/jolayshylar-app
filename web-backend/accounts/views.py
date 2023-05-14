@@ -67,7 +67,7 @@ class RegisterEmail(APIView):
                     company = request.POST.get("company")
                     email = request.POST.get("email")
                     contacts = request.POST.get("contacts")
-                    message = "Что-то про приветствие. Мы компания пассажироперевозок - " + company \
+                    message = "Приветствуем вас! Мы компания пассажироперевозок - " + company \
                               + " - оперируем на территории " + city \
                               + ". Наш email: " + email \
                               + ". Кроме того, вы можете связаться с нами, используя следующие контактные данные: " \
@@ -83,7 +83,6 @@ class RegisterEmail(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        # try:
             login = request.data['login']
             password = request.data['password']
 
@@ -102,8 +101,6 @@ class LoginView(APIView):
                     return Response('Неверный пароль', status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response('Пользователь не существует', status=status.HTTP_400_BAD_REQUEST)
-        # except TypeError:
-        #     return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(APIView):

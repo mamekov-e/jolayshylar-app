@@ -51,6 +51,7 @@ class Stop_record(models.Model):
     stop = models.ForeignKey(Stop, on_delete=models.CASCADE)
     passenger_in = models.IntegerField(default=0)
     passenger_out = models.IntegerField(default=0)
+    passengers_now = models.IntegerField(default=0)
     date = models.DateField(blank=True, null=True)
     timestamp = models.TimeField(default=0)
     cycle_amount = models.IntegerField(default=0)
