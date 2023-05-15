@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     get_transports_of_company, get_record_for_transport, get_transport,
     get_routes_stops, get_stop, get_routes_of_company, get_all_routes,
-    get_all_stops, get_last_record_for_transport,
+    get_all_stops, get_last_record_for_transport, get_closest_routes,
 
     TransportView, edit_transport, change_is_tracking, add_report, DeleteTransportView, get_tracked_transports_of_route,
     StopView, edit_stop, delete_stop,
@@ -14,6 +14,7 @@ urlpatterns = [
     path('get-record-for-transport/', get_record_for_transport, name='get-record-for-transport'),
     path('get-last-record-for-transport/', get_last_record_for_transport, name='get-last-record-for-transport'),
     path('add-record/', RecordView.as_view(), name='add-record'),
+    path('get-closest-routes/', get_closest_routes, name='get-closest-routes'),
 
     # Transports
     path('add-transport/', TransportView.as_view(), name='add-transport'),
