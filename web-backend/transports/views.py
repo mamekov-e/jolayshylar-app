@@ -241,7 +241,7 @@ class TransportView(APIView):
         try:
             user = getUserByToken(request)
             if Transport.objects.filter(transport_number__exact=request.data['transport_number']).exists():
-                return Response('Трансопрт с таким номером уже существует')
+                return Response('Трансопрт с таким номером уже существует', status=status.HTTP_400_BAD_REQUEST)
             else:
                 serializer = TransportPOSTSerializer(data={
                     "total_seats": request.data['total_seats'],
@@ -268,8 +268,8 @@ def edit_transport(request):
     try:
         transport_id = request.data['id']
         user = getUserByToken(request)
-        if Transport.objects.filter(transport_number__exact=request.data['transport_number']).exists():
-            return Response('Трансопрт с таким номером уже существует')
+        if Transport.objects.exclude(id__exact=transport_id).filter(transport_number__exact=request.data['transport_number']).exists():
+            return Response('Трансопрт с таким номером уже существует', status=status.HTTP_400_BAD_REQUEST)
         else:
             transport = Transport.objects.get(id__exact=transport_id)
             edited_transport_serializer = TransportPOSTSerializer(data=request.data)
