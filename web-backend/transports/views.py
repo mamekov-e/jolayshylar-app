@@ -148,7 +148,6 @@ def get_stop(request):
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
-@permission_classes([IsAuthenticated])
 class RecordView(APIView):
     def post(self, request):
         try:
@@ -220,15 +219,17 @@ class TransportView(APIView):
 @permission_classes([IsAuthenticated])
 def edit_transport(request):
     try:
+        print("printing req data ", request.data)
         transport_id = request.data['id']
         user = getUserByToken(request)
         if Transport.objects.filter(transport_number__exact=request.data['transport_number']).exists():
-            return Response('Трансопрт с таким номером уже существует')
+            return Response('Трансопрт с таким номером уже существует', status=status.HTTP_400_BAD_REQUEST)
         else:
             transport = Transport.objects.get(id__exact=transport_id)
             edited_transport_serializer = TransportPOSTSerializer(data=request.data)
             edited_transport_serializer.is_valid(raise_exception=True)
             new_data = TransportPOSTSerializer.update(edited_transport_serializer, transport, edited_transport_serializer.validated_data)
+            print("edited_transport_serializer ", edited_transport_serializer.data)
             return Response(edited_transport_serializer.data)
     except TypeError:
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
