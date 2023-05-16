@@ -1,3 +1,6 @@
+import math
+from decimal import Decimal
+import heapq
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
@@ -21,7 +24,16 @@ from .serializers import (
     Stop_recordReportSwitchSerializer, TransportIsTrackingSwitchSerializer
 )
 # Create your views here.
+class Location:
+    def __init__(self, stop, distance) -> None:
+        self.stop = stop
+        self.distance = distance
 
+    def __lt__(self, next):
+        return self.distance < next.distance
+
+    def __str__(self) -> str:
+        return self.stop + " " + self.distance
 
 @api_view([static.HTTPMethod.get])
 @permission_classes([IsAuthenticated])
@@ -74,6 +86,40 @@ def get_tracked_transports_of_route(request):
         return Response(data.data)
     except TypeError:
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
+
+@api_view([static.HTTPMethod.post])
+def get_closest_routes(request):
+    lat_1 = request.data['latitude-1']
+    long_1 = request.data['longitude-1']
+    lat_2 = request.data['latitude-2']
+    long_2 = request.data['longitude-2']
+    result = []
+    heap = []
+    min_dist = 1000
+    stops = Stop.objects.all()
+    for stop in stops:
+        distance = math.sqrt(pow(abs(stop.latitude - Decimal(lat_1)), 2) + pow(
+            abs(stop.longitude - Decimal(long_1)), 2))
+        if distance < min_dist:
+            min_dist = distance
+            location = Location(stop=stop.id, distance=distance)
+            heapq.heappush(heap, location)
+    min_dist = 1000
+    for stop in stops:
+        distance = math.sqrt(pow(abs(stop.latitude - Decimal(lat_2)), 2) + pow(
+            abs(stop.longitude - Decimal(long_2)), 2))
+        if distance < min_dist:
+            min_dist = distance
+            location = Location(stop=stop.id, distance=distance)
+            heapq.heappush(heap, location)
+    while len(heap) > 0:
+        result.append(heapq.heappop(heap).stop)
+    routes_stops = Routes_stops.objects.filter(stop__in=result)
+    routes = []
+    for route_stop in routes_stops:
+        routes.append(Route.objects.get(id__exact=route_stop.route.id))
+    routes = RouteGETSerializer(routes, many=True)
+    return Response(routes.data)
 
 
 @api_view([static.HTTPMethod.get])
@@ -194,7 +240,7 @@ class TransportView(APIView):
         try:
             user = getUserByToken(request)
             if Transport.objects.filter(transport_number__exact=request.data['transport_number']).exists():
-                return Response('Трансопрт с таким номером уже существует')
+                return Response('Трансопрт с таким номером уже существует', status=status.HTTP_400_BAD_REQUEST)
             else:
                 serializer = TransportPOSTSerializer(data={
                     "total_seats": request.data['total_seats'],
@@ -222,7 +268,7 @@ def edit_transport(request):
         print("printing req data ", request.data)
         transport_id = request.data['id']
         user = getUserByToken(request)
-        if Transport.objects.filter(transport_number__exact=request.data['transport_number']).exists():
+        if Transport.objects.exclude(id__exact=transport_id).filter(transport_number__exact=request.data['transport_number']).exists():
             return Response('Трансопрт с таким номером уже существует', status=status.HTTP_400_BAD_REQUEST)
         else:
             transport = Transport.objects.get(id__exact=transport_id)
