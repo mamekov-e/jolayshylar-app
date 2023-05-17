@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useContext} from "react";
 import axiosUtil from "../utils/axiosUtil.jsx";
 import {AuthContext} from "./useAuth.jsx";
+import {BASE_URL} from "../constants/Data.jsx";
 
 const RouteContext = React.createContext();
 
@@ -105,11 +106,11 @@ function RouteContextProvider({children}) {
     async function getRouteStopsById(id) {
         try {
             const params = new URLSearchParams({id: id})
-            const response = await api.get("/transports/get-routes-stops/?" + params.toString(),
-                {
-                    headers: {"Content-Type": "application/x-www-form-urlencoded"}
-                })
-            return response.data
+            const response = await fetch(`${BASE_URL}/transports/get-routes-stops/?${params.toString()}`, {
+                method: "GET",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"}
+            })
+            return await response.json()
         } catch (err) {
             return "Cannot load stops"
         }

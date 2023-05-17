@@ -50,7 +50,40 @@
     /*z-index: 1;*/
 }
 
+.requestPanel {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.mapInputs {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.requestButton {
+    height: 35px;
+    width: 90%;
+    min-width: 200px;
+    padding-inline-start: 10px;
+    /*flex-grow: 1;*/
+    border: 1px solid #007cad;
+    border-radius: 5px;
+    /*outline: none;*/
+}
+
+.buttonGroup {
+    display: flex;
+    width: 100%;
+    gap: 5px;
+}
+
 .calculateButton {
+    width: 80%;
     height: 39px;
     /*border: 1px solid #007cad;*/
     border: none;
@@ -59,48 +92,44 @@
     color: white;
 }
 
-.requestPanel {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 4px;
-}
-
-.mapInputs {
-    display: flex;
-    width: 100%;
-}
-
-.inputBox {
-    width: 100%;
-}
-
-.requestButton {
-    height: 35px;
-    /*width: 90%;*/
-    /*min-width: 200px;*/
-    padding-inline-start: 10px;
-    /*flex-grow: 1;*/
-    border: 1px solid #007cad;
-    border-radius: 5px;
-    outline: none;
-}
-
-.buttonGroup {
-    display: flex;
-    gap: 5px;
-}
-
 .clearBtn {
     text-align: center;
-    width: 35px;
+    width: 20%;
     border: none;
     border-radius: 5px;
 }
 
+.routeListActions {
+    display: flex;
+    justify-content: flex-end
+}
+
+.resetBtn {
+    width: 20%;
+    height: 30px;
+    margin-block: 10px;
+    /*border: 1px solid #007cad;*/
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(1, 78, 109, 0.68);
+    color: white;
+}
+
 .responsePanel {
+    width: 100%;
+    margin-top: 20px;
     display: flex;
     justify-content: space-around;
     align-items: center;
+}
+
+.markerLabelStyle {
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid rgba(12, 12, 12, 0.86);
+    padding: 5px;
+    margin-bottom: 30px;
+    font-weight: bold;
+    font-size: 25px
 }
 

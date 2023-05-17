@@ -111,7 +111,7 @@ function BusContextProvider({children}) {
                 return true
             }
         } catch (err) {
-            showMessage(err)
+            showMessage(err.response.data)
         }
     }
 

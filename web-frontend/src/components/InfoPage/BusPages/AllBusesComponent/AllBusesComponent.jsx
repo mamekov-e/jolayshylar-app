@@ -107,11 +107,6 @@ export default function AllBusesComponent() {
                 return;
             }
             const selected = rows.map((row) => row.original)
-            if (checkIsTrackingAtLeastOne(selected) && selected.length > 1) {
-                if (!confirm("В списке есть также неотслеживаемые автобусы. " +
-                    "Вы уверены что хотите запустить отслеживание этих автобусов?"))
-                    return;
-            }
             changeBusTrackingState(selected, true)
             table.resetRowSelection(true)
         },
@@ -120,15 +115,10 @@ export default function AllBusesComponent() {
 
     const handleRemoveTrackingBuses = useCallback(
         (table, rows) => {
-            if (!confirm(`Вы уверены что хотите удалить из отслеживаемых автобусы?`)) {
+            if (!confirm(`Вы уверены что хотите остановить отслеживание автобусов?`)) {
                 return;
             }
             const selected = rows.map((row) => row.original)
-            if (checkIsTrackingAtLeastOne(selected) && selected.length > 1) {
-                if (!confirm("В списке есть также отслеживаемые автобусы. " +
-                    "Вы уверены что хотите остановить отслеживание этих автобусов?"))
-                    return;
-            }
             changeBusTrackingState(selected, false)
             table.resetRowSelection(true)
         },
@@ -203,10 +193,11 @@ export default function AllBusesComponent() {
                                 </IconButton>}
                             <IconButton
                                 color="primary"
+                                disabled={row.original.is_tracking}
                                 onClick={() => {
                                     handleEditRow(row.original)
                                 }}>
-                                <MdModeEditOutline color={"black"}/>
+                                <MdModeEditOutline color={!row.original.is_tracking ? "black" : "grey"}/>
                             </IconButton>
                             <IconButton
                                 color="primary"
