@@ -132,7 +132,6 @@ def get_user(request):
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
 
-@permission_classes([IsAuthenticated])
 class CompanyView(APIView):
     def post(self, request):
         try:
