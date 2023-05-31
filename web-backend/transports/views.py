@@ -87,38 +87,53 @@ def get_tracked_transports_of_route(request):
     except TypeError:
         return Response('Неверный тип данных', status=status.HTTP_400_BAD_REQUEST)
 
+
+def haversine(lat1, lon1, lat2, lon2):
+    """
+    Calculate the distance between two points on Earth using the Haversine formula.
+    Returns the distance in kilometers.
+    """
+    R = 6371  # Radius of the Earth in kilometers
+
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2) * math.sin(dlat / 2) + math.cos(math.radians(lat1)) \
+        * math.cos(math.radians(lat2)) * math.sin(dlon / 2) * math.sin(dlon / 2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    distance = R * c
+
+    return distance
+
+
 @api_view([static.HTTPMethod.post])
 def get_closest_routes(request):
-    lat_1 = request.data['latitude-1']
-    long_1 = request.data['longitude-1']
-    lat_2 = request.data['latitude-2']
-    long_2 = request.data['longitude-2']
-    result = []
-    heap = []
-    min_dist = 1000
-    stops = Stop.objects.all()
-    for stop in stops:
-        distance = math.sqrt(pow(abs(stop.latitude - Decimal(lat_1)), 2) + pow(
-            abs(stop.longitude - Decimal(long_1)), 2))
-        if distance < min_dist:
-            min_dist = distance
-            location = Location(stop=stop.id, distance=distance)
-            heapq.heappush(heap, location)
-    min_dist = 1000
-    for stop in stops:
-        distance = math.sqrt(pow(abs(stop.latitude - Decimal(lat_2)), 2) + pow(
-            abs(stop.longitude - Decimal(long_2)), 2))
-        if distance < min_dist:
-            min_dist = distance
-            location = Location(stop=stop.id, distance=distance)
-            heapq.heappush(heap, location)
-    while len(heap) > 0:
-        result.append(heapq.heappop(heap).stop)
-    routes_stops = Routes_stops.objects.filter(stop__in=result)
-    routes = []
-    for route_stop in routes_stops:
-        routes.append(Route.objects.get(id__exact=route_stop.route.id))
-    routes = RouteGETSerializer(routes, many=True)
+
+    # Get the latitude and longitude values from the form
+    point1_latitude = Decimal(request.data['latitude-1'])
+    point1_longitude = Decimal(request.data['longitude-1'])
+    point2_latitude = Decimal(request.data['latitude-2'])
+    point2_longitude = Decimal(request.data['longitude-2'])
+
+    # Find the closest stops to the first point
+    closest_stops_point1 = Stop.objects.all()
+    closest_stops_point1 = sorted(closest_stops_point1,
+                                  key=lambda stop: haversine(point1_latitude, point1_longitude, stop.latitude,
+                                                             stop.longitude))[:4]
+
+    # Find the closest stops to the second point
+    closest_stops_point2 = Stop.objects.all()
+    closest_stops_point2 = sorted(closest_stops_point2,
+                                  key=lambda stop: haversine(point2_latitude, point2_longitude, stop.latitude,
+                                                             stop.longitude))[:4]
+
+
+    # Find the routes that contain the closest stops
+    routes_with_closest_stops = Route.objects.filter(routes_stops__stop__in=closest_stops_point1 + closest_stops_point2).distinct()
+
+
+    routes = RouteGETSerializer(routes_with_closest_stops, many=True)
+
+    print(routes.data)
     return Response(routes.data)
 
 
