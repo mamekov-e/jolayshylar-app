@@ -169,7 +169,7 @@ export default function RouteForm({submitForm, route, routeStops}) {
                     <Form className="form">
                         <div className="formGroup">
                             <span className="dangerText">
-                              {responseError ? responseError : touched.route_number && errors.route_number ? errors.route_number : "Номер маршрута *"}
+                              {touched.route_number && errors.route_number ? errors.route_number : "Номер маршрута *"}
                             </span>
                             <InputText
                                 placeholder="Введите номер маршрута"
