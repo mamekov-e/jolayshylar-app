@@ -45,8 +45,8 @@ class Company(models.Model):
 class User(AbstractBaseUser):
     login = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, default=None)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, default=None)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
