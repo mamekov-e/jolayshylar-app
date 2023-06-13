@@ -72,7 +72,9 @@ const Dropdown = ({
                         <div key={option.value} className="dropdown-tag-item" onClick={()=> onChosenItemClick(option)}>
                             {option.label}
                             <span
-                                onClick={(e) => onTagRemove(e, option)}
+                                onClick={(e) => {
+                                    onTagRemove(e, option)
+                                }}
                                 className="dropdown-tag-close"
                             >
                 <CloseIcon/>

@@ -27,6 +27,7 @@ export default function RouteForm({submitForm, route, routeStops}) {
     const [stopDirections, setStopDirections] = useState(null)
     const [windowOpen, setWindowOpen] = useState(false)
     const [currentPosition, setCurrentPosition] = useState(DEFAULT_LOCATION_LAT_AND_LONG_OBJECT);
+    const [routeMarkers, setRouteMarkers] = useState([])
 
     const api = axiosUtil()
 
@@ -62,22 +63,27 @@ export default function RouteForm({submitForm, route, routeStops}) {
                 if (status === "OK") {
                     setStopDirections(response);
                     setResponseError(null)
+                    routeMarkers.map(routeMarker => {
+                        routeMarker.setMap(null)
+                    })
 
                     if (map) {
                         const my_route = response.routes[0];
                         for (var i = 0; i < my_route.legs.length; i++) {
-                            new google.maps.Marker({
+                            const markerA = new google.maps.Marker({
                                 position: my_route.legs[i].start_location,
                                 label: "" + (i + 1),
                                 clickable: true,
                                 map: map
                             });
+                            setRouteMarkers(prevItems => [...prevItems, markerA]);
                         }
-                        new google.maps.Marker({
+                        const markerB = new google.maps.Marker({
                             position: my_route.legs[i - 1].end_location,
                             label: "" + (i + 1),
                             map: map
                         });
+                        setRouteMarkers(prevItems => [...prevItems, markerB]);
                     }
                 } else {
                     setResponseError("Не удается проложить маршрут")
@@ -169,7 +175,7 @@ export default function RouteForm({submitForm, route, routeStops}) {
                     <Form className="form">
                         <div className="formGroup">
                             <span className="dangerText">
-                              {responseError ? responseError : touched.route_number && errors.route_number ? errors.route_number : "Номер маршрута *"}
+                              {touched.route_number && errors.route_number ? errors.route_number : "Номер маршрута *"}
                             </span>
                             <InputText
                                 placeholder="Введите номер маршрута"
@@ -194,6 +200,7 @@ export default function RouteForm({submitForm, route, routeStops}) {
                                 placeHolder="Выберите остановку"
                                 options={stopOptions}
                                 onChange={(value) => {
+                                    console.log("stops", value)
                                     setFieldValue("stops", value)
                                     drawDirections(value, map)
                                     if (value.length) {
