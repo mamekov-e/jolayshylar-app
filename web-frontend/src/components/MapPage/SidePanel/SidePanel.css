@@ -1,8 +1,11 @@
 .routesListSB {
+    width: 100%;
+    margin: 0;
     list-style-type: none;
     padding-left: 0;
 }
 .routesListSB li {
+    cursor: pointer;
     padding: 10px;
     border-bottom: 1px solid #dddddd;
 }
@@ -12,5 +15,5 @@
 }
 
 .routesListSB li:hover {
-    background-color: rgba(52, 102, 161, 0.68);
+    background-color: rgba(52, 102, 161, 0.13);
 }

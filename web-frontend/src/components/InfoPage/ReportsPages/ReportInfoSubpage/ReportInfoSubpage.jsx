@@ -24,7 +24,12 @@ export default function ReportInfoSubpage({report, routeStops}) {
                     headers: {"Content-Type": "application/x-www-form-urlencoded"}
                 })
             if (response.status === 200) {
-                setBusRouteInfo(response.data)
+                let pass_count = 0
+                const busRouteInfoCalculated = response.data.map((info) => {
+                    pass_count += info.passenger_in - info.passenger_out
+                    return {...info, passengers_now: pass_count}
+                })
+                setBusRouteInfo(busRouteInfoCalculated)
                 setIsLoading(false);
             }
         };
@@ -36,22 +41,32 @@ export default function ReportInfoSubpage({report, routeStops}) {
             {
                 accessorKey: 'stop.stop_name',
                 header: 'Остановки',
+                size: 120
             },
             {
                 accessorKey: 'timestamp',
                 header: 'Время',
+                size: 70
             },
             {
                 accessorKey: 'passenger_in',
                 header: 'Пассажиров вошло',
+                size: 90
             },
             {
                 accessorKey: 'passenger_out',
                 header: 'Пассажиров вышло',
+                size: 90
+            },
+            {
+                accessorKey: 'passengers_now',
+                header: 'Пассажиров в автобусе',
+                size: 120
             },
             {
                 accessorKey: 'cycle_amount',
                 header: 'Рейс',
+                size: 70
             }
         ],
         [],

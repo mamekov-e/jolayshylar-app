@@ -4,15 +4,19 @@ import MaterialReactTable from "material-react-table";
 import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import {Box, Button, IconButton} from "@mui/material";
 import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
-import {MdOpenInNew} from "react-icons/all.js";
-import {AddRouteSubpageCrumb, RouteInfoSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
+import {MdModeEditOutline, MdOpenInNew} from "react-icons/all.js";
+import {
+    AddRouteSubpageCrumb,
+    EditBusSubpageCrumb, EditRouteSubpageCrumb,
+    RouteInfoSubpageCrumb
+} from "../../../../constants/BreadcrumbItems.jsx";
 import {BusContext} from "../../../../contexts/useBus.jsx";
 import {RouteContext} from "../../../../contexts/useRoute.jsx";
 
 export default function AllRoutesComponent() {
     const {goToSubpage} = useContext(BreadcrumbContext);
     const {setChangedState} = useContext(BusContext);
-    const {routeItems, message, addRoute, removeRoutes, isLoading} = useContext(RouteContext);
+    const {routeItems, message, addRoute, editRoute, removeRoutes, getRouteStopsById, isLoading} = useContext(RouteContext);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
@@ -47,6 +51,15 @@ export default function AllRoutesComponent() {
             const subpagecrumb = AddRouteSubpageCrumb(addRoute);
             goToSubpage(subpagecrumb);
         }, [])
+
+    const handleEditRow = useCallback(
+        async (route) => {
+            const routeStops = await getRouteStopsById(route.id)
+            const subpagecrumb = EditRouteSubpageCrumb(route, routeStops, editRoute);
+            goToSubpage(subpagecrumb);
+        },
+        [routeItems],
+    );
 
     const handleDeleteRow = useCallback(
         (table, rows) => {
@@ -96,11 +109,18 @@ export default function AllRoutesComponent() {
                             <IconButton
                                 color="primary"
                                 onClick={() => {
-                                    handleOpenRoutePage(row.original)
-                                }}
-                            >
-                                <MdOpenInNew color={"black"}/>
+                                    handleEditRow(row.original)
+                                }}>
+                                <MdModeEditOutline color={"black"}/>
                             </IconButton>
+                            {/*<IconButton*/}
+                            {/*    color="primary"*/}
+                            {/*    onClick={() => {*/}
+                            {/*        handleOpenRoutePage(row.original)*/}
+                            {/*    }}*/}
+                            {/*>*/}
+                            {/*    <MdOpenInNew color={"black"}/>*/}
+                            {/*</IconButton>*/}
                         </div>
                     )}
                     renderTopToolbarCustomActions={({table}) => (
@@ -125,7 +145,7 @@ export default function AllRoutesComponent() {
                             >
                                 Удалить
                             </Button>
-                            {message && (<p>{message}</p>)}
+                            {message && (<p style={{margin: 0}}>{message}</p>)}
                         </Box>
                     )}
                 />

@@ -1,14 +1,13 @@
-import React, {useContext, useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState, useContext} from "react";
 import "./BusMapInfoSubpage.css";
-import {EditBusSubpageCrumb} from "../../../../constants/BreadcrumbItems.jsx";
-import {BreadcrumbContext} from "../../../../contexts/useBreadcrumb.jsx";
 import MaterialReactTable from 'material-react-table';
 import {getCurrentDate} from "../../../../utils/dateUtil.jsx";
-import {BusContext} from "../../../../contexts/useBus.jsx";
 import axiosUtil from "../../../../utils/axiosUtil.jsx";
 import {MRT_Localization_RU} from "material-react-table/locales/ru.js";
+import {BusContext} from "../../../../contexts/useBus.jsx";
 
 export default function BusMapInfoSubpage({bus, routeStops}) {
+    const {busItems} = useContext(BusContext);
     const [currentDate, setCurrentDate] = useState(null);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
@@ -26,12 +25,20 @@ export default function BusMapInfoSubpage({bus, routeStops}) {
                     headers: {"Content-Type": "application/x-www-form-urlencoded"}
                 })
             if (response.status === 200) {
-                setBusRouteInfo(response.data)
-                setIsLoading(false);
+                let pass_count = 0
+                const data = response.data
+                if (data !== "Нет записей для этого транспорта") {
+                    const busRouteInfoCalculated = data.map((info) => {
+                        pass_count += info.passenger_in - info.passenger_out
+                        return {...info, passengers_now: pass_count}
+                    })
+                    setBusRouteInfo(busRouteInfoCalculated)
+                }
             }
+            setIsLoading(false);
         };
         fetchData();
-    }, []);
+    }, [busItems]);
 
     useEffect(() => {
         setCurrentDate(getCurrentDate())
@@ -42,22 +49,32 @@ export default function BusMapInfoSubpage({bus, routeStops}) {
             {
                 accessorKey: 'stop.stop_name',
                 header: 'Остановки',
+                size: 120
             },
             {
                 accessorKey: 'timestamp',
                 header: 'Время',
+                size: 70
             },
             {
                 accessorKey: 'passenger_in',
                 header: 'Пассажиров вошло',
+                size: 90
             },
             {
                 accessorKey: 'passenger_out',
                 header: 'Пассажиров вышло',
+                size: 90
+            },
+            {
+                accessorKey: 'passengers_now',
+                header: 'Пассажиров в автобусе',
+                size: 120
             },
             {
                 accessorKey: 'cycle_amount',
                 header: 'Рейс',
+                size: 70
             }
         ],
         [],

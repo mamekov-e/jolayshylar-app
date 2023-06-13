@@ -10,7 +10,7 @@ import axiosUtil from "../../../../utils/axiosUtil.jsx";
 import {BusContext} from "../../../../contexts/useBus.jsx";
 import {DirectionsRenderer, GoogleMap, InfoWindow, Marker, useJsApiLoader} from "@react-google-maps/api";
 import {API_KEY, DEFAULT_LOCATION_LAT_AND_LONG_OBJECT} from "../../../../constants/Data.jsx";
-import { faStreetView} from "@fortawesome/free-solid-svg-icons";
+import {faLocationCrosshairs, faLocationPin, faStreetView} from "@fortawesome/free-solid-svg-icons";
 
 export default function RouteForm({submitForm, route, routeStops}) {
     const {subpage, goToSubpage, allItemsPage} = useContext(BreadcrumbContext);
@@ -40,7 +40,7 @@ export default function RouteForm({submitForm, route, routeStops}) {
         }));
     }
 
-    const drawDirections = async (points) => {
+    const drawDirections = async (points, map) => {
         if (points.length <= 1) {
             setStopDirections(null)
             return;
@@ -51,17 +51,39 @@ export default function RouteForm({submitForm, route, routeStops}) {
         const destination = new window.google.maps.LatLng(points[points.length - 1].latitude, points[points.length - 1].longitude);
         const waypoints = points.slice(1, points.length - 1).map(point => ({location: new window.google.maps.LatLng(point.latitude, point.longitude)}));
 
-        const response = await directionsService.route(
+        await directionsService.route(
             {
                 origin,
                 destination,
                 waypoints,
                 travelMode: window.google.maps.TravelMode.DRIVING,
+            },
+            function (response, status) {
+                if (status === "OK") {
+                    setStopDirections(response);
+                    setResponseError(null)
+
+                    if (map) {
+                        const my_route = response.routes[0];
+                        for (var i = 0; i < my_route.legs.length; i++) {
+                            new google.maps.Marker({
+                                position: my_route.legs[i].start_location,
+                                label: "" + (i + 1),
+                                clickable: true,
+                                map: map
+                            });
+                        }
+                        new google.maps.Marker({
+                            position: my_route.legs[i - 1].end_location,
+                            label: "" + (i + 1),
+                            map: map
+                        });
+                    }
+                } else {
+                    setResponseError("Не удается проложить маршрут")
+                }
             }
         );
-        if (response !== null) {
-            setStopDirections(response);
-        }
     }
 
     const handleInfoWindow = () => {
@@ -103,7 +125,7 @@ export default function RouteForm({submitForm, route, routeStops}) {
     };
 
     useEffect(() => {
-        if (routeStops){
+        if (routeStops) {
             handleOnItemChosenClicked(routeStopsToOptions()[0])
         } else
             navigator.geolocation.getCurrentPosition(success);
@@ -146,12 +168,8 @@ export default function RouteForm({submitForm, route, routeStops}) {
                 return <div className={"routeFormWrapper"}>
                     <Form className="form">
                         <div className="formGroup">
-                            {responseError && (<span className="dangerText" style={{
-                                display: "flex",
-                                justifyContent: "center"
-                            }}>{responseError}</span>)}
                             <span className="dangerText">
-                              {touched.route_number && errors.route_number ? errors.route_number : "Номер маршрута *"}
+                              {responseError ? responseError : touched.route_number && errors.route_number ? errors.route_number : "Номер маршрута *"}
                             </span>
                             <InputText
                                 placeholder="Введите номер маршрута"
@@ -168,7 +186,7 @@ export default function RouteForm({submitForm, route, routeStops}) {
                         </div>
                         <div className="formGroup">
                             <span className="dangerText">
-                              {touched.stops && errors.stops ? errors.stops : "Остановка *"}
+                              {responseError ? responseError : touched.stops && errors.stops ? errors.stops : "Остановка *"}
                             </span>
                             <Dropdown
                                 isSearchable
@@ -177,7 +195,7 @@ export default function RouteForm({submitForm, route, routeStops}) {
                                 options={stopOptions}
                                 onChange={(value) => {
                                     setFieldValue("stops", value)
-                                    drawDirections(value)
+                                    drawDirections(value, map)
                                     if (value.length) {
                                         handleOnItemChosenClicked(value[value.length - 1])
                                     }
@@ -215,10 +233,13 @@ export default function RouteForm({submitForm, route, routeStops}) {
                             onLoad={map => {
                                 setMap(map)
                                 if (routeStops) {
-                                    drawDirections(routeStopsToOptions())
+                                    drawDirections(routeStopsToOptions(), map)
                                 }
                             }}>
-                            {stopDirections !== null && <DirectionsRenderer directions={stopDirections}/>}
+                            {stopDirections !== null &&
+                                <DirectionsRenderer
+                                    options={{suppressMarkers: true}}
+                                    directions={stopDirections}/>}
                             <Marker
                                 position={currentPosition}
                                 onClick={() => handleInfoWindow()}
@@ -232,9 +253,8 @@ export default function RouteForm({submitForm, route, routeStops}) {
                                     ),
                                     strokeWeight: 1,
                                     strokeColor: "#ffffff",
-                                    scale: 0.1,
-                                }
-                            }/>
+                                    scale: 0.05,
+                                }}/>
                             {windowOpen && (
                                 <InfoWindow
                                     position={currentPosition}
