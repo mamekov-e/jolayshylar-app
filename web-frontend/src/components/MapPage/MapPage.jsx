@@ -107,7 +107,7 @@ function MapPage() {
                         const my_route = response.routes[0];
                         const markerStart = new google.maps.Marker({
                             position: my_route.legs[0].start_location,
-                            label: {text: `Начальная(№${route.route_number})`, className: "markerLabelStyle"},
+                            label: {text: `Начальная(№${route.route_number})`, fontSize: "10px", className: "markerLabelStyle"},
                             icon: {
                                 path: faLocationPin.icon[4],
                                 fillColor: "rgb(168,36,41)",
@@ -118,7 +118,7 @@ function MapPage() {
                                 ),
                                 strokeWeight: 1,
                                 strokeColor: "#ffffff",
-                                scale: 0.05,
+                                scale: 0.03,
                             },
                             map: map
                         })
@@ -144,7 +144,7 @@ function MapPage() {
                         }
                         const markerEnd = new google.maps.Marker({
                             position: my_route.legs[i - 1].end_location,
-                            label: {text: `Конечная(№${route.route_number})`, className: "markerLabelStyle"},
+                            label: {text: `Конечная(№${route.route_number})`, fontSize: "10px", className: "markerLabelStyle"},
                             icon: {
                                 path: faLocationPin.icon[4],
                                 fillColor: "rgba(161,52,56,0.9)",
@@ -155,7 +155,7 @@ function MapPage() {
                                 ),
                                 strokeWeight: 1,
                                 strokeColor: "#ffffff",
-                                scale: 0.05,
+                                scale: 0.03,
                             },
                             map: map
                         })

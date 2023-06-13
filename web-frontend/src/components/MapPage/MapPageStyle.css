@@ -128,7 +128,8 @@
     border-radius: 5px;
     border: 1px solid rgba(12, 12, 12, 0.86);
     padding: 5px;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
+    margin-left: 130px;
     font-weight: bold;
     font-size: 25px
 }
